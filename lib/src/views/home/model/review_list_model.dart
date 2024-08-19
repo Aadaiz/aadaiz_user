@@ -1,13 +1,19 @@
 import 'dart:convert';
 
 class ReviewListRes {
-  dynamic status;
+  bool? status;
   Data? data;
+  List<int>? ratingCounts;
+  dynamic totalRatings;
+  double? averageRating;
   dynamic message;
 
   ReviewListRes({
     this.status,
     this.data,
+    this.ratingCounts,
+    this.totalRatings,
+    this.averageRating,
     this.message,
   });
 
@@ -18,19 +24,25 @@ class ReviewListRes {
   factory ReviewListRes.fromMap(Map<String, dynamic> json) => ReviewListRes(
     status: json["status"],
     data: json["data"] == null ? null : Data.fromMap(json["data"]),
+    ratingCounts: json["ratingCounts"] == null ? [] : List<int>.from(json["ratingCounts"]!.map((x) => x)),
+    totalRatings: json["totalRatings"],
+    averageRating: json["averageRating"]?.toDouble(),
     message: json["message"],
   );
 
   Map<String, dynamic> toMap() => {
     "status": status,
     "data": data?.toMap(),
+    "ratingCounts": ratingCounts == null ? [] : List<dynamic>.from(ratingCounts!.map((x) => x)),
+    "totalRatings": totalRatings,
+    "averageRating": averageRating,
     "message": message,
   };
 }
 
 class Data {
   dynamic currentPage;
-  List<Datum>? data;
+  List<Review>? data;
   dynamic firstPageUrl;
   dynamic from;
   dynamic lastPage;
@@ -65,7 +77,7 @@ class Data {
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
     currentPage: json["current_page"],
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromMap(x))),
+    data: json["data"] == null ? [] : List<Review>.from(json["data"]!.map((x) => Review.fromMap(x))),
     firstPageUrl: json["first_page_url"],
     from: json["from"],
     lastPage: json["last_page"],
@@ -96,7 +108,7 @@ class Data {
   };
 }
 
-class Datum {
+class Review {
   dynamic id;
   dynamic userId;
   dynamic rating;
@@ -104,10 +116,9 @@ class Datum {
   dynamic images;
   DateTime? date;
   dynamic time;
-  dynamic isLiked;
   User? user;
 
-  Datum({
+  Review({
     this.id,
     this.userId,
     this.rating,
@@ -115,15 +126,14 @@ class Datum {
     this.images,
     this.date,
     this.time,
-    this.isLiked,
     this.user,
   });
 
-  factory Datum.fromJson(String str) => Datum.fromMap(json.decode(str));
+  factory Review.fromJson(String str) => Review.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Datum.fromMap(Map<String, dynamic> json) => Datum(
+  factory Review.fromMap(Map<String, dynamic> json) => Review(
     id: json["id"],
     userId: json["user_id"],
     rating: json["rating"],
@@ -131,7 +141,6 @@ class Datum {
     images: json["images"],
     date: json["date"] == null ? null : DateTime.parse(json["date"]),
     time: json["time"],
-    isLiked: json["is_liked"],
     user: json["user"] == null ? null : User.fromMap(json["user"]),
   );
 
@@ -143,7 +152,6 @@ class Datum {
     "images": images,
     "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
     "time": time,
-    "is_liked": isLiked,
     "user": user?.toMap(),
   };
 }
@@ -175,7 +183,7 @@ class User {
 class Link {
   dynamic url;
   dynamic label;
-  dynamic active;
+  bool? active;
 
   Link({
     this.url,

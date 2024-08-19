@@ -1,3 +1,4 @@
+import 'package:aadaiz/src/res/components/common_toast.dart';
 import 'package:aadaiz/src/utils/colors.dart';
 import 'package:aadaiz/src/utils/responsive.dart';
 import 'package:aadaiz/src/utils/utils.dart';
@@ -37,6 +38,10 @@ class _ProductDetailsState extends State<ProductDetails> {
      images = widget.data!.imageUrl.split(',');
     displayImage=images[0];
     HomeController.to.cartLoading(false);
+    Future.delayed(const Duration(milliseconds: 500),(){
+      HomeController.to.getReviewList(isRefresh: true,id: widget.data!.id);
+    });
+
   }
 
   @override
@@ -172,7 +177,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     })),
             SizedBox(height: screenHeight * 0.03),
             Container(
-              color: Colors.red,
+              //color: Colors.red,
                 width: screenWidth,
                 child: ListTile(
                     title: Text(widget.data!.title ?? '',
@@ -192,160 +197,168 @@ class _ProductDetailsState extends State<ProductDetails> {
                               fontSize: 22.00.sp,
                               color: AppColor.black))
                     ]))),
-            SizedBox(
-                width: screenWidth,
-                child: Row(children: [
-                  RatingBar(
-                      initialRating: widget.rating,
-                      direction: Axis.horizontal,
-                      ignoreGestures: true,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemSize: 15,
-                      unratedColor: Colors.grey,
-                      ratingWidget: RatingWidget(
-                          full: const Icon(Icons.star_rounded,
-                              color: Color(0xffFFA800)),
-                          half: const Icon(Icons.star_half_rounded,
-                              color: Color(0xffFFA800)),
-                          empty: const Icon(Icons.star_outline_rounded,
-                              color: Color(0xffFFA800))),
-                      onRatingUpdate: (value) {}),
-                  SizedBox(width: screenWidth * 0.01),
-                  Text('View Review',
-                      style: GoogleFonts.dmSans(
-                          fontSize: 14.00.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColor.black,
-                          decoration: TextDecoration.underline))
-                ])),
-            SizedBox(height: screenHeight * 0.03),
-            SizedBox(
-                width: screenWidth,
-                child: Text('Size',
-                    style: GoogleFonts.dmSans(
-                        fontSize: 14.00.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColor.primary))),
-            Container(
-                width: screenWidth ,
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-                alignment: Alignment.centerLeft,
-                child: GroupButton<String>(
-                    buttons: widget.data!.sizes.split(','),
-                    onSelected: (value, i, isSelected) {
-                      setState(() {
-                        size = value;
-                      });
-                    },
-                    options: GroupButtonOptions(
-                      buttonWidth: 40,
-                      crossGroupAlignment: CrossGroupAlignment.start,
-                      borderRadius: BorderRadius.circular(50),
-                      selectedColor: AppColor.primary,
-                      selectedBorderColor: AppColor.groupBtnBorderColor,
-                      unselectedBorderColor: AppColor.groupBtnBorderColor,
-                      selectedTextStyle: GoogleFonts.dmSans(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13.00.sp),
-                      unselectedTextStyle: GoogleFonts.dmSans(
-                          color: AppColor.groupBtnTextColor,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13.00.sp),
-                    ))),
-            Container(
-                width: screenHeight,
-                margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.01,
-                    horizontal: screenWidth * 0.1),
-                child: RichText(
-                    text: TextSpan(
-                        text: 'How Many meters fabric you have ? ',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12.00.sp,
-                            color: AppColor.black),
-                        children: [
-                      TextSpan(
-                          text: ' *',
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(
+                      width: screenWidth,
+                      child: Row(children: [
+                        RatingBar(
+                            initialRating: widget.rating,
+                            direction: Axis.horizontal,
+                            ignoreGestures: true,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 15,
+                            unratedColor: Colors.grey,
+                            ratingWidget: RatingWidget(
+                                full: const Icon(Icons.star_rounded,
+                                    color: Color(0xffFFA800)),
+                                half: const Icon(Icons.star_half_rounded,
+                                    color: Color(0xffFFA800)),
+                                empty: const Icon(Icons.star_outline_rounded,
+                                    color: Color(0xffFFA800))),
+                            onRatingUpdate: (value) {}),
+                        SizedBox(width: screenWidth * 0.01),
+                        Text('View Review',
+                            style: GoogleFonts.dmSans(
+                                fontSize: 14.00.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.black,
+                                decoration: TextDecoration.underline))
+                      ])),
+                  SizedBox(height: screenHeight * 0.03),
+                  SizedBox(
+                      width: screenWidth,
+                      child: Text('Size',
+                          style: GoogleFonts.dmSans(
+                              fontSize: 14.00.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.primary))),
+                  Container(
+                      width: screenWidth ,
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+                      alignment: Alignment.centerLeft,
+                      child: GroupButton<String>(
+                          buttons: widget.data!.sizes.split(','),
+                          onSelected: (value, i, isSelected) {
+                            setState(() {
+                              size = value;
+                            });
+                          },
+                          options: GroupButtonOptions(
+                            buttonWidth: 40,
+                            crossGroupAlignment: CrossGroupAlignment.start,
+                            borderRadius: BorderRadius.circular(50),
+                            selectedColor: AppColor.primary,
+                            selectedBorderColor: AppColor.groupBtnBorderColor,
+                            unselectedBorderColor: AppColor.groupBtnBorderColor,
+                            selectedTextStyle: GoogleFonts.dmSans(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.00.sp),
+                            unselectedTextStyle: GoogleFonts.dmSans(
+                                color: AppColor.groupBtnTextColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.00.sp),
+                          ))),
+                  Container(
+                      width: screenHeight,
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * 0.01,
+                          horizontal: screenWidth * 0.1),
+                      child: RichText(
+                          text: TextSpan(
+                              text: 'How Many meters fabric you have ? ',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.00.sp,
+                                  color: AppColor.black),
+                              children: [
+                                TextSpan(
+                                    text: ' *',
+                                    style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12.00.sp,
+                                        color: AppColor.requiredTextColor))
+                              ]))),
+                  Container(
+                      width: screenWidth,
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border.all(color: AppColor.dropdownBgColor)),
+                      child: DropdownButton<String>(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          borderRadius: BorderRadius.circular(3),
+                          underline: const SizedBox(),
+                          value: selectedValue,
                           style: GoogleFonts.dmSans(
                               fontWeight: FontWeight.w400,
-                              fontSize: 12.00.sp,
-                              color: AppColor.requiredTextColor))
-                    ]))),
-            Container(
-                width: screenWidth,
-                margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    border: Border.all(color: AppColor.dropdownBgColor)),
-                child: DropdownButton<String>(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    borderRadius: BorderRadius.circular(3),
-                    underline: const SizedBox(),
-                    value: selectedValue,
-                    style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11.00.sp,
-                        color: AppColor.black.withOpacity(0.5)),
-                    isExpanded: true,
-                    hint: Text('Choose Here',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.black.withOpacity(0.5))),
-                    items: _fabric.map<DropdownMenuItem<String>>((String val) {
-                      return DropdownMenuItem<String>(
-                          value: val, child: Text(val));
-                    }).toList(),
-                    onChanged: (String? val) {})),
-            Container(
-                width: screenHeight,
-                margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.01,
-                    horizontal: screenWidth * 0.1),
-                child: Text('Required 5 Mtr',
-                    style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 10.00.sp,
-                        color: AppColor.requiredTextColor))),
-            Container(
-                width: screenWidth ,
-                margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddMeasurement()));
-                    },
-                    tileColor: AppColor.primary,
-                    title: Text('Add Measurement',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: Colors.white)),
-                    trailing: Image.asset('assets/images/arrow_right.png',
-                        height: screenHeight * 0.022))),
-            SizedBox(
-                width: screenWidth,
-                child: ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.022),
-                      child: Text('Description',
+                              fontSize: 11.00.sp,
+                              color: AppColor.black.withOpacity(0.5)),
+                          isExpanded: true,
+                          hint: Text('Choose Here',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.00.sp,
+                                  color: AppColor.black.withOpacity(0.5))),
+                          items: _fabric.map<DropdownMenuItem<String>>((String val) {
+                            return DropdownMenuItem<String>(
+                                value: val, child: Text(val));
+                          }).toList(),
+                          onChanged: (String? val) {})),
+                  Container(
+                      width: screenHeight,
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * 0.01,
+                          horizontal: screenWidth * 0.1),
+                      child: Text('Required 5 Mtr',
                           style: GoogleFonts.dmSans(
                               fontWeight: FontWeight.w400,
-                              fontSize: 15.00.sp,
-                              color: AppColor.black)),
-                    ),
-                    subtitle: Text(widget.data!.description ?? '',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.subTitleColor)))),
+                              fontSize: 10.00.sp,
+                              color: AppColor.requiredTextColor))),
+                  Container(
+                      width: screenWidth ,
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const AddMeasurement()));
+                          },
+                          tileColor: AppColor.primary,
+                          title: Text('Add Measurement',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.00.sp,
+                                  color: Colors.white)),
+                          trailing: Image.asset('assets/images/arrow_right.png',
+                              height: screenHeight * 0.022))),
+                  SizedBox(
+                      width: screenWidth,
+                      child: ListTile(
+                          title: Padding(
+                            padding: EdgeInsets.only(bottom: screenHeight * 0.022),
+                            child: Text('Description',
+                                style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15.00.sp,
+                                    color: AppColor.black)),
+                          ),
+                          subtitle: Text(widget.data!.description ?? '',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.00.sp,
+                                  color: AppColor.subTitleColor)))),
+                ],
+              ),
+            ),
+
             Container(
               width: screenWidth,
               height: screenHeight * 0.022,
@@ -361,49 +374,48 @@ class _ProductDetailsState extends State<ProductDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16.00.sp,
                         color: AppColor.textColor))),
-            RatingsWidget(
-              rating: widget.data!.rating,
-              averageRating: 4.3,
-              totalRatings: 23,
-              ratingCounts: [
-                12,
-                5,
-                4,
-                2,
-                8
-              ], // Replace with actual rating counts
-            ),
-            Container(
-                margin: EdgeInsets.only(top: screenHeight * 0.022),
-                width: screenWidth / 1.2,
-                alignment: Alignment.centerLeft,
-                child: const CircleAvatar(
-                    backgroundImage:
+
+            Obx(()=>  HomeController.to.reviewLoading.value?
+                const CommonLoading():
+                Column(
+              children: [
+                RatingsWidget(
+                    rating: widget.data!.rating,
+                    averageRating: HomeController.to.averageRating.value,
+                    totalRatings: HomeController.to.totalRating.value,
+                    ratingCounts: HomeController.to.ratingCount.value // Replace with actual rating counts
+                  ),
+                Container(
+                    margin: EdgeInsets.only(top: screenHeight * 0.022),
+                    width: screenWidth / 1.2,
+                    alignment: Alignment.centerLeft,
+                    child: const CircleAvatar(
+                        backgroundImage:
                         AssetImage('assets/images/human_avatar.png'))),
-            SizedBox(
-                width: screenWidth / 1.3,
-                child: ListTile(
-                    title: Text('Angel',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13.00.sp,
-                            color: AppColor.textColor)),
-                    subtitle: Row(
-                        children: List.generate(5, (index) {
-                      return index == 4
-                          ? Icon(Icons.star_border_outlined,
-                              color: AppColor.borderGrey,
-                              size: screenHeight * 0.022)
-                          : Icon(Icons.star,
-                              color: AppColor.starColor,
-                              size: screenHeight * 0.022);
-                    })),
-                    trailing: Text('June 5, 2019',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.borderGrey)))),
-            Text('''
+                SizedBox(
+                    width: screenWidth / 1.3,
+                    child: ListTile(
+                        title: Text('Angel',
+                            style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 13.00.sp,
+                                color: AppColor.textColor)),
+                        subtitle: Row(
+                            children: List.generate(5, (index) {
+                              return index == 4
+                                  ? Icon(Icons.star_border_outlined,
+                                  color: AppColor.borderGrey,
+                                  size: screenHeight * 0.022)
+                                  : Icon(Icons.star,
+                                  color: AppColor.starColor,
+                                  size: screenHeight * 0.022);
+                            })),
+                        trailing: Text('June 5, 2019',
+                            style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 11.00.sp,
+                                color: AppColor.borderGrey)))),
+                Text('''
                 I recently purchased a dress from [Your 
                 Online Shopping Platform], and I must say, 
                 I'm absolutely thrilled with my purchase! 
@@ -413,246 +425,255 @@ class _ProductDetailsState extends State<ProductDetails> {
                 exceptional. It's soft, comfortable, and 
                 feels luxurious against my skin. 
                 I was also impressed by the attention to detail.''',
-                style: GoogleFonts.dmSans(
-                    fontSize: 10.00.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.textColor)),
-            Padding(
-                padding: EdgeInsets.only(
-                    right: screenWidth * 0.033, bottom: screenHeight * 0.03),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('Helpful',
-                          style: GoogleFonts.dmSans(
-                              fontSize: 10.00.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.borderGrey)),
-                      Image.asset('assets/images/like.png',
-                          height: screenHeight * 0.045)
-                    ])),
-            SizedBox(
-                width: screenWidth / 1.2,
-                child: PhysicalShape(
-                    color: Colors.white,
-                    elevation: 18,
-                    clipper: ShapeBorderClipper(
-                        shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    )),
-                    child: ListTile(
-                        title: Text('All 106 review',
-                            style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 11.00.sp,
-                                color: AppColor.textColor)),
-                        trailing: Image.asset(
-                            'assets/images/arrow_right_orange.png',
-                            height: screenHeight * 0.022)))),
-            SizedBox(height: screenHeight * 0.03),
-            SizedBox(
-                width: screenWidth / 1.2,
-                child: Text('Seller',
                     style: GoogleFonts.dmSans(
-                        fontSize: 12.00.sp,
+                        fontSize: 10.00.sp,
                         fontWeight: FontWeight.w400,
-                        color: AppColor.black))),
-            Container(
-                width: screenWidth / 1.2,
-                margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.018,
-                    vertical: screenHeight * 0.013),
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      offset: const Offset(0, 1),
-                      blurRadius: 5,
-                      spreadRadius: 0)
-                ]),
-                child: Column(children: [
-                  ListTile(
-                      tileColor: Colors.white,
-                      selectedTileColor: Colors.white,
-                      leading: const CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/retail_logo.png')),
-                      title: Text('Aadaiz',
-                          style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400, fontSize: 14.00.sp)),
-                      subtitle: SizedBox(
-                          width: screenWidth * 0.3,
-                          child: Row(children: [
-                            Row(
-                                children: List.generate(4, (index) {
-                              return Image.asset('assets/images/star.png');
-                            })),
-                            SizedBox(width: screenWidth * 0.01),
-                            Text('4 star',
+                        color: AppColor.textColor)),
+                Padding(
+                    padding: EdgeInsets.only(
+                        right: screenWidth * 0.033, bottom: screenHeight * 0.03),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('Helpful',
+                              style: GoogleFonts.dmSans(
+                                  fontSize: 10.00.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColor.borderGrey)),
+                          Image.asset('assets/images/like.png',
+                              height: screenHeight * 0.045)
+                        ])),
+                SizedBox(
+                    width: screenWidth / 1.2,
+                    child: PhysicalShape(
+                        color: Colors.white,
+                        elevation: 18,
+                        clipper: ShapeBorderClipper(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            )),
+                        child: ListTile(
+                            title: Text('All 106 review',
                                 style: GoogleFonts.dmSans(
-                                    fontSize: 9.00.sp,
                                     fontWeight: FontWeight.w400,
-                                    color: AppColor.black))
-                          ])),
-                      trailing: Column(children: [
-                        Text('₹189',
-                            style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16.00.sp,
-                                color: AppColor.black))
-                      ])),
-                  SizedBox(height: screenHeight * 0.01),
-                  ExpansionTile(
-                      title: Text('About Seller',
+                                    fontSize: 11.00.sp,
+                                    color: AppColor.textColor)),
+                            trailing: Image.asset(
+                                'assets/images/arrow_right_orange.png',
+                                height: screenHeight * 0.022)))),
+              ],
+            ),
+            ),
+
+
+            SizedBox(height: screenHeight * 0.03),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(
+                      width: screenWidth,
+                      child: Text('Seller',
                           style: GoogleFonts.dmSans(
-                              fontSize: 10.00.sp, fontWeight: FontWeight.w400)),
-                      trailing: Image.asset('assets/images/arrow_down.png'),
-                      shape: const Border(),
-                      expandedAlignment: Alignment.centerLeft,
-                      children: [
-                        Text('Reseller',
-                            style: GoogleFonts.dmSans(
-                                fontSize: 10.00.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColor.hintTextColor))
-                      ]),
-                  ExpansionTile(
-                      title: Text('Overall Rating',
-                          style: GoogleFonts.dmSans(
-                              fontSize: 10.00.sp, fontWeight: FontWeight.w400)),
-                      trailing: Image.asset('assets/images/arrow_down.png'),
-                      shape: const Border(),
-                      expandedAlignment: Alignment.centerLeft,
-                      children: [
-                        ListTile(
-                            title: Text('Product Quality',
-                                style: GoogleFonts.dmSans(
-                                    fontSize: 10.00.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColor.hintTextColor)),
-                            trailing: SizedBox(
-                                width: screenWidth * 0.3,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                          children: List.generate(4, (index) {
-                                        return Image.asset(
-                                            'assets/images/star.png');
-                                      })),
-                                      SizedBox(width: screenWidth * 0.01),
-                                      Text('4 star',
-                                          style: GoogleFonts.dmSans(
-                                              fontSize: 9.00.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.black))
-                                    ]))),
-                        ListTile(
-                            title: Text('Service Quality',
-                                style: GoogleFonts.dmSans(
-                                    fontSize: 10.00.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColor.hintTextColor)),
-                            trailing: SizedBox(
-                                width: screenWidth * 0.3,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                          children: List.generate(3, (index) {
-                                        return Image.asset(
-                                            'assets/images/star.png');
-                                      })),
-                                      SizedBox(width: screenWidth * 0.01),
-                                      Text('3 star',
-                                          style: GoogleFonts.dmSans(
-                                              fontSize: 9.00.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColor.black))
-                                    ])))
-                      ]),
-                  const Divider(color: AppColor.dividerColor),
-                  SizedBox(height: screenHeight * 0.01),
-                  const Divider(color: AppColor.dividerColor),
-                  ListTile(
-                      title: Text('Select Other Sellers',
-                          style: GoogleFonts.dmSans(
+                              fontSize: 12.00.sp,
                               fontWeight: FontWeight.w400,
-                              fontSize: 10.00.sp,
-                              color: Colors.black)),
-                      trailing: Image.asset('assets/images/arrow_right.png',
-                          color: AppColor.black, height: screenHeight * 0.022))
-                ])),
-            Container(
-                width: screenWidth / 1.2,
-                margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Image.asset('assets/images/truck.png',
-                        height: screenHeight * 0.05),
-                    title: Text('Fast Delivery',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13.00.sp,
-                            color: AppColor.black)),
-                    subtitle: Text('Deliver from 2 Feb',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.hintTextColor)),
-                    trailing: Text('Learn more',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.primary)))),
-            SizedBox(
-                width: screenWidth / 1.2,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          height: screenHeight * 0.05,
-                          //width: screenWidth * 0.28,
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: AppColor.primary),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.asset('assets/images/share.png',
-                                    width: screenWidth * 0.1),
-                                Text('Share',
-                                    style: GoogleFonts.dmSans(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12.00.sp,
-                                        color: Colors.white))
-                              ])),
-                      Gap(screenWidth * 0.05),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            HomeController.to.cart(
-                              action: 'add',
-                              id: widget.data!.id,
-                              price: widget.data!.price,
-                              gst: widget.data!.price,
-                              quantity: 1,
-                              size: size,
-                            );
-                          },
-                          child: Container(
-                              height: screenHeight * 0.05,
-                              // width: screenWidth * 0.45,
-                              // padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: AppColor.black, width: 2)),
-                              child: HomeController.to.cartLoading.value
-                                  ? SizedBox(
+                              color: AppColor.black))),
+                  Container(
+                      width: screenWidth,
+                      margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.018,
+                          vertical: screenHeight * 0.013),
+                      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            offset: const Offset(0, 1),
+                            blurRadius: 5,
+                            spreadRadius: 0)
+                      ]),
+                      child: Column(children: [
+                        ListTile(
+                            tileColor: Colors.white,
+                            selectedTileColor: Colors.white,
+                            leading: const CircleAvatar(
+                                backgroundImage:
+                                AssetImage('assets/images/retail_logo.png')),
+                            title: Text('Aadaiz',
+                                style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w400, fontSize: 14.00.sp)),
+                            subtitle: SizedBox(
+                                width: screenWidth * 0.3,
+                                child: Row(children: [
+                                  Row(
+                                      children: List.generate(4, (index) {
+                                        return Image.asset('assets/images/star.png');
+                                      })),
+                                  SizedBox(width: screenWidth * 0.01),
+                                  Text('4 star',
+                                      style: GoogleFonts.dmSans(
+                                          fontSize: 9.00.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.black))
+                                ])),
+                            trailing: Column(children: [
+                              Text('₹189',
+                                  style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.00.sp,
+                                      color: AppColor.black))
+                            ])),
+                        SizedBox(height: screenHeight * 0.01),
+                        ExpansionTile(
+                            title: Text('About Seller',
+                                style: GoogleFonts.dmSans(
+                                    fontSize: 10.00.sp, fontWeight: FontWeight.w400)),
+                            trailing: Image.asset('assets/images/arrow_down.png'),
+                            shape: const Border(),
+                            expandedAlignment: Alignment.centerLeft,
+                            children: [
+                              Text('Reseller',
+                                  style: GoogleFonts.dmSans(
+                                      fontSize: 10.00.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColor.hintTextColor))
+                            ]),
+                        ExpansionTile(
+                            title: Text('Overall Rating',
+                                style: GoogleFonts.dmSans(
+                                    fontSize: 10.00.sp, fontWeight: FontWeight.w400)),
+                            trailing: Image.asset('assets/images/arrow_down.png'),
+                            shape: const Border(),
+                            expandedAlignment: Alignment.centerLeft,
+                            children: [
+                              ListTile(
+                                  title: Text('Product Quality',
+                                      style: GoogleFonts.dmSans(
+                                          fontSize: 10.00.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.hintTextColor)),
+                                  trailing: SizedBox(
+                                      width: screenWidth * 0.3,
+                                      child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                                children: List.generate(4, (index) {
+                                                  return Image.asset(
+                                                      'assets/images/star.png');
+                                                })),
+                                            SizedBox(width: screenWidth * 0.01),
+                                            Text('4 star',
+                                                style: GoogleFonts.dmSans(
+                                                    fontSize: 9.00.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColor.black))
+                                          ]))),
+                              ListTile(
+                                  title: Text('Service Quality',
+                                      style: GoogleFonts.dmSans(
+                                          fontSize: 10.00.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.hintTextColor)),
+                                  trailing: SizedBox(
+                                      width: screenWidth * 0.3,
+                                      child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                                children: List.generate(3, (index) {
+                                                  return Image.asset(
+                                                      'assets/images/star.png');
+                                                })),
+                                            SizedBox(width: screenWidth * 0.01),
+                                            Text('3 star',
+                                                style: GoogleFonts.dmSans(
+                                                    fontSize: 9.00.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColor.black))
+                                          ])))
+                            ]),
+                        const Divider(color: AppColor.dividerColor),
+                        SizedBox(height: screenHeight * 0.01),
+                        const Divider(color: AppColor.dividerColor),
+                        ListTile(
+                            title: Text('Select Other Sellers',
+                                style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.00.sp,
+                                    color: Colors.black)),
+                            trailing: Image.asset('assets/images/arrow_right.png',
+                                color: AppColor.black, height: screenHeight * 0.022))
+                      ])),
+                  Container(
+                      width: screenWidth,
+                      margin: EdgeInsets.only(bottom: screenHeight * 0.01),
+                      child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Image.asset('assets/images/truck.png',
+                              height: screenHeight * 0.05),
+                          title: Text('Fast Delivery',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13.00.sp,
+                                  color: AppColor.black)),
+                          subtitle: Text('Deliver from 2 Feb',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.00.sp,
+                                  color: AppColor.hintTextColor)),
+                          trailing: Text('Learn more',
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 11.00.sp,
+                                  color: AppColor.primary)))),
+                  SizedBox(
+                      width: screenWidth,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                                height: screenHeight * 0.05,
+                                //width: screenWidth * 0.28,
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColor.primary),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Image.asset('assets/images/share.png',
+                                          width: screenWidth * 0.1),
+                                      Text('Share',
+                                          style: GoogleFonts.dmSans(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12.00.sp,
+                                              color: Colors.white))
+                                    ])),
+                            Gap(screenWidth * 0.05),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () {
+                                  HomeController.to.cart(
+                                    action: 'add',
+                                    id: widget.data!.id,
+                                    price: widget.data!.price,
+                                    gst: widget.data!.price,
+                                    quantity: 1,
+                                    size: size,
+                                  );
+                                },
+                                child: Container(
+                                    height: screenHeight * 0.05,
+                                    // width: screenWidth * 0.45,
+                                    // padding: EdgeInsets.symmetric(horizontal: 8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: AppColor.black, width: 2)),
+                                    child: HomeController.to.cartLoading.value
+                                        ? SizedBox(
                                       // height: 1.00.hp,
                                       width: 1.00.wp,
                                       child: LoadingAnimationWidget
@@ -661,10 +682,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         size: 5.00.hp,
                                       ),
                                     )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
+                                        : Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
                                           Image.asset('assets/images/bag.png',
                                               height: screenHeight * 0.03),
                                           SizedBox(
@@ -676,21 +697,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   fontSize: 12.00.sp,
                                                   color: Colors.black))
                                         ])),
-                        ),
-                      )
-                    ])),
-            Container(
-                width: screenWidth / 1.2,
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
-                child: Text('People Also Viewed',
-                    style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14.00.sp,
-                        color: Colors.black))),
-            HomeController.to.peopleMostViewList.value.isEmpty
-                ? const SizedBox()
-                : Row(
+                              ),
+                            )
+                          ])),
+                  Container(
+                      width: screenWidth,
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
+                      child: Text('People Also Viewed',
+                          style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14.00.sp,
+                              color: Colors.black))),
+                  HomeController.to.peopleMostViewList.value.isEmpty
+                      ? const SizedBox()
+                      : Row(
                     children: [
                       SizedBox(
                           height: screenHeight * 0.45,
@@ -730,20 +751,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                               })),
                     ],
                   ),
-            InkWell(
-              onTap: () {},
-              child: Container(
-                  width: screenWidth / 1.2,
-                  height: screenHeight * 0.055,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: AppColor.primary)),
-                  alignment: Alignment.center,
-                  child: Text('View More',
-                      style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16.00.sp,
-                          color: AppColor.black))),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                        width: screenWidth / 1.2,
+                        height: screenHeight * 0.055,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: AppColor.primary)),
+                        alignment: Alignment.center,
+                        child: Text('View More',
+                            style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16.00.sp,
+                                color: AppColor.black))),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: screenHeight * 0.03)
           ]),
@@ -753,8 +777,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
 class RatingsWidget extends StatelessWidget {
   final double averageRating;
-  final int totalRatings;
-  final List<int> ratingCounts;
+  final dynamic totalRatings;
+  final List<dynamic> ratingCounts;
   final dynamic rating;
   const RatingsWidget({
     Key? key,
@@ -779,7 +803,7 @@ class RatingsWidget extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                         fontSize: 38.00.sp,
                         color: AppColor.textColor)),
-                Text('23 ratings',
+                Text('$totalRatings ratings',
                     style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 12.00.sp,
@@ -811,7 +835,7 @@ class RatingsWidget extends StatelessWidget {
                             children: [
                               Container(
                                   width:
-                                      (200 * ratingCounts[4 - i] / totalRatings)
+                                      (150 * ratingCounts[4 - i] / int.parse(totalRatings))
                                           .clamp(0, 200),
                                   height: Get.height * 0.022,
                                   decoration: BoxDecoration(

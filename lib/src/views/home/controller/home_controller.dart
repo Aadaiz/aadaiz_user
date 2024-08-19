@@ -6,6 +6,7 @@ import 'package:aadaiz/src/views/home/model/banner_model.dart';
 import 'package:aadaiz/src/views/home/model/banner_model.dart' as banner;
 import 'package:aadaiz/src/views/home/model/gender_model.dart';
 import 'package:aadaiz/src/views/home/model/gender_model.dart' as gender;
+import 'package:aadaiz/src/views/home/model/review_list_model.dart';
 import 'package:aadaiz/src/views/home/repository/home_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -198,19 +199,36 @@ TextEditingController country = TextEditingController();
   }
 
 
-  var favoriteListLoading=false.obs;
   var favoriteList =<Favorites>[].obs;
 
 
-  Future<dynamic> favouriteList() async{
-    favoriteListLoading(true);
+  final favoriteCurrentPage = 1.obs;
+  final favoriteTotalPages = 1.obs;
+
+  Future<dynamic> getFavouriteList({bool isRefresh = false}) async{
+    if (isRefresh) {
+      favoriteCurrentPage.value = 1;
+      favoriteList.clear();
+    } else {
+      favoriteTotalPages.value++;
+    }
     FavoriteListRes res = await repo.favoriteList();
     if(res.success==true){
-      favoriteListLoading(false);
-      favoriteList.value = res.data!;
+      favoriteTotalPages.value=res.data!.lastPage;
+      if(res.data!.data!.isNotEmpty){
+        if(isRefresh){
+          favoriteList.value = res.data!.data!;
+        }else{
+          final newItems = res.data!.data ?? [];
+          favoriteList.addAll(newItems);
+        }
+      }else{
+        favoriteList.clear();
+      }
     }else{
 
     }
+    return true;
   }
 
   Future<dynamic> addFavorite(id) async {
@@ -227,6 +245,7 @@ TextEditingController country = TextEditingController();
   var cartListLoading=false.obs;
   var cartList =CartListRes().obs;
   List itemValues = [].obs;
+
   Future<dynamic> getCartList({dynamic code, dynamic apply}) async {
     itemValues.clear();
     SharedPreferences prefs=await SharedPreferences.getInstance();
@@ -366,6 +385,48 @@ TextEditingController country = TextEditingController();
       'token':'$token',
     };
     OrderRes res = await repo.cancelOrder(jsonEncode(body));
+  }
+
+  final reviewCurrentPage = 1.obs;
+  final reviewTotalPages = 1.obs;
+  var reviewList = <Review>[].obs;
+  var totalRating = ''.obs;
+  var averageRating = 0.0.obs;
+  RxList ratingCount = [].obs;
+  var reviewLoading =false.obs;
+
+ Future<dynamic> getReviewList({bool isRefresh= false,dynamic id}) async {
+    if(isRefresh){
+      reviewCurrentPage.value=1;
+      ratingCount.clear();
+      reviewList.clear();
+    }else{
+      reviewCurrentPage.value++;
+    }
+    reviewLoading(true);
+    ReviewListRes res = await repo.reviewList(id);
+    if(res.status==true){
+      reviewLoading(false);
+      reviewTotalPages.value=res.data!.lastPage!;
+      totalRating.value=res.totalRatings.toString();
+      averageRating.value=res.averageRating!;
+      for(var i=0;i<res.ratingCounts!.length;i++){
+        ratingCount.add(res.ratingCounts![i]);
+      }
+      if(res.data!.data!.isNotEmpty){
+        if(isRefresh){
+          reviewList.value = res.data!.data!;
+        }else{
+          final newItems = res.data!.data ?? [];
+          reviewList.addAll(newItems);
+        }
+      }else{
+        reviewList.clear();
+      }
+    }else{
+
+    }
+    return true;
   }
 
 

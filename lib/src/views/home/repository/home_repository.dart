@@ -8,6 +8,7 @@ import 'package:aadaiz/src/views/home/model/favoritelist_model.dart';
 import 'package:aadaiz/src/views/home/model/filter_model.dart';
 import 'package:aadaiz/src/views/home/model/my_order_model.dart';
 import 'package:aadaiz/src/views/home/model/productlist_model.dart';
+import 'package:aadaiz/src/views/home/model/review_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/api_service.dart';
 import '../../../services/http_services.dart';
@@ -129,6 +130,14 @@ class HomeRepository{
   Future<dynamic> placeOrder(body) async {
     var response = await _http.post(Api.placeOrder,body,contentType: true);
     OrderRes res  = OrderRes.fromMap(jsonDecode(response));
+    return res;
+  }
+
+  Future<dynamic> reviewList(id) async {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    var response = await _http.get("${Api.review}?action=list&pattern_id=$id&token=$token");
+    ReviewListRes res  = ReviewListRes.fromMap(jsonDecode(response));
     return res;
   }
 }
