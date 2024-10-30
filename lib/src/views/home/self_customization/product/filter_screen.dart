@@ -1,3 +1,4 @@
+import 'package:aadaiz/src/res/components/common_button.dart';
 import 'package:aadaiz/src/res/components/common_toast.dart';
 import 'package:aadaiz/src/utils/colors.dart';
 import 'package:aadaiz/src/utils/responsive.dart';
@@ -7,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../res/widgets/common_app_bar.dart';
 import '../../model/filter_model.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -17,7 +19,7 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  RangeValues _values = const RangeValues(135, 2000);
+  RangeValues _values = const RangeValues(40, 80);
 
   final List<String> categories = [
     'Women',
@@ -36,42 +38,32 @@ class _FilterScreenState extends State<FilterScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      await HomeController.to.getFilterList();
+    });
     category = HomeController
         .to
         .filterList
         .value[selectedCategory]
         .patternCategories!;
-    Future.delayed(const Duration(milliseconds: 500), () async {
-      await HomeController.to.getFilterList();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final RangeLabels labels =
-        RangeLabels(_values.start.toString(), _values.end.toString());
+    // final RangeLabels labels =
+    //     RangeLabels(_values.start.toString(), _values.end.toString());
 
     return Scaffold(
       backgroundColor: AppColor.backGroundColor,
-      appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          leading: InkWell(
-            onTap: () {
-              Get.back();
-            },
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: Get.height * 0.016),
-                child: Image.asset('assets/images/back.png')),
-          ),
-          title: Text('Filter',
-              style: GoogleFonts.dmSans(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.00.sp,
-                  color: AppColor.black)),
-          centerTitle: true,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false),
+      appBar: PreferredSize(
+        preferredSize: Size(
+          100,
+          5.5.hp,
+        ),
+        child: const CommonAppBar(
+          title: 'Filter',
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 3.0.hp),
@@ -153,9 +145,25 @@ class _FilterScreenState extends State<FilterScreen> {
                             children: [
                               Gap(2.0.hp),
                               SizedBox(
-                                height: Get.height * 0.83,
+                                height: Get.height * 0.7,
                                 width: Get.width * 0.7,
-                                child: ListView.builder(
+                                child: selectedCategory==4?
+                                RangeSlider(
+                                  values: _values,
+                                  max: 10000,
+                                  divisions: 20,
+                                  activeColor: AppColor.primary,
+                                  labels: RangeLabels(
+                                    _values.start.round().toString(),
+                                    _values.end.round().toString(),
+                                  ),
+                                  onChanged: (RangeValues values) {
+                                    setState(() {
+                                      _values = values;
+                                    });
+                                  },
+                                ):
+                                ListView.builder(
                                     physics:
                                         const AlwaysScrollableScrollPhysics(),
                                     shrinkWrap: true,
@@ -254,6 +262,11 @@ class _FilterScreenState extends State<FilterScreen> {
                                                       ),
                                                     );
                                                   }).toList()),
+
+
+
+
+                                          ///un used code
                                           // SizedBox(
                                           //   //color: Colors.red,
                                           //  // height: Get.height * 0.3,
@@ -349,6 +362,31 @@ class _FilterScreenState extends State<FilterScreen> {
                         ],
                       ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CommonButton(
+              text: 'Reset',
+              width: Get.width*0.4,
+              press: () {
+              },
+              loading: false,
+              borderRadius:0.0,
+              isBorder: true,
+            ),
+            CommonButton(
+              text: 'Apply',
+              width: Get.width*0.4,
+              press: () {
+              },
+              loading: false,
+              borderRadius:0.0,
+            ),
+          ],
         ),
       ),
     );

@@ -52,38 +52,6 @@ class _FilterDataWidgetState extends State<FilterDataWidget> {
               image: 'assets/images/l_h.png',
             ),
           ),
-          Obx(
-            () => SizedBox(
-              width: 5.0.wp,
-              child: HomeController.to.listIndex.value == 0
-                  ? InkWell(
-                      onTap: () {
-                        //   setState(() {
-                        HomeController.to.listIndex.value = 1;
-                        //    });
-                      },
-                      child: Image.asset(
-                        'assets/images/list.png',
-                        fit: BoxFit.contain,
-                        height: 2.5.hp,
-                        width: 2.0.wp,
-                      ),
-                    )
-                  : InkWell(
-                      onTap: () {
-                        // setState(() {
-                        HomeController.to.listIndex.value = 0;
-                        // });
-                      },
-                      child: Image.asset(
-                        'assets/images/grid.png',
-                        fit: BoxFit.fill,
-                        //  height: 10.0.hp,
-                        width: 5.0.wp,
-                      ),
-                    ),
-            ),
-          ),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz/src/views/consulting/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,9 @@ class _SelfCustomizeState extends State<SelfCustomize> {
   String? selectedPant;
   String? selectedSleeve;
   Color? selectedMaterial;
+  Color? selectedTop;
   int selectedIndex = 0;
+  int selectIndex = 0;
   String defaultSleeve = 'assets/self/db.png';
   String defaultTop = 'assets/self/dp.png';
   String defaultBottom = 'assets/self/ds.png';
@@ -75,6 +78,14 @@ class _SelfCustomizeState extends State<SelfCustomize> {
           "image": 'assets/self/t3.png',
           "name": "Full Top",
         },
+        {
+          "image": 'assets/self/4.png',
+          "name": "Full Top",
+        },
+        {
+          "image": 'assets/self/11.png',
+          "name": "Full Top",
+        },
       ]
     },
     {
@@ -99,15 +110,16 @@ class _SelfCustomizeState extends State<SelfCustomize> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: PreferredSize(
-      //   preferredSize: Size(
-      //     100,
-      //     8.0.hp,
-      //   ),
-      //   child: const CommonAppBar(
-      //     title: 'Coupon',
-      //   ),
-      // ),
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size(
+          100,
+          5.5.hp,
+        ),
+        child: const CommonAppBar(
+          title: 'Self Customize',
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -122,15 +134,10 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                       Stack(
                         alignment: Alignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: Get.width,
-                            height: Get.height * 0.75,
-                            // decoration: const BoxDecoration(
-                            //     //color: Colors.red,
-                            //     image: DecorationImage(
-                            //         image: ExactAssetImage(
-                            //   'assets/self/croquis.png',
-                            // ))),
+                            height: Get.height * 0.67,
+                            //color: Colors.cyan,
                           ),
                           selectedMaterial != null
                               ? Positioned(
@@ -138,53 +145,64 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                                   left: 0,
                                   child: Container(
                                     width: Get.width,
-                                    height: Get.height * 0.75,
+                                    height: Get.height * 0.165,
                                     color: selectedMaterial,
                                   ),
                                 )
                               : const SizedBox(),
-                          selectedPant != null ?
-                           Positioned(
-                                  top: 35,
+                          selectedTop != null
+                              ? Positioned(
+                                  top: Get.height*0.2,
+                                  left: 0,
+                                  child: Container(
+                                    width: Get.width,
+                                    height: Get.height * 0.16,
+                                    color: selectedTop,
+                                  ),
+                                )
+                              : const SizedBox(),
+                          selectedPant != null
+                              ? Positioned(
+                                  top: 0,
                                   left: 0,
                                   right: 0,
                                   child: Image.asset(
-                                  //  selectedPant != null ?
+                                    //  selectedPant != null ?
                                     selectedPant!,
-                                        //:defaultBottom,
+                                    //:defaultBottom,
                                     height: 560,
                                     fit: BoxFit.cover,
                                   ),
                                 )
-                        :  Container(),
-                          selectedShirt != null ?
-                           Positioned(
-                                  top: 35,
+                              : Container(),
+                          selectedSleeve != null
+                              ? Positioned(
+                                  top: 0,
                                   left: 0,
                                   right: 0,
                                   child: Image.asset(
-                                   // selectedShirt != null ?
-                                    selectedShirt!,
-                                       // :defaultTop,
-                                    height: 560,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                          : Container(),
-                          selectedSleeve != null ?
-                          Positioned(
-                                  top: 34.5,
-                                  left: 0,
-                                  right: 0,
-                                  child: Image.asset(
-                                   // selectedSleeve != null ?
+                                    // selectedSleeve != null ?
                                     selectedSleeve!,
-                                       // :defaultSleeve,
+                                    // :defaultSleeve,
                                     height: 560,
                                     fit: BoxFit.cover,
                                   ),
                                 )
-                          : Container(),
+                              : Container(),
+                          selectedShirt != null
+                              ? Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    // selectedShirt != null ?
+                                    selectedShirt!,
+                                    // :defaultTop,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ],
@@ -195,7 +213,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: SizedBox(
-                height: 50,
+                height: Get.height * 0.08,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: maxList[selectedIndex]['categories'].length,
@@ -206,9 +224,15 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
+                            selectIndex = index;
                             switch (selectedIndex) {
                               case 0:
-                                selectedMaterial = data['color'];
+                                if (index == 0) {
+                                } else if (index == 1) {
+                                  selectedMaterial = data['color'];
+                                } else {
+                                  selectedTop = data['color'];
+                                }
                               case 1:
                                 selectedPant = data['image'];
                               case 2:
@@ -239,15 +263,17 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                         child: selectedIndex != 0
                             ? Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
+                                    //   color: Colors.blue,
+                                    border: Border.all(
+                                        color: selectedIndex == index
+                                            ? Colors.teal
+                                            : Colors.grey),
                                     borderRadius: BorderRadius.circular(8)),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                      data['image'],
-                                      height: 40,
-                                      fit: BoxFit.cover,
-                                    )),
+                                child: Image.asset(
+                                  data['image'],
+                                  height: Get.height * 0.1,
+                                  fit: BoxFit.cover,
+                                ),
                               )
                             : Container(
                                 height: 50,

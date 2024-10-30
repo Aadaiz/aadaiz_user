@@ -1,15 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aadaiz/src/res/components/common_toast.dart';
+import 'package:aadaiz/src/utils/colors.dart';
+import 'package:aadaiz/src/utils/responsive.dart';
 import 'package:aadaiz/src/views/home/model/banner_model.dart';
 import 'package:aadaiz/src/views/home/model/banner_model.dart' as banner;
 import 'package:aadaiz/src/views/home/model/gender_model.dart';
 import 'package:aadaiz/src/views/home/model/gender_model.dart' as gender;
 import 'package:aadaiz/src/views/home/model/review_list_model.dart';
+import 'package:aadaiz/src/views/home/model/tailor_list_model.dart';
+import 'package:aadaiz/src/views/home/model/tailor_list_model.dart' as tailor;
 import 'package:aadaiz/src/views/home/repository/home_repository.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../order/coupon.dart';
@@ -23,10 +32,12 @@ import '../model/couponlist_model.dart';
 import '../model/couponlist_model.dart' as coupon;
 import '../model/favoritelist_model.dart';
 import '../model/filter_model.dart';
+import '../model/filter_model.dart' as filter;
 import '../model/my_order_model.dart';
 import '../model/my_order_model.dart' as order;
 import '../model/order.dart';
 import '../model/productlist_model.dart';
+
 
 class HomeController extends GetxController {
   static HomeController get to => Get.put(HomeController());
@@ -81,7 +92,6 @@ class HomeController extends GetxController {
   final currentPage = 1.obs;
   final totalPages = 1.obs;
   var productList = <PatternListDatum>[].obs;
-  var peopleMostViewList = <PatternListDatum>[].obs;
   var likeList = [].obs;
   var priceRange = ''.obs;
   var price = 'asc'.obs;
@@ -94,7 +104,6 @@ class HomeController extends GetxController {
     if (isRefresh) {
       currentPage.value = 1;
       productList.clear();
-      peopleMostViewList.clear();
       likeList.clear();
     //  keyword='';
     } else {
@@ -104,7 +113,6 @@ class HomeController extends GetxController {
         filterCategory:filterCategory ,keyword:search.text??'' , bannerId:bannerId);
     if (res.status == true) {
       totalPages.value = res.patternList!.lastPage;
-      peopleMostViewList.value = res.peopleMostViewlist!.data!;
       if (res.patternList!.data!.isNotEmpty) {
         if (isRefresh) {
           productList.value = res.patternList!.data!;
@@ -119,17 +127,44 @@ class HomeController extends GetxController {
     return true;
   }
 
+  final tailorCurrentPage = 1.obs;
+  final tailorTotalPages = 1.obs;
+  var tailorList = <tailor.Datum>[].obs;
+  var tailorLoading = false.obs;
+
+  Future<dynamic> getTailors({bool isRefresh = false,dynamic id, dynamic city}) async {
+    if (isRefresh) {
+      tailorLoading(true);
+      tailorCurrentPage.value = 1;
+      tailorList.clear();
+    } else {
+      tailorCurrentPage.value++;
+    }
+    TailorListRes res = await repo.getTailorList(id:id,page:tailorCurrentPage.value,city: city);
+    if (res.success == true) {
+      tailorTotalPages.value = res.data!.lastPage;
+      if (res.data!.data!.isNotEmpty) {
+        if (isRefresh) {
+          tailorLoading(false);
+          tailorList.value = res.data!.data!;
+        } else {
+          final newItems = res.data!.data ?? [];
+          tailorList.addAll(newItems);
+        }
+      }
+    } else {}
+    return true;
+  }
+
   var filterListLoading=false.obs;
-  var filterList =  <Category>[].obs;
+  var filterList =  <filter.Category>[].obs;
   
   Future<dynamic> getFilterList() async {
     filterListLoading(true);
     FilterRes res = await repo.getFilters();
-    print('dsafdad res ${res}');
     if(res.status==true){
       filterListLoading(false);
       filterList.value=res.categories!;
-      print('dsafdad${filterList.value}');
     }else{
       filterList.clear();
     }
@@ -210,7 +245,7 @@ TextEditingController country = TextEditingController();
       favoriteCurrentPage.value = 1;
       favoriteList.clear();
     } else {
-      favoriteTotalPages.value++;
+      favoriteCurrentPage.value++;
     }
     FavoriteListRes res = await repo.favoriteList();
     if(res.success==true){
@@ -231,11 +266,11 @@ TextEditingController country = TextEditingController();
     return true;
   }
 
-  Future<dynamic> addFavorite(id) async {
+  Future<dynamic> addFavorite(value,id) async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");
     Map body ={
-      'pattern_id': '$id',
+      '$value': '$id',
       'token': '$token',
     };
     AddFavoriteRes res = await repo.addFavorite(jsonEncode(body));
@@ -282,7 +317,6 @@ TextEditingController country = TextEditingController();
      dynamic price,
      dynamic gst,
      dynamic quantity,
-     dynamic size,
       dynamic cartId,
   }) async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
@@ -291,7 +325,6 @@ TextEditingController country = TextEditingController();
     Map body = {
       'pattern_id':'$id',
       'fabric_metre':'1',
-      'size':'$size',
       'quantity':'$quantity',
       'price':'$price',
       'gst_percentage':'$gst',
@@ -395,7 +428,7 @@ TextEditingController country = TextEditingController();
   RxList ratingCount = [].obs;
   var reviewLoading =false.obs;
 
- Future<dynamic> getReviewList({bool isRefresh= false,dynamic id}) async {
+ Future<dynamic> getReviewList({bool isRefresh= false,dynamic value,dynamic id}) async {
     if(isRefresh){
       reviewCurrentPage.value=1;
       ratingCount.clear();
@@ -404,7 +437,7 @@ TextEditingController country = TextEditingController();
       reviewCurrentPage.value++;
     }
     reviewLoading(true);
-    ReviewListRes res = await repo.reviewList(id);
+    ReviewListRes res = await repo.reviewList(value,id,reviewCurrentPage);
     if(res.status==true){
       reviewLoading(false);
       reviewTotalPages.value=res.data!.lastPage!;
@@ -431,5 +464,9 @@ TextEditingController country = TextEditingController();
 
 
 
+
+
+
   TextEditingController search = TextEditingController();
+
 }

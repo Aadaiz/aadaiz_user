@@ -1,25 +1,34 @@
 import 'package:aadaiz/src/utils/colors.dart';
 import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../utils/utils.dart';
+import 'controller/consulting_controller.dart';
 
 class Completed extends StatefulWidget {
 
-  final double screenWidth;
-  final double screenHeight;
 
-  const Completed({super.key, required this.screenWidth, required this.screenHeight});
+
+  const Completed({super.key,});
 
   @override
   State<Completed> createState() => _CompletedState();
 }
 
 class _CompletedState extends State<Completed> {
-
+  final RefreshController refreshController =
+  RefreshController(initialRefresh: true);
   @override
   Widget build(BuildContext context) {
 
+    final double screenHeight = Utils.getActivityScreenHeight(context);
+    final double screenWidth = Utils.getActivityScreenWidth(context);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,224 +42,293 @@ class _CompletedState extends State<Completed> {
               )
           ),
           SizedBox(
-              height: widget.screenHeight * 0.03
+              height: screenHeight * 0.03
           ),
-          Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: widget.screenWidth * 0.033,
-                  vertical: widget.screenHeight * 0.018
-              ),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppColor.scheduledContainerColor,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                      bottomRight: Radius.circular(18)
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: AppColor.containerShadowColor.withOpacity(0.3),
-                        blurRadius: 18
-                    )
-                  ]
-              ),
-            child: ExpansionTile(
-              expandedCrossAxisAlignment: CrossAxisAlignment.start,
-              shape: const Border(),
-                visualDensity: const VisualDensity(
-                    vertical: -3
-                ),
-                leading: Image.asset(
-                    'assets/images/consulting/designer_avatar.png',
-                    width: widget.screenWidth * 0.1
-                ),
-                title: Row(
-                    children: [
-                      Text(
-                          'Mr.Joe',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13.00.sp,
-                              color: AppColor.black
-                          )
-                      )
-                    ]
-                ),
-                subtitle: Row(
-                    children: [
-                      Text(
-                          'Fashion Designer',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 9.00.sp,
-                              color: AppColor.black
-                          )
-                      )
-                    ]
-                ),
-                children: [
-                  Divider(
-                      color: AppColor.black.withOpacity(0.2)
-                  ),
-                  Text(
-                      'Meeting Was Ended',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 10.00.sp,
-                          color: AppColor.black
-                      )
-                  ),
-                  SizedBox(
-                      height: widget.screenHeight * 0.01
-                  ),
-                  Row(
-                      children: [
-                        SvgPicture.asset(
-                            'assets/svg/ic_calendar.svg'
-                        ),
-                        SizedBox(
-                            width: widget.screenWidth * 0.018
-                        ),
-                        Text(
-                            'Mar 24, 2024',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10.00.sp,
-                                color: AppColor.black
+          SizedBox(
+            height: screenHeight * 0.72,
+            child: SmartRefresher(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: refreshController,
+              enablePullUp: true,
+              onRefresh: () async {
+                final result = await ConsultingController.to
+                    .getAppointments(isRefresh: true, status: 'completed');
+                if (result) {
+                  refreshController.refreshCompleted();
+                } else {
+                  refreshController.refreshFailed();
+                }
+              },
+              onLoading: () async {
+                final result = await ConsultingController.to
+                    .getAppointments(status: 'completed');
+                if (ConsultingController.to.currentPage.value >=
+                    ConsultingController.to.totalPages.value) {
+                  refreshController.loadNoData();
+                } else {
+                  if (result) {
+                    refreshController.loadComplete();
+                  } else {
+                    refreshController.loadFailed();
+                  }
+                }
+              },
+              child: Obx(()=>
+                ListView.builder(
+                    itemCount: ConsultingController.to.appointmentList.length,
+                    itemBuilder: (context, index){
+                      var data = ConsultingController.to.appointmentList[index];
+                      return Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.033,
+                          vertical: screenHeight * 0.018
+                      ),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColor.scheduledContainerColor,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(18),
+                              topRight: Radius.circular(18),
+                              bottomRight: Radius.circular(18)
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColor.containerShadowColor.withOpacity(0.3),
+                                blurRadius: 18
                             )
-                        ),
-                        const Spacer(),
-                        SvgPicture.asset(
-                            'assets/svg/ic_clock.svg'
-                        ),
-                        SizedBox(
-                            width: widget.screenWidth * 0.018
-                        ),
-                        Text(
-                            '11:00 AM',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10.00.sp,
-                                color: AppColor.black
-                            )
-                        ),
-                        const Spacer(),
-                        Text(
-                            '25 Min',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10.00.sp,
-                                color: AppColor.black
-                            )
-                        ),
-                        SizedBox(
-                          width: widget.screenWidth * 0.03
-                        )
-                      ]
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: widget.screenWidth * 0.03
-                    ),
-                    height: widget.screenHeight / 2.8,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        alignment: Alignment.bottomCenter,
-                          image: AssetImage(
-                            'assets/images/consulting/container_overlay.png'
-                          )
-                      )
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Image.asset(
-                          'assets/images/consulting/see_design.png',
-                        ),
-                        SizedBox(
-                          height: widget.screenHeight * 0.022
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          ]
+                      ),
+                      child: ExpansionTile(
+                          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                          shape: const Border(),
+                          visualDensity: const VisualDensity(
+                              vertical: -3
+                          ),
+                          leading: data.profileImage != null
+                              ? ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) =>
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColor.primary),
+                                    child: Icon(Icons.person,
+                                        color: AppColor.white,
+                                        size: screenWidth*0.1),
+                                  ),
+                              progressIndicatorBuilder:
+                                  (context, url, progress) =>
+                                  Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                              imageUrl: (data.profileImage),
+                            ),
+                          ) :
+                          Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColor.primary),
+                            child: Icon(Icons.person,
+                                color: AppColor.white,
+                                size: screenWidth*0.1),
+                          ),
+                          title: Row(
+                              children: [
+                                Text(
+                                    'Mr.${data.designerName??''}',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13.00.sp,
+                                        color: AppColor.black
+                                    )
+                                )
+                              ]
+                          ),
+                          subtitle: Row(
+                              children: [
+                                Text(
+                                    '${data.category??''}',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 9.00.sp,
+                                        color: AppColor.black
+                                    )
+                                )
+                              ]
+                          ),
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.primary,
-                                borderRadius: BorderRadius.circular(8)
-                              ),
-                              width: widget.screenWidth * 0.38,
-                              height: widget.screenHeight * 0.06,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                            Divider(
+                                color: AppColor.black.withOpacity(0.2)
+                            ),
+                            Text(
+                                'Meeting Was Ended',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.00.sp,
+                                    color: AppColor.black
+                                )
+                            ),
+                            SizedBox(
+                                height: screenHeight * 0.01
+                            ),
+                            Row(
                                 children: [
                                   SvgPicture.asset(
-                                    'assets/svg/ic_download.svg',
-                                    width: widget.screenWidth * 0.05
+                                      'assets/svg/ic_calendar.svg'
                                   ),
                                   SizedBox(
-                                    width: widget.screenWidth * 0.03
+                                      width: screenWidth * 0.018
                                   ),
                                   Text(
-                                      'Your design',
+                                      '${data.date??''}',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.dmSans(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 9.00.sp,
-                                          color: Colors.white
+                                          fontSize: 10.00.sp,
+                                          color: AppColor.black
                                       )
+                                  ),
+                                  const Spacer(),
+                                  SvgPicture.asset(
+                                      'assets/svg/ic_clock.svg'
+                                  ),
+                                  SizedBox(
+                                      width: screenWidth * 0.018
+                                  ),
+                                  Text(
+                                      '${data.time??''}',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.dmSans(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.00.sp,
+                                          color: AppColor.black
+                                      )
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                      '45 Min',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.dmSans(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 10.00.sp,
+                                          color: AppColor.black
+                                      )
+                                  ),
+                                  SizedBox(
+                                      width: screenWidth * 0.03
                                   )
                                 ]
-                              )
                             ),
                             Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: AppColor.black.withOpacity(0.2)
-                                  )
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.03
                                 ),
-                                width: widget.screenWidth * 0.38,
-                                height: widget.screenHeight * 0.06,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                height: screenHeight / 2.8,
+                                decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                        alignment: Alignment.bottomCenter,
+                                        image: AssetImage(
+                                            'assets/images/consulting/container_overlay.png'
+                                        )
+                                    )
+                                ),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      SvgPicture.asset(
-                                          'assets/svg/cube.svg',
-                                          width: widget.screenWidth * 0.05
+                                      Image.asset(
+                                        'assets/images/consulting/see_design.png',
                                       ),
                                       SizedBox(
-                                          width: widget.screenWidth * 0.03
+                                          height: screenHeight * 0.022
                                       ),
-                                      Text(
-                                          'Your design',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.dmSans(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 9.00.sp,
-                                              color: AppColor.black
-                                          )
+                                      Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                                decoration: BoxDecoration(
+                                                    color: AppColor.primary,
+                                                    borderRadius: BorderRadius.circular(8)
+                                                ),
+                                                width: screenWidth * 0.38,
+                                                height: screenHeight * 0.06,
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          'assets/svg/ic_download.svg',
+                                                          width: screenWidth * 0.05
+                                                      ),
+                                                      SizedBox(
+                                                          width: screenWidth * 0.03
+                                                      ),
+                                                      Text(
+                                                          'Your design',
+                                                          textAlign: TextAlign.center,
+                                                          style: GoogleFonts.dmSans(
+                                                              fontWeight: FontWeight.w400,
+                                                              fontSize: 9.00.sp,
+                                                              color: Colors.white
+                                                          )
+                                                      )
+                                                    ]
+                                                )
+                                            ),
+                                            Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(
+                                                        color: AppColor.black.withOpacity(0.2)
+                                                    )
+                                                ),
+                                                width: screenWidth * 0.38,
+                                                height: screenHeight * 0.06,
+                                                child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          'assets/svg/cube.svg',
+                                                          width: screenWidth * 0.05
+                                                      ),
+                                                      SizedBox(
+                                                          width: screenWidth * 0.03
+                                                      ),
+                                                      Text(
+                                                          'Your design',
+                                                          textAlign: TextAlign.center,
+                                                          style: GoogleFonts.dmSans(
+                                                              fontWeight: FontWeight.w400,
+                                                              fontSize: 9.00.sp,
+                                                              color: AppColor.black
+                                                          )
+                                                      )
+                                                    ]
+                                                )
+                                            )
+                                          ]
+                                      ),
+                                      SizedBox(
+                                          height: screenHeight * 0.02
                                       )
                                     ]
                                 )
                             )
                           ]
-                        ),
-                        SizedBox(
-                            height: widget.screenHeight * 0.02
-                        )
-                      ]
-                    )
-                  )
-                ]
-            )
+                      )
+                  );
+                }),
+              ),
+            ),
           )
         ]
     );

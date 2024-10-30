@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:aadaiz/src/views/material/model/category_list_model.dart'as material;
 import '../../../../utils/colors.dart';
 import '../../../../utils/utils.dart';
 import '../../model/productlist_model.dart';
 
 class PeopleViewedProductWidget extends StatelessWidget {
   const PeopleViewedProductWidget({super.key, required this.data, this.images, this.rating});
-final PatternListDatum data;
+final material.Datum data;
 final dynamic images;
 final dynamic rating;
   @override
@@ -32,7 +32,7 @@ final dynamic rating;
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(8)),
-                    child: data.imageUrl!=null||data.imageUrl!=''?
+                    child: data.image!=null||data.image!=''?
                     CachedNetworkImage(
                       fit: BoxFit.cover,
                       height: screenHeight * 0.27,
@@ -135,7 +135,7 @@ final dynamic rating;
                   )
               ),
               subtitle: Text(
-                  data.subTitle??'',
+                  data.subtitle??'',
                   style: GoogleFonts.dmSans(
                       fontSize: 10.00.sp,
                       fontWeight: FontWeight.w400,

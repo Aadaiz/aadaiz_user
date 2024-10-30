@@ -8,11 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'exceptions.dart';
 
 class HttpHelper {
-
-
-
-
-
   Future<dynamic> get(String url, {bool auth = false}) async {
 
     Map<String, String> hd = await getHeaders(auth);

@@ -96,7 +96,6 @@ class _WishlistState extends State<Wishlist> {
                                 final data = HomeController.to.favoriteList.value[index];
                                 final currentData =data!.patern;
                                 List images = data.patern!.imageUrl.split(',');
-                                List size = currentData!.sizes.split(',');
                                 double rating;
                                 if (data.patern!.rating is int) {
                                   rating = data.patern!.rating.toDouble();
@@ -255,7 +254,6 @@ class _WishlistState extends State<Wishlist> {
                                                 price: currentData.price,
                                                 gst: currentData.gstPercentage,
                                                 quantity: 1,
-                                                size: size[0],
                                               );
                                             },
                                             child: Container(

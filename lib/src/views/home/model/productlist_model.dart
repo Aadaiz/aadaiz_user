@@ -96,36 +96,47 @@ class PatternList {
   };
 }
 
+
 class PatternListDatum {
   dynamic id;
   dynamic pCatId;
+  dynamic filterCategoryId;
+  dynamic bannerId;
   dynamic title;
-  dynamic subTitle;
-  dynamic price;
-  dynamic imageUrl;
-  dynamic sizes;
   dynamic description;
+  dynamic imageUrl;
+  dynamic videoUrl;
+  dynamic specialCategory;
   dynamic rating;
   dynamic gstPercentage;
   dynamic length;
   dynamic breadth;
   dynamic height;
-  dynamic isLiked;
+  dynamic peopleView;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic startsFrom;
+  bool? isLiked;
 
   PatternListDatum({
     this.id,
     this.pCatId,
+    this.filterCategoryId,
+    this.bannerId,
     this.title,
-    this.subTitle,
-    this.price,
-    this.imageUrl,
-    this.sizes,
     this.description,
+    this.imageUrl,
+    this.videoUrl,
+    this.specialCategory,
     this.rating,
     this.gstPercentage,
     this.length,
     this.breadth,
     this.height,
+    this.peopleView,
+    this.createdAt,
+    this.updatedAt,
+    this.startsFrom,
     this.isLiked,
   });
 
@@ -136,34 +147,44 @@ class PatternListDatum {
   factory PatternListDatum.fromMap(Map<String, dynamic> json) => PatternListDatum(
     id: json["id"]??null,
     pCatId: json["p_cat_id"]??null,
+    filterCategoryId: json["filter_category_id"]??null,
+    bannerId: json["banner_id"]??null,
     title: json["title"]??null,
-    subTitle: json["sub_title"]??null,
-    price: json["price"]??null,
-    imageUrl: json["image_url"]??null,
-    sizes: json["sizes"]??null,
     description: json["description"]??null,
+    imageUrl: json["image_url"]??null,
+    videoUrl: json["video_url"]??null,
+    specialCategory: json["special_category"]??null,
     rating: json["rating"]??null,
     gstPercentage: json["gst_percentage"]??null,
     length: json["length"]??null,
     breadth: json["breadth"]??null,
     height: json["height"]??null,
+    peopleView: json["people_view"]??null,
+    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    startsFrom: json["starts_from"]??null,
     isLiked: json["isLiked"]??null,
   );
 
   Map<String, dynamic> toMap() => {
     "id": id??null,
     "p_cat_id": pCatId??null,
+    "filter_category_id": filterCategoryId??null,
+    "banner_id": bannerId??null,
     "title": title??null,
-    "sub_title": subTitle??null,
-    "price": price??null,
-    "image_url": imageUrl??null,
-    "sizes": sizes??null,
     "description": description??null,
+    "image_url": imageUrl??null,
+    "video_url": videoUrl??null,
+    "special_category": specialCategory??null,
     "rating": rating??null,
     "gst_percentage": gstPercentage??null,
     "length": length??null,
     "breadth": breadth??null,
     "height": height??null,
+    "people_view": peopleView??null,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "starts_from": startsFrom??null,
     "isLiked": isLiked??null,
   };
 }

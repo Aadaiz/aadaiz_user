@@ -95,11 +95,11 @@ class _SavedAddressState extends State<SavedAddress> {
                           InkWell(
                             onTap: (){
 
-                              Navigator.push(context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>  NewAddress(data:data,isEdit:true)
-                                  )
-                              );
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(
+                              //         builder: (BuildContext context) =>  NewAddress(data:data,isEdit:true)
+                              //     )
+                              // );
                             },
                             child: Text(
                                 'Edit',
@@ -192,11 +192,11 @@ class _SavedAddressState extends State<SavedAddress> {
           foregroundColor: Colors.transparent,
           onPressed: (){
 
-            Navigator.push(context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => const NewAddress()
-                )
-            );
+            //Navigator.push(context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => const NewAddress()
+            //     )
+            // );
 
           },
         child: SvgPicture.asset(

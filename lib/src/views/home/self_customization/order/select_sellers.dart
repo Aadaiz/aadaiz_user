@@ -6,6 +6,8 @@ import 'package:aadaiz/src/views/home/self_customization/order/product_customiza
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../res/widgets/common_app_bar.dart';
+
 class SelectSellers extends StatefulWidget {
   const SelectSellers({super.key});
 
@@ -35,30 +37,15 @@ class _SelectSellersState extends State<SelectSellers> {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        leading: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.016
+        appBar: PreferredSize(
+          preferredSize: Size(
+            100,
+            5.5.hp,
           ),
-          child: Image.asset(
-            'assets/images/back.png'
-          )
+          child: const CommonAppBar(
+            title: 'Select Sellers',
+          ),
         ),
-        title: Text(
-          'Select Sellers',
-          style: GoogleFonts.dmSans(
-            fontWeight: FontWeight.w400,
-            fontSize: 14.00.sp,
-            color: AppColor.black
-          )
-        ),
-        centerTitle: true,
-        elevation: 2,
-        shadowColor: AppColor.black,
-        forceMaterialTransparency: false
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -4,8 +4,11 @@ import 'package:aadaiz/src/utils/utils.dart';
 import 'package:aadaiz/src/views/consulting/appointment.dart';
 import 'package:aadaiz/src/views/consulting/completed.dart';
 import 'package:aadaiz/src/views/consulting/scheduled.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../res/widgets/common_app_bar.dart';
 
 class OnlineConsult extends StatefulWidget {
   const OnlineConsult({super.key});
@@ -38,31 +41,16 @@ class _OnlineConsultState extends State<OnlineConsult> with SingleTickerProvider
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            leading: Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.016
-                ),
-                child: Image.asset(
-                    'assets/images/back.png'
-                )
+        backgroundColor: AppColor.white,
+          appBar: PreferredSize(
+            preferredSize: Size(
+              100,
+              5.5.hp,
             ),
-            title: Text(
-                'Online Consult',
-                style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.00.sp,
-                    color: AppColor.black
-                )
+            child: const CommonAppBar(
+              title: 'Online Consult',
             ),
-            elevation: 2,
-            centerTitle: true,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false
-        ),
+          ),
         body: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: screenWidth * 0.022
@@ -118,21 +106,13 @@ class _OnlineConsultState extends State<OnlineConsult> with SingleTickerProvider
                 )
               ),
               SizedBox(
-                height: screenHeight / 1.5,
+                height: screenHeight*0.78,
                 child: TabBarView(
                     controller: _tabController,
-                    children: <Widget>[
-                      Appointment(
-                        screenHeight: screenHeight,
-                        screenWidth: screenWidth
-                      ),
-                      Scheduled(
-                          screenHeight: screenHeight,
-                          screenWidth: screenWidth
-                      ),
+                    children: const <Widget>[
+                      Appointment(),
+                      Scheduled(),
                       Completed(
-                          screenHeight: screenHeight,
-                          screenWidth: screenWidth
                       )
                     ]
                 )

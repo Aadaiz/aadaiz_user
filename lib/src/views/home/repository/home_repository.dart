@@ -17,6 +17,8 @@ import '../model/addresslist_model.dart';
 import '../model/category_model.dart';
 import '../model/gender_model.dart';
 import '../model/order.dart';
+import '../../profile/model/profile_model.dart';
+import '../model/tailor_list_model.dart';
 
 class HomeRepository{
   static final HttpHelper _http = HttpHelper();
@@ -55,6 +57,14 @@ class HomeRepository{
     return res;
   }
 
+  Future<dynamic> getTailorList({id, page, dynamic city}) async {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    var response = await _http.get("${Api.tailorList}?p_sub_cat_id=$id&city=$city&token=$token&page=$page"
+        "&token=$token&page=$page");
+    TailorListRes res  = TailorListRes.fromMap(jsonDecode(response));
+    return res;
+  }
 
   Future<dynamic> getFilters() async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
@@ -133,12 +143,13 @@ class HomeRepository{
     return res;
   }
 
-  Future<dynamic> reviewList(id) async {
+  Future<dynamic> reviewList(value,id,page) async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");
-    var response = await _http.get("${Api.review}?action=list&pattern_id=$id&token=$token");
+    var response = await _http.get("${Api.review}?action=list&$value=$id&token=$token&page=$page");
     ReviewListRes res  = ReviewListRes.fromMap(jsonDecode(response));
     return res;
   }
+
 }
 

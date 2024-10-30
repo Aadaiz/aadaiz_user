@@ -114,7 +114,7 @@ class Review {
   dynamic rating;
   dynamic comment;
   dynamic images;
-  DateTime? date;
+  dynamic date;
   dynamic time;
   User? user;
 
@@ -134,24 +134,24 @@ class Review {
   String toJson() => json.encode(toMap());
 
   factory Review.fromMap(Map<String, dynamic> json) => Review(
-    id: json["id"],
-    userId: json["user_id"],
-    rating: json["rating"],
-    comment: json["comment"],
+    id: json["id"]??null,
+    userId: json["user_id"]??null,
+    rating: json["rating"]??null,
+    comment: json["comment"]??null,
     images: json["images"],
-    date: json["date"] == null ? null : DateTime.parse(json["date"]),
-    time: json["time"],
+    date: json["date"]??null,
+    time: json["time"]??null,
     user: json["user"] == null ? null : User.fromMap(json["user"]),
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "user_id": userId,
-    "rating": rating,
-    "comment": comment,
-    "images": images,
-    "date": "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
-    "time": time,
+    "id": id??null,
+    "user_id": userId??null,
+    "rating": rating??null,
+    "comment": comment??null,
+    "images": images??null,
+    "date": date??null,
+    "time": time??null,
     "user": user?.toMap(),
   };
 }
@@ -159,10 +159,12 @@ class Review {
 class User {
   dynamic id;
   dynamic username;
+  dynamic profile;
 
   User({
     this.id,
     this.username,
+    this.profile,
   });
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
@@ -170,13 +172,15 @@ class User {
   String toJson() => json.encode(toMap());
 
   factory User.fromMap(Map<String, dynamic> json) => User(
-    id: json["id"],
-    username: json["username"],
+    id: json["id"]??null,
+    username: json["username"]??null,
+    profile: json["profile"]??null,
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "username": username,
+    "id": id??null,
+    "username": username??null,
+    "profile": profile??null,
   };
 }
 
