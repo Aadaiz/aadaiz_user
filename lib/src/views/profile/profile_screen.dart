@@ -70,6 +70,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const CommonLoading():
              Column(
               children: [
+
+
+
+
+
+
+
+
                 Center(
                     child: Stack(
                         children: <Widget>[
