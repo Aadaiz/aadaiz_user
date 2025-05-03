@@ -1,6 +1,6 @@
-import 'package:aadaiz/src/res/widgets/common_app_bar.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

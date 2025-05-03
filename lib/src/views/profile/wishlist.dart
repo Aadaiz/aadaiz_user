@@ -1,6 +1,6 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -95,15 +95,20 @@ class _WishlistState extends State<Wishlist> {
                               itemBuilder: (context, index) {
                                 final data = HomeController.to.favoriteList.value[index];
                                 final currentData =data!.patern;
-                                List images = data.patern!.imageUrl.split(',');
-                                double rating;
-                                if (data.patern!.rating is int) {
-                                  rating = data.patern!.rating.toDouble();
-                                } else if (data.patern! is double) {
-                                  rating = data.patern!.rating;
-                                } else {
-                                  rating = 1.0;
+                                List images =[];
+                                double rating=0.0;
+                                if(data.patern!=null){
+                                  images = data.patern!.imageUrl.split(',');
+                                  if (data.patern!.rating is int) {
+                                    rating = data.patern!.rating.toDouble();
+                                  } else if (data.patern! is double) {
+                                    rating = data.patern!.rating;
+                                  } else {
+                                    rating = 1.0;
+                                  }
                                 }
+
+
                                 return Padding(
                                     padding:
                                         EdgeInsets.only(right: screenWidth * 0.016),

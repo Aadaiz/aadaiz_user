@@ -1,12 +1,12 @@
 import 'dart:ffi';
 
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz/src/views/material/add_measurement.dart';
-import 'package:aadaiz/src/views/material/controller/material_controller.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
+import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +15,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group_button/group_button.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:aadaiz/src/views/material/model/category_list_model.dart'
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'
     as material;
 
 import '../home/self_customization/order/product_customization.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +17,12 @@ class ProfileController extends GetxController{
   static ProfileController get to => Get.put(ProfileController());
   var repo = ProfileRepository();
 
-
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    getProfile();
+  }
   var profileLoading = false.obs;
   var profileData= profile.User().obs;
 
@@ -28,6 +33,8 @@ class ProfileController extends GetxController{
       profileLoading(false);
       profileData.value=res.user!;
       profileName.text = res.user!.username??'';
+      mobile.text = res.user!.mobileNumber??'';
+      email.text = res.user!.email??'';
     }else{
     }
 
@@ -45,6 +52,7 @@ class ProfileController extends GetxController{
     ProfileRes res = await repo.updateProfile(jsonEncode(body));
     if(res.status==true){
       profileLoading(false);
+      getProfile();
     }
 
   }
@@ -55,8 +63,6 @@ class ProfileController extends GetxController{
  Future<dynamic> uploadImage() async {
     List upload = [];
     uploadImages.value = '';
-      Get.back();
-      Get.back();
       addPostLoading(true);
     for (var i = 0; i < selectedImages.length; i++) {
       try {
@@ -64,7 +70,6 @@ class ProfileController extends GetxController{
         await repo.uploadImage(image: selectedImages[i].path);
         if (response != null) {
           upload.add(response.url);
-          print('uploadimages $upload');
         } else {}
       } catch (e) {
         rethrow;
@@ -76,6 +81,8 @@ class ProfileController extends GetxController{
   }
 
   TextEditingController profileName = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController mobile = TextEditingController();
 
 
 

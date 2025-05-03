@@ -1,4 +1,4 @@
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +25,7 @@ class CommonAppBar extends StatelessWidget {
           },
           child: Padding(
               padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
-              child: Image.asset('assets/images/back.png')),
+              child: Image.asset('assets/images/back.png', height: 15.0.hp, width: 5.0.wp,)),
         ),
         title: Text(title,
             style: GoogleFonts.dmSans(

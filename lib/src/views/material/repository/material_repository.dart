@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aadaiz/src/views/material/model/category_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/api_service.dart';

@@ -1,4 +1,4 @@
-# aadaiz
+# aadaiz_customer_crm
 
 A new Flutter project.
 

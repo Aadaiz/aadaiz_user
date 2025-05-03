@@ -1,14 +1,12 @@
 import 'dart:developer';
 
-import 'package:aadaiz/src/res/components/common_button.dart';
-import 'package:aadaiz/src/res/components/common_textfield.dart';
-import 'package:aadaiz/src/res/components/form_validation.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/routes/routes_name.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_textfield.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,7 +1,9 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentHistory extends StatefulWidget {
@@ -35,16 +37,20 @@ class _PaymentHistoryState extends State<PaymentHistory> {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
+        backgroundColor: AppColor.white,
       appBar: AppBar(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          leading: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.016
-              ),
-              child: Image.asset(
-                  'assets/images/back.png'
-              )
+          leading: InkWell(
+            onTap: ()=> Get.back(),
+            child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.016
+                ),
+                child: Image.asset(
+                    'assets/images/back.png'
+                )
+            ),
           ),
           title: Text(
               'Payment History',

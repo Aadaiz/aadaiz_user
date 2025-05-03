@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/routes/routes_name.dart';
-import 'package:aadaiz/src/views/auth/controller/auth_controller.dart';
-import 'package:aadaiz/src/views/dashboard/dashboard.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/controller/auth_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

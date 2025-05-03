@@ -1,11 +1,10 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz/src/views/my_orders/active_orders.dart';
-import 'package:aadaiz/src/views/my_orders/cancelled_orders.dart';
-import 'package:aadaiz/src/views/my_orders/completed_orders.dart';
-import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/active_orders.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/cancelled_orders.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/completed_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -117,14 +116,14 @@ class _MyOrderScreenState extends State<MyOrderScreen> with SingleTickerProvider
                   )
                 ]
             ),
-            AutoScaleTabBarView(
-                controller: _tabController,
-                children: const <Widget>[
-                  ActiveOrders(),
-                  CompletedOrders(),
-                  CancelledOrders()
-                ]
-            )
+            // AutoScaleTabBarView(
+            //     controller: _tabController,
+            //     children: const <Widget>[
+            //       ActiveOrders(),
+            //       CompletedOrders(),
+            //       CancelledOrders()
+            //     ]
+            // )
           ]
         )
       )

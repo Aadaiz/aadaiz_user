@@ -1,22 +1,16 @@
-import 'package:aadaiz/src/res/components/common_button.dart';
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/consulting/controller/consulting_controller.dart';
-import 'package:aadaiz/src/views/consulting/models/consulting_designer_model.dart';
-import 'package:aadaiz/src/views/consulting/review_designer.dart';
-import 'package:aadaiz/src/views/review/review_list.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_designer_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/review_designer.dart';
+import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_timeline_calendar/timeline/model/calendar_options.dart';
-import 'package:flutter_timeline_calendar/timeline/model/day_options.dart';
-import 'package:flutter_timeline_calendar/timeline/model/headers_options.dart';
-import 'package:flutter_timeline_calendar/timeline/utils/calendar_types.dart';
-import 'package:flutter_timeline_calendar/timeline/widget/timeline_calendar.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -31,8 +25,6 @@ final Designer data;
 
 class _DesignerDetailState extends State<DesignerDetail> {
 
-  final List<String> _duration = ["1", "2"];
-  final String _selectedValue = "1";
 
   String date = '';
   String time = '';
@@ -243,36 +235,37 @@ class _DesignerDetailState extends State<DesignerDetail> {
               SizedBox(
                   height: screenHeight * 0.022
               ),
-              TimelineCalendar(
-                calendarType: CalendarType.GREGORIAN,
-                calendarLanguage: "en",
-                calendarOptions: CalendarOptions(
-                  viewType: ViewType.DAILY,
-                  toggleViewType: true,
-                  headerMonthElevation: 10,
-                  headerMonthShadowColor: AppColor.white,
-                  headerMonthBackColor: Colors.transparent,
-                ),
-                dayOptions: DayOptions(
-                    compactMode: true,
-                    selectedBackgroundColor:  AppColor.primary,
-                    weekDaySelectedColor: AppColor.white,
-                    disableDaysBeforeNow: true),
-                headerOptions: HeaderOptions(
-                    weekDayStringType: WeekDayStringTypes.SHORT,
-                    monthStringType: MonthStringTypes.FULL,
-                    backgroundColor: AppColor.primary,
-                    headerTextColor: AppColor.white,
-                    calendarIconColor: AppColor.white,
-                    resetDateColor: AppColor.white,
-                    navigationColor: AppColor.white,
-                ),
-                onChangeDateTime: (datetime) {
-                  ConsultingController.to.getAvailableSlots(widget.data.id, datetime.getDate());
-                  date =datetime.getDate();
-
-                },
-              ),
+              ///Add package while updating next verion
+              // TimelineCalendar(
+              //   calendarType: CalendarType.GREGORIAN,
+              //   calendarLanguage: "en",
+              //   calendarOptions: CalendarOptions(
+              //     viewType: ViewType.DAILY,
+              //     toggleViewType: true,
+              //     headerMonthElevation: 10,
+              //     headerMonthShadowColor: AppColor.white,
+              //     headerMonthBackColor: Colors.transparent,
+              //   ),
+              //   dayOptions: DayOptions(
+              //       compactMode: true,
+              //       selectedBackgroundColor:  AppColor.primary,
+              //       weekDaySelectedColor: AppColor.white,
+              //       disableDaysBeforeNow: true),
+              //   headerOptions: HeaderOptions(
+              //       weekDayStringType: WeekDayStringTypes.SHORT,
+              //       monthStringType: MonthStringTypes.FULL,
+              //       backgroundColor: AppColor.primary,
+              //       headerTextColor: AppColor.white,
+              //       calendarIconColor: AppColor.white,
+              //       resetDateColor: AppColor.white,
+              //       navigationColor: AppColor.white,
+              //   ),
+              //   onChangeDateTime: (datetime) {
+              //     ConsultingController.to.getAvailableSlots(widget.data.id, datetime.getDate());
+              //     date =datetime.getDate();
+              //
+              //   },
+              // ),
               SizedBox(
                   height: screenHeight * 0.03
               ),
@@ -290,31 +283,32 @@ class _DesignerDetailState extends State<DesignerDetail> {
               Obx(()=>
               ConsultingController.to.availableSlotLoading.value?
                  const CommonLoading():
-                 GroupButton(
-                    buttons: ConsultingController.to.availableSlotsList.value,
-                    onSelected: (dynamic val, int index, bool isSelected){
-                      time = val;
-                    },
-                    options: GroupButtonOptions(
-                        buttonWidth: screenWidth * 0.2,
-                        crossGroupAlignment: CrossGroupAlignment.start,
-                        borderRadius: BorderRadius.circular(8),
-                        selectedBorderColor: AppColor.primary,
-                        unselectedBorderColor: AppColor.hintTextColor,
-                        selectedColor: AppColor.primary,
-                        unselectedColor: Colors.white,
-                        selectedTextStyle: GoogleFonts.dmSans(
-                          fontSize: 10.00.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.white
-                        ),
-                        unselectedTextStyle: GoogleFonts.dmSans(
-                            fontSize: 10.00.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColor.black
-                        )
-                    )
-                ),
+                  SizedBox()
+                //  GroupButton(
+                //     buttons: ConsultingController.to.availableSlotsList.value,
+                //     onSelected: (dynamic val, int index, bool isSelected){
+                //       time = val;
+                //     },
+                //     options: GroupButtonOptions(
+                //         buttonWidth: screenWidth * 0.2,
+                //         crossGroupAlignment: CrossGroupAlignment.start,
+                //         borderRadius: BorderRadius.circular(8),
+                //         selectedBorderColor: AppColor.primary,
+                //         unselectedBorderColor: AppColor.hintTextColor,
+                //         selectedColor: AppColor.primary,
+                //         unselectedColor: Colors.white,
+                //         selectedTextStyle: GoogleFonts.dmSans(
+                //           fontSize: 10.00.sp,
+                //             fontWeight: FontWeight.w400,
+                //             color: Colors.white
+                //         ),
+                //         unselectedTextStyle: GoogleFonts.dmSans(
+                //             fontSize: 10.00.sp,
+                //             fontWeight: FontWeight.w400,
+                //             color: AppColor.black
+                //         )
+                //     )
+                // ),
               ),
               SizedBox(
                   height: screenHeight * 0.022

@@ -1,4 +1,4 @@
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';

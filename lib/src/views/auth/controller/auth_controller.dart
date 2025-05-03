@@ -1,20 +1,19 @@
 import 'dart:convert';
 
-import 'package:aadaiz/src/views/auth/model/signup_model.dart';
-import 'package:aadaiz/src/views/auth/model/verify_otp_model.dart';
-import 'package:aadaiz/src/views/auth/repository/auth_repository.dart';
-import 'package:aadaiz/src/views/auth/ui/otp_screen.dart';
-import 'package:aadaiz/src/views/auth/ui/register_screen.dart';
-import 'package:aadaiz/src/views/dashboard/controller.dart';
-import 'package:aadaiz/src/views/home/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/model/signup_model.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/model/verify_otp_model.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/repository/auth_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/ui/otp_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../res/components/common_toast.dart';
+import '../../customer_crm/screens/customer_dashboard.dart';
 import '../../dashboard/dashboard.dart';
 
 class AuthController extends GetxController{
@@ -76,7 +75,7 @@ class AuthController extends GetxController{
       await prefs.setString('token', '${res.data!.token}');
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-        const Dashboard(), // Navigate to home if logged in
+         CustomerDashboard(), // Navigate to home if logged in
       ));
 
     }else{
@@ -127,7 +126,7 @@ var loginLoading = false.obs;
       await prefs.setString('token', '${res.data!.token}');
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-        const Dashboard(), // Navigate to home if logged in
+         CustomerDashboard(), // Navigate to home if logged in
       ));
 
     }else{
@@ -148,7 +147,7 @@ var loginLoading = false.obs;
     if (isLoggedIn) {
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-        const Dashboard(), // Navigate to home if logged in
+         CustomerDashboard(), // Navigate to home if logged in
       ));
     } else{
       await  Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -166,9 +165,9 @@ var loginLoading = false.obs;
     //await _signOut();
     await Get.offAll(()=> const RegisterScreen());
   }
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+//  final GoogleSignIn googleSignIn = GoogleSignIn();
   Future<void> _signOut() async {
-    await googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
+   // await googleSignIn.signOut();
+    //await FirebaseAuth.instance.signOut();
   }
 }

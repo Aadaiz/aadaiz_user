@@ -1,5 +1,5 @@
-import 'package:aadaiz/src/views/material/model/category_list_model.dart';
-import 'package:aadaiz/src/views/material/model/category_list_model.dart'as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'as material;
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

@@ -1,10 +1,10 @@
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz/src/views/my_orders/order_card.dart';
-import 'package:aadaiz/src/views/my_orders/order_tracking/track_order.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/order_card.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/order_tracking/track_order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,7 +67,9 @@ class _ActiveOrdersState extends State<ActiveOrders> {
           }
         },
         child: Obx(
-          () => ListView.builder(
+          () => HomeController.to.myOrderList.isEmpty?
+          const CommonEmpty(title: 'Active Orders'):
+              ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(

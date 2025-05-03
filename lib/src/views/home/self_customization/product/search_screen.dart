@@ -1,6 +1,6 @@
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/views/home/self_customization/product/product_list_screen.dart';
-import 'package:aadaiz/src/views/home/self_customization/product/product_widget.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/product_list_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 

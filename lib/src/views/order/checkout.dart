@@ -1,10 +1,9 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/order/coupon.dart';
-import 'package:aadaiz/src/views/order/payment_success.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/order/coupon.dart';
+import 'package:aadaiz_customer_crm/src/views/order/payment_success.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -345,31 +344,31 @@ class _CheckoutState extends State<Checkout> {
                     elevation: 3,
                     child: ListTile(
                         title: Row(children: [
-                          DottedBorder(
-                              color: AppColor.dottedBorderColor,
-                              borderType: BorderType.RRect,
-                              radius: const Radius.circular(8),
-                              padding: EdgeInsets.zero,
-                              child: SizedBox(
-                                  width: screenWidth / 1.6,
-                                  height: screenHeight * 0.055,
-                                  child: TextFormField(
-                                    controller: coupon,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          prefixIcon: Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical:
-                                                      screenHeight * 0.01),
-                                              child: Image.asset(
-                                                  'assets/images/pre_coupon.png')),
-                                          hintText: 'Enter coupon code',
-                                          hintStyle: GoogleFonts.dmSans(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 10.00.sp,
-                                              color: AppColor.borderGrey))))),
+                          // DottedBorder(
+                          //     color: AppColor.dottedBorderColor,
+                          //     borderType: BorderType.RRect,
+                          //     radius: const Radius.circular(8),
+                          //     padding: EdgeInsets.zero,
+                          //     child: SizedBox(
+                          //         width: screenWidth / 1.6,
+                          //         height: screenHeight * 0.055,
+                          //         child: TextFormField(
+                          //           controller: coupon,
+                          //             decoration: InputDecoration(
+                          //                 border: InputBorder.none,
+                          //                 enabledBorder: InputBorder.none,
+                          //                 focusedBorder: InputBorder.none,
+                          //                 prefixIcon: Padding(
+                          //                     padding: EdgeInsets.symmetric(
+                          //                         vertical:
+                          //                             screenHeight * 0.01),
+                          //                     child: Image.asset(
+                          //                         'assets/images/pre_coupon.png')),
+                          //                 hintText: 'Enter coupon code',
+                          //                 hintStyle: GoogleFonts.dmSans(
+                          //                     fontWeight: FontWeight.w400,
+                          //                     fontSize: 10.00.sp,
+                          //                     color: AppColor.borderGrey))))),
                           InkWell(
                             onTap: () async{
                               await HomeController.to.getCartList(apply: 'apply',code: coupon.text);

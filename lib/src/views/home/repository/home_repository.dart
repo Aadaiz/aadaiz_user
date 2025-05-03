@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'package:aadaiz/src/views/home/model/add_cart_model.dart';
-import 'package:aadaiz/src/views/home/model/add_favorite_model.dart';
-import 'package:aadaiz/src/views/home/model/banner_model.dart';
-import 'package:aadaiz/src/views/home/model/cartlist_model.dart';
-import 'package:aadaiz/src/views/home/model/couponlist_model.dart';
-import 'package:aadaiz/src/views/home/model/favoritelist_model.dart';
-import 'package:aadaiz/src/views/home/model/filter_model.dart';
-import 'package:aadaiz/src/views/home/model/my_order_model.dart';
-import 'package:aadaiz/src/views/home/model/productlist_model.dart';
-import 'package:aadaiz/src/views/home/model/review_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_cart_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_favorite_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/banner_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/cartlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/couponlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/favoritelist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/filter_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/my_order_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/review_list_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/api_service.dart';
 import '../../../services/http_services.dart';
@@ -101,8 +101,6 @@ class HomeRepository{
   }
 
   Future<dynamic> cartList(body) async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
     var response = await _http.post(Api.cart,body,contentType: true);
     CartListRes res  = CartListRes.fromMap(jsonDecode(response));
     return res;

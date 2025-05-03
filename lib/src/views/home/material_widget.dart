@@ -1,8 +1,8 @@
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/views/material/controller/material_controller.dart';
-import 'package:aadaiz/src/views/material/material_screen.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

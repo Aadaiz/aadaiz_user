@@ -1,9 +1,9 @@
-import 'package:aadaiz/src/utils/routes/routes_name.dart';
-import 'package:aadaiz/src/views/auth/ui/login.dart';
-import 'package:aadaiz/src/views/auth/ui/otp_screen.dart';
-import 'package:aadaiz/src/views/auth/ui/register_screen.dart';
-import 'package:aadaiz/src/views/dashboard/splash_screen.dart';
-import 'package:aadaiz/src/views/dashboard/welcome_screen.dart';
+import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/ui/login.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/ui/otp_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/splash_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 class Routes{

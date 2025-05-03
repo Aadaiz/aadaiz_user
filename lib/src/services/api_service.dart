@@ -39,4 +39,8 @@ class Api {
   static const availableSlots = AppConfig.baseUrl + "onlineconsult/available_slots";
   static const createAppointment = AppConfig.baseUrl + "onlineconsult/appointments_create";
   static const consultingAppointment = AppConfig.baseUrl + "onlineconsult/appointments_list";
+
+  ///crm
+  static const crmOrders = AppConfig.baseUrl + "crm/customerOrders";
+  static const notification = AppConfig.baseUrl + "selfcustomize/notification";
 }

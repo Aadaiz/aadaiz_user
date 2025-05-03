@@ -1,13 +1,12 @@
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/res/widgets/common_app_bar.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ticket_widget/ticket_widget.dart';
 
 import '../home/controller/home_controller.dart';
 
@@ -67,64 +66,66 @@ class _CouponState extends State<Coupon> {
                         itemCount: HomeController.to.couponList.value.length,
                         itemBuilder: (context, index) {
                           var data = HomeController.to.couponList.value[index];
-                          return TicketWidget(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: screenHeight * 0.018),
-                              width: screenWidth,
-                              height: screenHeight * 0.18,
-                              color: AppColor.couponBorder.withOpacity(0.2),
-                              isCornerRounded: true,
-                              child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ListTile(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: screenWidth * 0.1,
-                                            vertical: 0),
-                                        title: Text(data.title ?? '',
-                                            style: GoogleFonts.dmSans(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 12.00.sp,
-                                                color: AppColor.textColor)),
-                                        subtitle: Text(data.description ?? '',
-                                            style: GoogleFonts.dmSans(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 8.00.sp,
-                                                color: AppColor.primary))),
-                                    Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: screenWidth * 0.1),
-                                        child: Row(children: [
-                                          Image.asset(
-                                              'assets/images/discount.png',
-                                              height: screenHeight * 0.03),
-                                          SizedBox(width: screenWidth * 0.03),
-                                          Text(data.couponCode ?? '',
-                                              style: GoogleFonts.dmSans(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 12.00.sp,
-                                                  color: AppColor.textColor))
-                                        ])),
-                                    InkWell(
-                                      onTap:(){
-                                        widget.callBack(data.couponCode??'');
-                                        Get.back();
-                                      },
-                                      child: Container(
-                                          margin: EdgeInsets.only(
-                                              top: screenHeight * 0.01),
-                                          height: screenHeight * 0.045,
-                                          color: AppColor.primary,
-                                          width: double.infinity,
-                                          alignment: Alignment.center,
-                                          child: Text('Copy Code',
-                                              style: GoogleFonts.dmSans(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12.00.sp,
-                                                  color: Colors.white))),
-                                    )
-                                  ]));
+
+                          return  Text('test');
+                            // TicketWidget(
+                            //   margin: EdgeInsets.symmetric(
+                            //       vertical: screenHeight * 0.018),
+                            //   width: screenWidth,
+                            //   height: screenHeight * 0.18,
+                            //   color: AppColor.couponBorder.withOpacity(0.2),
+                            //   isCornerRounded: true,
+                            //   child: Column(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         ListTile(
+                            //             contentPadding: EdgeInsets.symmetric(
+                            //                 horizontal: screenWidth * 0.1,
+                            //                 vertical: 0),
+                            //             title: Text(data.title ?? '',
+                            //                 style: GoogleFonts.dmSans(
+                            //                     fontWeight: FontWeight.w700,
+                            //                     fontSize: 12.00.sp,
+                            //                     color: AppColor.textColor)),
+                            //             subtitle: Text(data.description ?? '',
+                            //                 style: GoogleFonts.dmSans(
+                            //                     fontWeight: FontWeight.w700,
+                            //                     fontSize: 8.00.sp,
+                            //                     color: AppColor.primary))),
+                            //         Padding(
+                            //             padding: EdgeInsets.symmetric(
+                            //                 horizontal: screenWidth * 0.1),
+                            //             child: Row(children: [
+                            //               Image.asset(
+                            //                   'assets/images/discount.png',
+                            //                   height: screenHeight * 0.03),
+                            //               SizedBox(width: screenWidth * 0.03),
+                            //               Text(data.couponCode ?? '',
+                            //                   style: GoogleFonts.dmSans(
+                            //                       fontWeight: FontWeight.w700,
+                            //                       fontSize: 12.00.sp,
+                            //                       color: AppColor.textColor))
+                            //             ])),
+                            //         InkWell(
+                            //           onTap:(){
+                            //             widget.callBack(data.couponCode??'');
+                            //             Get.back();
+                            //           },
+                            //           child: Container(
+                            //               margin: EdgeInsets.only(
+                            //                   top: screenHeight * 0.01),
+                            //               height: screenHeight * 0.045,
+                            //               color: AppColor.primary,
+                            //               width: double.infinity,
+                            //               alignment: Alignment.center,
+                            //               child: Text('Copy Code',
+                            //                   style: GoogleFonts.dmSans(
+                            //                       fontWeight: FontWeight.w400,
+                            //                       fontSize: 12.00.sp,
+                            //                       color: Colors.white))),
+                            //         )
+                            //       ]));
                         })
           ]),
         ));

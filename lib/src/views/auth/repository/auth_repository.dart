@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:aadaiz/src/services/http_services.dart';
-import 'package:aadaiz/src/views/auth/model/signup_model.dart';
-import 'package:aadaiz/src/views/auth/model/verify_otp_model.dart';
+import 'package:aadaiz_customer_crm/src/services/http_services.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/model/signup_model.dart';
+import 'package:aadaiz_customer_crm/src/views/auth/model/verify_otp_model.dart';
 
 import '../../../services/api_service.dart';
 

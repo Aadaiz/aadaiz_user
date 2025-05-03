@@ -1,10 +1,10 @@
-import 'package:aadaiz/src/res/components/search_field.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz/src/views/home/self_customization/order/product_customization.dart';
-import 'package:aadaiz/src/views/material/filter.dart';
+import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
+import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

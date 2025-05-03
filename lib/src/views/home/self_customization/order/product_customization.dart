@@ -1,10 +1,10 @@
-import 'package:aadaiz/src/res/components/common_button.dart';
-import 'package:aadaiz/src/res/components/common_toast.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
-import 'package:aadaiz/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz/src/views/material/add_measurement.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group_button/group_button.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -455,9 +454,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 11.00.sp,
                                                     color: AppColor.textColor)),
-                                            trailing: Image.asset(
-                                                'assets/images/arrow_right_orange.png',
-                                                height: screenHeight * 0.022))),
+                                            trailing:   InkWell(
+                                              onTap: () {
+                                                Get.to(() => ReviewList(
+                                                  id: widget.data!.id,
+                                                  value: 'review_id',
+                                                ));
+                                              },
+                                              child: Image.asset(
+                                                  'assets/images/arrow_right_orange.png',
+                                                  height: screenHeight * 0.022),
+                                            ))),
                                   )
                                 : const SizedBox(),
                           ],

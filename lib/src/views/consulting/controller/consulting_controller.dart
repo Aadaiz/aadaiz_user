@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:aadaiz/src/views/consulting/models/appointment_list_model.dart';
-import 'package:aadaiz/src/views/consulting/models/consulting_category_model.dart';
-import 'package:aadaiz/src/views/consulting/models/consulting_designer_model.dart';
-import 'package:aadaiz/src/views/consulting/repository/consulting_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/appointment_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_category_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_designer_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/repository/consulting_repository.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

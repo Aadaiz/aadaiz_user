@@ -1,11 +1,11 @@
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:aadaiz/src/views/material/model/category_list_model.dart'as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'as material;
 import '../../../../utils/colors.dart';
 import '../../../../utils/utils.dart';
 import '../../model/productlist_model.dart';

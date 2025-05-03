@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:aadaiz/src/views/consulting/models/appointment_list_model.dart';
-import 'package:aadaiz/src/views/consulting/models/consulting_available_slot_model.dart';
-import 'package:aadaiz/src/views/consulting/models/consulting_designer_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/appointment_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_available_slot_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_designer_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/api_service.dart';
 import '../../../services/http_services.dart';

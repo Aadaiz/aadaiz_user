@@ -1,11 +1,12 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../res/components/common_toast.dart';
 import '../home/controller/home_controller.dart';
 import 'order_card.dart';
 
@@ -59,7 +60,9 @@ class _CancelledOrdersState extends State<CancelledOrders> {
           }
         },
         child: Obx(
-              () => ListView.builder(
+              () => HomeController.to.myOrderList.isEmpty?
+              const CommonEmpty(title: 'Cancelled Orders'):
+                  ListView.builder(
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(

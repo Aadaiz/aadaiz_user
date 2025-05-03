@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aadaiz/src/views/home/model/add_address_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_address_model.dart';
 
 class AddressListRes {
   bool? success;

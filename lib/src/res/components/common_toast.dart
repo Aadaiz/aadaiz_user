@@ -1,4 +1,4 @@
-import 'package:aadaiz/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -26,14 +26,19 @@ class CommonEmpty extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 10.00.hp,
-      width: Get.width * 0.8,
-      child: Center(
-        child: Text(
-          "No $title found",
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 10.00.hp,
+          width: Get.width * 0.8,
+          child: Center(
+            child: Text(
+              "No $title found",
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

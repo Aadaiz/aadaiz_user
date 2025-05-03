@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.aadaiz" "\0"
-            VALUE "FileDescription", "aadaiz" "\0"
+            VALUE "CompanyName", "com.example" "\0"
+            VALUE "FileDescription", "aadaiz_customer_crm" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "aadaiz" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.aadaiz. All rights reserved." "\0"
-            VALUE "OriginalFilename", "aadaiz.exe" "\0"
-            VALUE "ProductName", "aadaiz" "\0"
+            VALUE "InternalName", "aadaiz_customer_crm" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "aadaiz_customer_crm.exe" "\0"
+            VALUE "ProductName", "aadaiz_customer_crm" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

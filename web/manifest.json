@@ -1,6 +1,6 @@
 {
-    "name": "aadaiz",
-    "short_name": "aadaiz",
+    "name": "aadaiz_customer_crm",
+    "short_name": "aadaiz_customer_crm",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

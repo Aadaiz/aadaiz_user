@@ -1,7 +1,7 @@
-import 'package:aadaiz/src/res/components/common_button.dart';
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/views/consulting/controller/consulting_controller.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

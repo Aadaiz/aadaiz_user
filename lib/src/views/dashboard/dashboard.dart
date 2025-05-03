@@ -1,16 +1,17 @@
-import 'package:aadaiz/src/utils/colors.dart';
-import 'package:aadaiz/src/utils/responsive.dart';
-import 'package:aadaiz/src/views/consulting/consulting.dart';
-import 'package:aadaiz/src/views/dashboard/controller.dart';
-import 'package:aadaiz/src/views/order/cart.dart';
-import 'package:aadaiz/src/views/home/home_screen.dart';
-import 'package:aadaiz/src/views/material/material_screen.dart';
-import 'package:aadaiz/src/views/profile/profile_screen.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/consulting.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
+import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
+import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../customer_crm/screens/customer_dashboard.dart';
 import '../home/self_customization/costume_designer.dart';
 import '../home/self_customization/self_customize.dart';
 import '../my_orders/my_orders_screen.dart';
@@ -32,9 +33,10 @@ class _DashboardState extends State<Dashboard> {
   ];
 
   List<Widget> screens = <Widget>[
-    const HomeScreen(),
+    CustomerDashboard(),
+    //const HomeScreen(),
     const ProfileScreen(),
-    const MyOrderScreen(),
+    const HomeScreen(),
     const Cart(),
     const ProfileScreen(),
   ];
