@@ -9,7 +9,8 @@ import '../screens/ordered_items.dart';
 import 'app_colors.dart';
 
 class OrderWidget extends StatefulWidget {
-  final bool is_completed;
+  final String orderStatus;
+  final bool productStaus;
   final String order_name;
   final String order_no;
   final List<OrdersProduct> products;
@@ -26,7 +27,6 @@ class OrderWidget extends StatefulWidget {
     super.key,
     required this.order_name,
     required this.order_no,
-    required this.is_completed,
     required this.products,
     required this.order_shop,
     required this.order_item_count,
@@ -35,7 +35,7 @@ class OrderWidget extends StatefulWidget {
     required this.name,
     required this.email,
     required this.address,
-    required this.phone, required this.shopId,
+    required this.phone, required this.shopId, required this.orderStatus, required this.productStaus,
     
   });
 
@@ -51,7 +51,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   Widget build(BuildContext context) {
     return  GestureDetector(
       onTap: ()=> Get.to(OrderDetails(
-        status:widget.is_completed,
+        status:widget.orderStatus,
         order_name: widget.order_name,
         order_no: widget.order_no,
         order_shop: widget.order_shop,
@@ -62,7 +62,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         email: widget.email, 
         address: widget.address,
         phone: widget.phone,
-        shopId: widget.shopId,
+        shopId: widget.shopId, productStatus: widget.productStaus,
       )),
       child: Container(
         width: Get.width,
@@ -101,7 +101,19 @@ class _OrderWidgetState extends State<OrderWidget> {
                         ],
                       ),
                     ),
-                    inProgress(completed:widget.is_completed),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color:widget.orderStatus!='pending'? Color(0xFFC8FFF4): Color(0xffFFEBB2), // Light yellow
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text("${widget.orderStatus}",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12.0.sp,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                     SizedBox(width: 24.w,),
                     InkWell(
                       onTap: (){
@@ -156,7 +168,8 @@ Widget inProgress({required bool completed}){
       borderRadius: BorderRadius.circular(20.r),
     ),
     child: Text(
-      completed? "Completed": 'In Progress',
+      completed? "Completed":
+      'In Progress',
       style: GoogleFonts.montserrat(
         fontSize: 12.0.sp,
         color: Colors.black,

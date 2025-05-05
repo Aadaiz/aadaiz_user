@@ -125,6 +125,7 @@ class Datum {
     String? price;
     String? paymentType;
     String? paidAmount;
+    String? orderStatus;
     String? createdAt;
     DateTime? updatedAt;
     List<OrdersProduct>? existingOrdersProduct;
@@ -153,6 +154,7 @@ class Datum {
         this.price,
         this.paymentType,
         this.paidAmount,
+        this.orderStatus,
         this.createdAt,
         this.updatedAt,
         this.existingOrdersProduct,
@@ -184,6 +186,7 @@ class Datum {
         price: json["price"],
         paymentType: json["payment_type"],
         paidAmount: json["paid_amount"],
+        orderStatus: json["order_status"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
         existingOrdersProduct: json["existingOrdersProduct"] == null ? [] : List<OrdersProduct>.from(json["existingOrdersProduct"]!.map((x) => OrdersProduct.fromMap(x))),
@@ -213,6 +216,7 @@ class Datum {
         "price": price,
         "payment_type": paymentType,
         "paid_amount": paidAmount,
+        "order_status": orderStatus,
         "created_at": createdAt,
         "updated_at": updatedAt?.toIso8601String(),
         "existingOrdersProduct": existingOrdersProduct == null ? [] : List<dynamic>.from(existingOrdersProduct!.map((x) => x.toMap())),

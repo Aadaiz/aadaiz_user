@@ -15,7 +15,7 @@ class OrderDetails extends StatefulWidget {
 
   final String order_name;
   final String order_no;
-  final bool status;
+  final String status;
   final String order_date;
   final String order_shop;
   final String order_item_count;
@@ -25,6 +25,7 @@ class OrderDetails extends StatefulWidget {
   final String email;
   final String address;
   final String shopId;
+  final bool productStatus;
    OrderDetails({
     super.key,
     required this.order_name,
@@ -37,7 +38,7 @@ class OrderDetails extends StatefulWidget {
     required this.name,
     required this.email,
     required this.address,
-    required this.phone, required this.shopId,
+    required this.phone, required this.shopId, required this.productStatus,
     });
 
   @override
@@ -84,7 +85,19 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ],
                     ),
                   ),
-                  inProgress(completed:widget.status),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color:widget.status!='pending'? Color(0xFFC8FFF4): Color(0xffFFEBB2), // Light yellow
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Text("${widget.status}",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 12.0.sp,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                   ],
               ),
             ),

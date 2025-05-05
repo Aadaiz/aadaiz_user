@@ -43,7 +43,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
   void initState() {
     super.initState();
     zegoInit();
-    con.getOrders(filter: "today");
+    con.getOrders(filter: "");
   }
 
   @override
@@ -152,96 +152,9 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    PopupMenuButton<String>(
-                      color: AppColors.whiteColor,
-                      onSelected: (value) {},
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      itemBuilder:
-                          (context) => [
-                            PopupMenuItem(
-                              onTap: () {
-                                con.getOrders(filter: "today");
-                              },
-                              value: 'New order',
-                              child: Text(
-                                'New order',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              onTap: () {
-                                con.getOrders(filter: "progress");
-                              },
-                              value: 'In progress',
-                              child: Text(
-                                'In progress',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 'Last week',
-                              onTap: () {
-                                con.getOrders(filter: "last_week");
-                              },
-                              child: Text(
-                                'Last week',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                            PopupMenuItem(
-                              value: 'Last month',
-                              onTap: () {
-                                con.getOrders(filter: "last_month");
-                              },
-                              child: Text(
-                                'Last month',
-                                style: GoogleFonts.montserrat(
-                                  fontSize: 14.0.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                          ],
-                      child: Row(
-                        //spacing: 4.w,
-                        children: [
-                          Text(
-                            'Filters',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.blackColor,
-                            ),
-                          ),
-                          SizedBox(width: 4.w),
-                          Image.asset("assets/images/fil.png", width: 20.w),
-                        ],
-                      ), // Or any widget you want to tap
-                    ),
-                  ],
-                ),
                 Obx(
                   () => SizedBox(
-                    height: Get.height * 0.5,
+                    height: Get.height * 0.7,
                     child: TabBarView(
                       children: [
                         con.isLoading.value
@@ -250,145 +163,240 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                                 color: AppColors.projectcolor,
                               ),
                             )
-                            : SizedBox(
-                              height: Get.height * 0.5,
-                              child: ListView.separated(
-                                itemBuilder: (context, index) {
-                                  var productsStatus =
-                                      con
-                                          .orderDatas
-                                          .value
-                                          .data!
-                                          .newOrders!
-                                          .data![index]
-                                          .newOrdersProduct ??
-                                      [];
-
-                                  return OrderWidget(
-                                    is_completed: productsStatus.every(
-                                      (element) => element == true,
+                            : Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PopupMenuButton<String>(
+                                      color: AppColors.whiteColor,
+                                      onSelected: (value) {},
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                      itemBuilder:
+                                          (context) => [
+                                        PopupMenuItem(
+                                          onTap: () {
+                                            con.getOrders(filter: "today");
+                                          },
+                                          value: 'Today',
+                                          child: Text(
+                                            'Today',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          onTap: () {
+                                            con.getOrders(filter: "progress");
+                                          },
+                                          value: 'In progress',
+                                          child: Text(
+                                            'In progress',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'Last week',
+                                          onTap: () {
+                                            con.getOrders(filter: "last_week");
+                                          },
+                                          child: Text(
+                                            'Last week',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'Last month',
+                                          onTap: () {
+                                            con.getOrders(filter: "last_month");
+                                          },
+                                          child: Text(
+                                            'Last month',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      child: Row(
+                                        //spacing: 4.w,
+                                        children: [
+                                          Text(
+                                            'Filters',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.blackColor,
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Image.asset("assets/images/fil.png", width: 20.w),
+                                        ],
+                                      ), // Or any widget you want to tap
                                     ),
-                                    order_name:
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: Get.height * 0.5,
+                                  child: ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      var productsStatus =
+                                          con
+                                              .orderDatas
+                                              .value
+                                              .data!
+                                              .newOrders!
+                                              .data![index]
+                                              .newOrdersProduct ??
+                                          [];
+
+                                      return OrderWidget(
+                                        orderStatus: con
+                                            .orderDatas
+                                            .value
+                                            .data!
+                                            .newOrders!
+                                            .data![index].orderStatus!,
+                                        order_name:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .styleName ??
+                                            "",
+                                        order_no:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .id
+                                                .toString(),
+                                        products:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .newOrdersProduct ??
+                                            [],
+                                        order_shop:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .shopName ??
+                                            "",
+                                        order_item_count:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .newOrdersProduct!
+                                                .length
+                                                .toString(),
+                                        delivery_date:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .deliveryDate ??
+                                            "null",
+                                        order_date:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .createdAt ??
+                                            "null",
+                                        name:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .customerName ??
+                                            "null",
+                                        email:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .customerMail ??
+                                            "null",
+                                        address:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .shippingAddress ??
+                                            "null",
+                                        phone:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .contactNumber ??
+                                            "null",
+                                        shopId:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .newOrders!
+                                                .data![index]
+                                                .createdSubadminId!, productStaus:  productsStatus.every(
+                                          (element) => element == true),
+                                      );
+                                    },
+                                    separatorBuilder:
+                                        (context, index) => SizedBox(height: 8.h),
+                                    itemCount:
                                         con
                                             .orderDatas
                                             .value
                                             .data!
                                             .newOrders!
-                                            .data![index]
-                                            .customerName ??
-                                        "",
-                                    order_no:
-                                        con
-                                            .orderDatas
-                                            .value
                                             .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .id
-                                            .toString(),
-                                    products:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .newOrdersProduct ??
-                                        [],
-                                    order_shop:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .shopName ??
-                                        "",
-                                    order_item_count:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .newOrdersProduct!
-                                            .length
-                                            .toString(),
-                                    delivery_date:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .deliveryDate ??
-                                        "null",
-                                    order_date:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .createdAt ??
-                                        "null",
-                                    name:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .customerName ??
-                                        "null",
-                                    email:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .customerMail ??
-                                        "null",
-                                    address:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .shippingAddress ??
-                                        "null",
-                                    phone:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .contactNumber ??
-                                        "null",
-                                    shopId:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .newOrders!
-                                            .data![index]
-                                            .createdSubadminId!,
-                                  );
-                                },
-                                separatorBuilder:
-                                    (context, index) => SizedBox(height: 8.h),
-                                itemCount:
-                                    con
-                                        .orderDatas
-                                        .value
-                                        .data!
-                                        .newOrders!
-                                        .data!
-                                        .length,
-                              ),
+                                            .length,
+                                  ),
+                                ),
+                              ],
                             ),
                         con.isLoading.value
                             ? Center(
@@ -396,145 +404,214 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                                 color: AppColors.projectcolor,
                               ),
                             )
-                            : SizedBox(
-                              height: Get.height * 0.5,
-                              child: ListView.separated(
-                                itemBuilder: (context, index) {
-                                  var products_status =
-                                      con
-                                          .orderDatas
-                                          .value
-                                          .data!
-                                          .existingOrders!
-                                          .data![index]
-                                          .newOrdersProduct ??
-                                      [];
-
-                                  return OrderWidget(
-                                    is_completed: products_status.every(
-                                      (element) => element == true,
+                            : Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PopupMenuButton<String>(
+                                      color: AppColors.whiteColor,
+                                      onSelected: (value) {},
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                      itemBuilder:
+                                          (context) => [
+                                        PopupMenuItem(
+                                          value: 'Last week',
+                                          onTap: () {
+                                            con.getOrders(filter: "last_week");
+                                          },
+                                          child: Text(
+                                            'Last week',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          value: 'Last month',
+                                          onTap: () {
+                                            con.getOrders(filter: "last_month");
+                                          },
+                                          child: Text(
+                                            'Last month',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      child: Row(
+                                        //spacing: 4.w,
+                                        children: [
+                                          Text(
+                                            'Filters',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14.0.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.blackColor,
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.w),
+                                          Image.asset("assets/images/fil.png", width: 20.w),
+                                        ],
+                                      ), // Or any widget you want to tap
                                     ),
-                                    order_name:
-                                        con
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: Get.height * 0.5,
+                                  child: ListView.separated(
+                                    itemBuilder: (context, index) {
+                                      var productStatus =
+                                          con
+                                              .orderDatas
+                                              .value
+                                              .data!
+                                              .existingOrders!
+                                              .data![index]
+                                              .newOrdersProduct ??
+                                          [];
+
+                                      return OrderWidget(
+                                        orderStatus: con
                                             .orderDatas
                                             .value
                                             .data!
                                             .existingOrders!
                                             .data![index]
-                                            .customerName ??
-                                        "",
-                                    order_no:
+                                            .orderStatus ??
+                                            "",
+                                        order_name:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .styleName ??
+                                            "",
+                                        order_no:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .id
+                                                .toString(),
+                                        products:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .newOrdersProduct ??
+                                            [],
+                                        order_shop:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .shopName ??
+                                            "",
+                                        order_item_count:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .newOrdersProduct!
+                                                .length
+                                                .toString(),
+                                        delivery_date:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .deliveryDate ??
+                                            "null",
+                                        order_date:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .createdAt ??
+                                            "null",
+                                        name:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .customerName ??
+                                            "null",
+                                        email:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .customerMail ??
+                                            "null",
+                                        address:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .shippingAddress ??
+                                            "null",
+                                        phone:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .contactNumber ??
+                                            "null",
+                                        shopId:
+                                            con
+                                                .orderDatas
+                                                .value
+                                                .data!
+                                                .existingOrders!
+                                                .data![index]
+                                                .createdSubadminId!, productStaus:  productStatus.every(
+                                          (element) => element == true),
+                                      );
+                                    },
+                                    separatorBuilder:
+                                        (context, index) => SizedBox(height: 8.h),
+                                    itemCount:
                                         con
                                             .orderDatas
                                             .value
                                             .data!
                                             .existingOrders!
-                                            .data![index]
-                                            .id
-                                            .toString(),
-                                    products:
-                                        con
-                                            .orderDatas
-                                            .value
                                             .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .newOrdersProduct ??
-                                        [],
-                                    order_shop:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .shopName ??
-                                        "",
-                                    order_item_count:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .newOrdersProduct!
-                                            .length
-                                            .toString(),
-                                    delivery_date:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .deliveryDate ??
-                                        "null",
-                                    order_date:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .createdAt ??
-                                        "null",
-                                    name:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .customerName ??
-                                        "null",
-                                    email:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .customerMail ??
-                                        "null",
-                                    address:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .shippingAddress ??
-                                        "null",
-                                    phone:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .contactNumber ??
-                                        "null",
-                                    shopId:
-                                        con
-                                            .orderDatas
-                                            .value
-                                            .data!
-                                            .existingOrders!
-                                            .data![index]
-                                            .createdSubadminId!,
-                                  );
-                                },
-                                separatorBuilder:
-                                    (context, index) => SizedBox(height: 8.h),
-                                itemCount:
-                                    con
-                                        .orderDatas
-                                        .value
-                                        .data!
-                                        .existingOrders!
-                                        .data!
-                                        .length,
-                              ),
+                                            .length,
+                                  ),
+                                ),
+                              ],
                             ),
                       ],
                     ),
