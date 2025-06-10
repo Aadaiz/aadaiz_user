@@ -33,8 +33,7 @@ class _DashboardState extends State<Dashboard> {
   ];
 
   List<Widget> screens = <Widget>[
-    CustomerDashboard(),
-    //const HomeScreen(),
+    const HomeScreen(),
     const ProfileScreen(),
     const HomeScreen(),
     const Cart(),

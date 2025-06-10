@@ -15,6 +15,7 @@ class InputField extends StatelessWidget {
   // final VoidCallback press;
   final Widget? prefixicon;
   final dynamic type;
+  final FocusNode? focusNode;
 
   const InputField({
     Key? key,
@@ -25,7 +26,7 @@ class InputField extends StatelessWidget {
     this.prefixicon,
     required this.validator,
     this.keyboardType,
-    this.type = true,
+    this.type = true, this.focusNode,
 
     // required this.bordercolor,
     //  this.radiusvalue,
@@ -39,6 +40,7 @@ class InputField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8),
       child: TextFormField(
+        focusNode: focusNode,
         inputFormatters: [
           type
               ? LengthLimitingTextInputFormatter(100)

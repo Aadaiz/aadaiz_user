@@ -75,7 +75,7 @@ class AuthController extends GetxController{
       await prefs.setString('token', '${res.data!.token}');
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-         CustomerDashboard(), // Navigate to home if logged in
+            Dashboard(), // Navigate to home if logged in
       ));
 
     }else{
@@ -97,7 +97,6 @@ var loginLoading = false.obs;
     };
     SignUpRes res = await repo.signIn(body: jsonEncode(body));
     loginLoading(false);
-    print('logina fdf dsa${res}');
     if(res.success==true){
       otpToken.value= res.data!.otpToken;
       await Get.to(()=>const OtpScreen(isLogin: true,));
@@ -126,7 +125,7 @@ var loginLoading = false.obs;
       await prefs.setString('token', '${res.data!.token}');
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-         CustomerDashboard(), // Navigate to home if logged in
+            Dashboard(), // Navigate to home if logged in
       ));
 
     }else{
@@ -147,7 +146,7 @@ var loginLoading = false.obs;
     if (isLoggedIn) {
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
-         CustomerDashboard(), // Navigate to home if logged in
+            Dashboard(), // Navigate to home if logged in
       ));
     } else{
       await  Navigator.of(context).pushReplacement(MaterialPageRoute(
