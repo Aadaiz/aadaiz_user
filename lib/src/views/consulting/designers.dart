@@ -22,7 +22,6 @@ class Designers extends StatefulWidget {
 }
 
 class _DesignersState extends State<Designers> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -38,132 +37,157 @@ class _DesignersState extends State<Designers> {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
-        backgroundColor: AppColor.white,
-        appBar: PreferredSize(
-          preferredSize: Size(
-            100,
-            5.5.hp,
-          ),
-          child: const CommonAppBar(
-            title: 'Designers',
-          ),
-        ),
-        body: Obx(
-          () => ConsultingController.to.designerLoading.value
-              ? const CommonLoading()
-              : ConsultingController.to.designerList.isEmpty
-                  ? const CommonEmpty(title: 'Designers')
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 1 / 1.1),
-                      padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.03,
-                          horizontal: screenWidth * 0.022),
-                      itemCount: ConsultingController.to.designerList.length,
-                      itemBuilder: (_, int index) {
-                        var data = ConsultingController.to.designerList[index];
-                        return Container(
-                            width: screenWidth / 3.3,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: screenWidth * 0.016,
-                                vertical: screenHeight * 0.01),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(18)),
-                            child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                               DesignerDetail(data: data,)));
-                                },
-                                child: Column(children: [
-                                  const Spacer(),
-                                  SizedBox(
-                                      height: screenHeight * 0.1,
-                                      child: Stack(children: [
-                                        data.profileImage != null
-                                            ? ClipOval(
-                                          child: CachedNetworkImage(
-                                                  height: screenHeight * 0.088,
-                                                  width: screenHeight * 0.088,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Container(
+      backgroundColor: AppColor.white,
+      appBar: PreferredSize(
+        preferredSize: Size(100, 5.5.hp),
+        child: const CommonAppBar(title: 'Designers'),
+      ),
+      body: Obx(
+        () =>
+            ConsultingController.to.designerLoading.value
+                ? const CommonLoading()
+                : ConsultingController.to.designerList.isEmpty
+                ? const CommonEmpty(title: 'Designers')
+                : GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1 / 1.1,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.03,
+                    horizontal: screenWidth * 0.022,
+                  ),
+                  itemCount: ConsultingController.to.designerList.length,
+                  itemBuilder: (_, int index) {
+                    var data = ConsultingController.to.designerList[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (BuildContext context) =>
+                                DesignerDetail(data: data),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: screenWidth / 3.3,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.016,
+                          vertical: screenHeight * 0.01,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Column(
+                          children: [
+                            const Spacer(),
+                            SizedBox(
+                              height: screenHeight * 0.1,
+                              child: Stack(
+                                children: [
+                                  data.profileImage != null
+                                      ? ClipOval(
+                                        child: CachedNetworkImage(
+                                          height: screenHeight * 0.088,
+                                          width: screenHeight * 0.088,
+                                          fit: BoxFit.cover,
+                                          errorWidget:
+                                              (context, url, error) =>
+                                                  Container(
                                                     decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color:
-                                                            AppColor.primary),
-                                                    child: Icon(Icons.person,
-                                                        color: AppColor.white,
-                                                        size: screenHeight *
-                                                            0.088),
+                                                      shape: BoxShape.circle,
+                                                      color: AppColor.primary,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      color: AppColor.white,
+                                                      size:
+                                                          screenHeight * 0.088,
+                                                    ),
                                                   ),
-                                                  progressIndicatorBuilder:
-                                                      (context, url,
-                                                              progress) =>
-                                                          Container(
+                                          progressIndicatorBuilder:
+                                              (
+                                                context,
+                                                url,
+                                                progress,
+                                              ) => Container(
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Shimmer.fromColors(
+                                                  baseColor: Colors.grey[300]!,
+                                                  highlightColor:
+                                                      Colors.grey[100]!,
+                                                  child: Container(
                                                     decoration:
                                                         const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Shimmer.fromColors(
-                                                      baseColor:
-                                                          Colors.grey[300]!,
-                                                      highlightColor:
-                                                          Colors.grey[100]!,
-                                                      child: Container(
-                                                        decoration:
-                                                            const BoxDecoration(
                                                           color: Colors.white,
                                                         ),
-                                                      ),
-                                                    ),
                                                   ),
-                                                  imageUrl:
-                                                      (data.profileImage),
                                                 ),
-                                              )
-                                            : Container(
-                                                decoration: BoxDecoration(
-                                                    color: AppColor.primary),
-                                                child: Icon(Icons.person,
-                                                    color: AppColor.white,
-                                                    size: screenHeight * 0.088),
                                               ),
-                                        const Positioned(
-                                            top: 7,
-                                            right: 7,
-                                            child: CircleAvatar(
-                                                radius: 7,
-                                                backgroundColor:
-                                                    AppColor.circleDotColor))
-                                      ])),
-                                  const Spacer(),
-                                  Text("${data.name ?? ''}".capitalizeFirst!,
-                                      style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14.00.sp,
-                                          color: AppColor.designerColor)),
-                                  Text('${data.category??''}',
-                                      style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 11.00.sp,
-                                          color: AppColor.designerRoleColor)),
-                                  Text(
-                                      '⭐️ ${data.avgRate ?? 0} (${data.totalRate ?? 0} reviews)',
-                                      style: GoogleFonts.dmSans(
-                                          fontSize: 9.00.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColor.designerRoleColor)),
-                                  const Spacer()
-                                ])));
-                      }),
-        ));
+                                          imageUrl: (data.profileImage),
+                                        ),
+                                      )
+                                      : Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColor.primary,
+                                        ),
+                                        child: Icon(
+                                          Icons.person,
+                                          color: AppColor.white,
+                                          size: screenHeight * 0.088,
+                                        ),
+                                      ),
+                                  const Positioned(
+                                    top: 7,
+                                    right: 7,
+                                    child: CircleAvatar(
+                                      radius: 7,
+                                      backgroundColor: AppColor.circleDotColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              "${data.name ?? ''}".capitalizeFirst!,
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.00.sp,
+                                color: AppColor.designerColor,
+                              ),
+                            ),
+                            Text(
+                              '${data.category ?? ''}',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 11.00.sp,
+                                color: AppColor.designerRoleColor,
+                              ),
+                            ),
+                            Text(
+                              '⭐️ ${data.avgRate ?? 0} (${data.totalRate ?? 0} reviews)',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 9.00.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.designerRoleColor,
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+      ),
+    );
   }
 }

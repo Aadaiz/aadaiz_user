@@ -49,12 +49,15 @@ class _ReviewListState extends State<ReviewList> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            RatingsWidget(
-                rating: HomeController.to.averageRating.value,
-                totalRatings:
-                HomeController.to.totalRating.value,
-                ratingCounts: HomeController.to.ratingCount
-                    .value // Replace with actual rating counts
+            Obx(()=>
+          !HomeController.to.reviewLoading.value?
+              RatingsWidget(
+                  rating: HomeController.to.averageRating.value,
+                  totalRatings:
+                  HomeController.to.totalRating.value,
+                  ratingCounts: HomeController.to.ratingCount
+                       // Replace with actual rating counts
+              ):const SizedBox.shrink(),
             ),
             SizedBox(
               height: Get.height*0.78,

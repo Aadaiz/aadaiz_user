@@ -63,6 +63,8 @@ dependencies:
   uuid: ^4.5.1
   pull_to_refresh: ^2.0.0
   flutter_rating_bar: ^4.0.1
+  calendar_timeline: ^1.1.2
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:

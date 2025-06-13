@@ -36,17 +36,16 @@ class ConsultingRepository {
   }
 
 
-  Future<dynamic> getAppointments(status,page) async {
+  Future<dynamic> getAppointments(status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var response = await _http.get("${Api.consultingAppointment}?status=$status&token=$token&page=$page");
+    var response = await _http.get("${Api.consultingAppointment}?status=$status&token=$token");
     AppointmentRes res = AppointmentRes.fromMap(jsonDecode(response));
     return res;
   }
 
   Future<dynamic> createAppointment(body) async {
     var response = await _http.post(Api.createAppointment, body, contentType: true);
-    AppointmentCreateRes res = AppointmentCreateRes.fromMap(jsonDecode(response));
-    return res;
+    return jsonDecode(response);
   }
 }

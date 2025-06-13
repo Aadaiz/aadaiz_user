@@ -108,6 +108,7 @@ class _OnlineConsultState extends State<OnlineConsult> with SingleTickerProvider
               SizedBox(
                 height: screenHeight*0.78,
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                     controller: _tabController,
                     children: const <Widget>[
                       Appointment(),
