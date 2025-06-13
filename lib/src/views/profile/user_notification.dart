@@ -27,27 +27,33 @@ class _UserNotificationState extends State<UserNotification> {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            leading: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
-                  child: Image.asset('assets/images/back.png')),
-            ),
-            title: Text('Notification',
-                style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.00.sp,
-                    color: AppColor.black)),
-            elevation: 2,
-            centerTitle: true,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false),
-        body: Column(children: [
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
+            child: Image.asset('assets/images/back.png'),
+          ),
+        ),
+        title: Text(
+          'Notification',
+          style: GoogleFonts.dmSans(
+            fontWeight: FontWeight.w400,
+            fontSize: 14.00.sp,
+            color: AppColor.black,
+          ),
+        ),
+        elevation: 2,
+        centerTitle: true,
+        shadowColor: AppColor.black,
+        forceMaterialTransparency: false,
+      ),
+      body: Column(
+        children: [
           Padding(
             padding: const EdgeInsets.only(top: 32),
             child: SizedBox(
@@ -58,9 +64,7 @@ class _UserNotificationState extends State<UserNotification> {
                 enablePullDown: true,
                 enablePullUp: true,
                 onRefresh: () async {
-                  final result = await con.getNotifications(
-                    isRefresh: true,
-                  );
+                  final result = await con.getNotifications(isRefresh: true);
                   if (result) {
                     refreshController.refreshCompleted();
                   } else {
@@ -80,51 +84,64 @@ class _UserNotificationState extends State<UserNotification> {
                   }
                 },
                 child: ListView.builder(
-                    itemCount: con.notificationList.length,
-                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.055),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      var data = con.notificationList[index];
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        decoration:
-                            BoxDecoration(color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
+                  itemCount: con.notificationList.length,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.055,
+                  ),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    var data = con.notificationList[index];
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
                           BoxShadow(
-                              color: AppColor.black.withOpacity(0.1),
-                              blurRadius: 15,
-                              offset: const Offset(0, 0.1)
-                          )
-                        ]),
-                        child: ListTile(
-                            leading:
-                                SvgPicture.asset('assets/svg/completed.svg'),
-                            title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('${data.title ?? ""}',
-                                      style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 10.00.sp,
-                                          color: AppColor.titleBlackColor)),
-                                  Text('${con.timeAgo(data.createdAt!)}',
-                                      style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 9.00.sp,
-                                          color: AppColor.titleHintColor))
-                                ]),
-                            subtitle: Text('${data.message ?? ""}',
-                                style: GoogleFonts.dmSans(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 10.00.sp,
-                                    color: AppColor.titleBlackColor))),
-                      );
-                    }),
+                            color: AppColor.black.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 0.1),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        leading: SvgPicture.asset('assets/svg/completed.svg'),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${data.title ?? ""}',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10.00.sp,
+                                color: AppColor.titleBlackColor,
+                              ),
+                            ),
+                            Text(
+                              '${con.timeAgo(data.createdAt!)}',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 9.00.sp,
+                                color: AppColor.titleHintColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        subtitle: Text(
+                          '${data.message ?? ""}',
+                          style: GoogleFonts.dmSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 10.00.sp,
+                            color: AppColor.titleBlackColor,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          )
+          ),
           // Container(
           //     margin: const EdgeInsets.symmetric(vertical: 8.0),
           //     decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -194,6 +211,8 @@ class _UserNotificationState extends State<UserNotification> {
           //                       fontSize: 10.00.sp,
           //                       color: AppColor.primary)))
           //         ]))
-        ]));
+        ],
+      ),
+    );
   }
 }

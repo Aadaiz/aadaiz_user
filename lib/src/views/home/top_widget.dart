@@ -4,6 +4,7 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/offer_banner_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/search_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customization_home_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/user_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -53,11 +54,16 @@ class _TopWidgetState extends State<TopWidget> {
                 ),
                 Row(
                   children: [
-                    Image.asset(
-                      'assets/images/notification.png',
-                      fit:BoxFit.fill,
-                      //  height: 10.0.hp,
-                      width: 5.0.wp,
+                    InkWell(
+                      onTap: (){
+                        Get.to(() => UserNotification());
+                      },
+                      child: Image.asset(
+                        'assets/images/notification.png',
+                        fit:BoxFit.fill,
+                        //  height: 10.0.hp,
+                        width: 5.0.wp,
+                      ),
                     ),
                     // Gap(5.0.wp),
                     // Image.asset(

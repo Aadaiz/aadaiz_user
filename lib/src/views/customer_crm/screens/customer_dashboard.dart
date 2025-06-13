@@ -63,53 +63,53 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  //spacing: 16.w,
-                  children: [
-                    Image.asset("assets/images/Brandname.png", height: 34.h),
-                    const Spacer(),
-                    // ZegoSendCallInvitationButton(
-                    //   isVideoCall: false,
-                    //   buttonSize: const Size(100, 100),
-                    //   iconSize: const Size(40, 40),
-                    //   icon: ButtonIcon(
-                    //     icon: Padding(
-                    //       padding: const EdgeInsets.all(8.0),
-                    //       child: Image.asset(
-                    //         "assets/images/call.png", // Path to your image
-                    //         width: 20,
-                    //         height: 20,
-                    //         fit: BoxFit.fill,
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   resourceID: "aadaiz_call",
-                    //   invitees: [ZegoUIKitUser(id: "456", name: "surya")],
-                    // ),
-                    InkWell(
-                      onTap: () {
-                        Get.to(() => UserNotification());
-                      },
-                      child: Image.asset(
-                        "assets/images/notification.png",
-                        width: 16.h,
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    InkWell(
-                      onTap: () {
-                        Get.to(() => const ProfileScreen());
-                      },
-                      child: Image.asset(
-                        "assets/dashboard/profile.png",
-                        width: 18.h,
-                        color: AppColors.projectcolor,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   //spacing: 16.w,
+                //   children: [
+                //     Image.asset("assets/images/Brandname.png", height: 34.h),
+                //     const Spacer(),
+                //     // ZegoSendCallInvitationButton(
+                //     //   isVideoCall: false,
+                //     //   buttonSize: const Size(100, 100),
+                //     //   iconSize: const Size(40, 40),
+                //     //   icon: ButtonIcon(
+                //     //     icon: Padding(
+                //     //       padding: const EdgeInsets.all(8.0),
+                //     //       child: Image.asset(
+                //     //         "assets/images/call.png", // Path to your image
+                //     //         width: 20,
+                //     //         height: 20,
+                //     //         fit: BoxFit.fill,
+                //     //       ),
+                //     //     ),
+                //     //   ),
+                //     //   resourceID: "aadaiz_call",
+                //     //   invitees: [ZegoUIKitUser(id: "456", name: "surya")],
+                //     // ),
+                //     InkWell(
+                //       onTap: () {
+                //
+                //       },
+                //       child: Image.asset(
+                //         "assets/images/notification.png",
+                //         width: 16.h,
+                //       ),
+                //     ),
+                //     SizedBox(width: 16.w),
+                //     InkWell(
+                //       onTap: () {
+                //         Get.to(() => const ProfileScreen());
+                //       },
+                //       child: Image.asset(
+                //         "assets/dashboard/profile.png",
+                //         width: 18.h,
+                //         color: AppColors.projectcolor,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 40),
                 SearchOrdersField(
                   onChanged: (val) {
                     Future.delayed(Duration(), () {

@@ -27,7 +27,6 @@ class CustomerRepository {
   Future<dynamic> getNotifications() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
-
     final response =
     await _http.get("${Api.notification}?token=$token");
     final NotificationRes res = NotificationRes.fromMap(jsonDecode(response));

@@ -1,5 +1,7 @@
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart';
+import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart' as category;
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -43,6 +45,21 @@ class MaterialController extends GetxController {
       materialList.clear();
     }
     return true;
+  }
+
+
+  var orderLoading=false.obs;
+  var categoryList = <category.Fabric>[].obs;
+
+  getCategory() async {
+    orderLoading(true);
+    MaterialCategoryListRes res = await repo.getMaterialCategory();
+    orderLoading(false);
+    if(res.success==true){
+      categoryList.value = res.fabric!;
+    }else{
+      categoryList.clear();
+    }
   }
 
 

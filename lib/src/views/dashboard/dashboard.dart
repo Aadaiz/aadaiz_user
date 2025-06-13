@@ -44,6 +44,7 @@ class _DashboardState extends State<Dashboard> {
     {'icon': 'assets/dashboard/self.png', 'text': 'Self Customization','screen': const SelfCustomize()},
     {'icon': 'assets/dashboard/consult.png', 'text': 'Consulting','screen': const Consulting()},
     {'icon': 'assets/dashboard/fabric.png', 'text': 'Material','screen': const MaterialScreen()},
+    {'icon': 'assets/dashboard/cor.png', 'text': 'Customer orders','screen':  CustomerDashboard()},
   ];
    final controller =  Get.put(DashboardController());
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
