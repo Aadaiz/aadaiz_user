@@ -23,11 +23,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    HomeController.to.getGender();
-    HomeController.to.getBannerList();
-    // Calculate the offset to center the middle item
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
+      HomeController.to.getGender();
+      HomeController.to.getBannerList();
     });
   }
 

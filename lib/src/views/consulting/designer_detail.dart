@@ -43,12 +43,11 @@ class _DesignerDetailState extends State<DesignerDetail> {
     super.initState();
     ConsultingController.to.createAppointmentLoading(false);
     dateConvert(DateTime.now());
-    if (ConsultingController.to.availableSlotsList.isNotEmpty) {
-      time = ConsultingController.to.availableSlotsList[0];
-    }
-
     Future.delayed(const Duration(milliseconds: 100), () async {
-      ConsultingController.to.getAvailableSlots(1, date);
+      await ConsultingController.to.getAvailableSlots(widget.data.id, date);
+      if (ConsultingController.to.availableSlotsList.isNotEmpty) {
+        time = ConsultingController.to.availableSlotsList[0];
+      }
     });
   }
 
@@ -241,7 +240,7 @@ class _DesignerDetailState extends State<DesignerDetail> {
                   monthColor: AppColor.black.withOpacity(0.5),
                   onDateSelected: (DateTime val) async {
                     await dateConvert(val);
-                    ConsultingController.to.getAvailableSlots(1, date);
+                    await ConsultingController.to.getAvailableSlots(widget.data.id, date);
                   },
                 ),
                 SizedBox(height: screenHeight * 0.03),
@@ -328,7 +327,7 @@ class _DesignerDetailState extends State<DesignerDetail> {
                 //     decoration: BoxDecoration(
                 //         borderRadius: BorderRadius.circular(3),
                 //         border: Border.all(
-                //             color: AppColor.dropdownBgColor
+                //             color: AppColor.dropdownBgColora
                 //         )
                 //     ),
                 //     child: DropdownButton<String>(

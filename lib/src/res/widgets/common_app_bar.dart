@@ -13,12 +13,13 @@ class CommonAppBar extends StatelessWidget {
     required this.title,
     this.isCheck = false,
     this.isLoading,
-    this.onTap,
+    this.onTap,  this.actionButton,
   });
   final String title;
   final bool? isCheck;
   final bool? isLoading;
   final Function()? onTap;
+  final Widget? actionButton;
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -47,8 +48,7 @@ class CommonAppBar extends StatelessWidget {
         ),
       ),
       actions: [
-        isCheck == true
-            ? Padding(
+        if(isCheck == true)Padding(
               padding: EdgeInsets.only(right: screenHeight * 0.016),
               child:
                   isLoading == true
@@ -59,7 +59,8 @@ class CommonAppBar extends StatelessWidget {
                           color: AppColor.primary,
                           size: 5.00.hp,
                         ),
-                      )
+                      ) :actionButton!=null ?
+                      actionButton
                       : InkWell(
                         onTap: onTap,
                         child: Icon(
@@ -69,7 +70,6 @@ class CommonAppBar extends StatelessWidget {
                         ),
                       ),
             )
-            : const SizedBox(),
       ],
       centerTitle: true,
       shadowColor: AppColor.black,

@@ -32,12 +32,11 @@ class _SelfCustomizationHomeScreenState
     // TODO: implement initState
     super.initState();
     _index = widget.catIndex;
-    Future.delayed(const Duration(milliseconds: 500), () async {
-      await HomeController.to.getCategoryData(widget.id);
-    });
 
     // Calculate the offset to center the middle item
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+       HomeController.to.getCategoryData(widget.id);
+    });
   }
 
   @override

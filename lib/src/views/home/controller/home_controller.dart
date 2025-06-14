@@ -301,11 +301,42 @@ TextEditingController country = TextEditingController();
   }
 
 
-  TextEditingController length =  TextEditingController();
-  TextEditingController shoulder =  TextEditingController();
-  TextEditingController chest =  TextEditingController();
-  TextEditingController waist =  TextEditingController();
-  TextEditingController hip =  TextEditingController();
+  final neckCircumferenceController = TextEditingController(); // A
+  final singleShoulderWidthController = TextEditingController(); // B
+  final acrossShoulderWidthController = TextEditingController(); // C
+  final frontWidthController = TextEditingController(); // D1
+  final backWidthController = TextEditingController(); // D2
+  final upperBustCircumferenceController = TextEditingController(); // E
+  final bustCircumferenceController = TextEditingController(); // F
+  final underBustCircumferenceController = TextEditingController(); // G
+  final sareeBlouseHemlineCircumferenceController = TextEditingController(); // H
+  final waistCircumferenceController = TextEditingController(); // I
+  final lowWaistCircumferenceController = TextEditingController(); // J
+  final bustLengthController = TextEditingController(); // Q
+  final apexHighBustPointDifferenceController = TextEditingController(); // R
+  final sareeBlouseLengthController = TextEditingController(); // S
+  final requiredTopLengthController = TextEditingController(); // T
+
+// Sleeve Measurements
+  final armHoleRoundController = TextEditingController(); // W
+  final upperArmCircumferenceController = TextEditingController(); // X
+  final requiredSleeveLengthController = TextEditingController(); // Y (Y1, Y2, Y3)
+  final sleeveHemlineCircumferenceController = TextEditingController(); // Z (Z1, Z2, Z3)
+
+// Bottom Measurements
+  final highHipCircumferenceController = TextEditingController(); // K
+  final hipCircumferenceController = TextEditingController(); // L
+  final thighCircumferenceController = TextEditingController(); // M
+  final kneeCircumferenceController = TextEditingController(); // N
+  final calfCircumferenceController = TextEditingController(); // O
+  final ankleBottomHemlineCircumferenceController = TextEditingController(); // P
+  final requiredBottomLengthController = TextEditingController(); // V1
+  final inseamLengthController = TextEditingController(); // V2
+  final crotchLengthController = TextEditingController(); // V3
+
+// Full Length Measurements
+  final requiredFullLengthController = TextEditingController(); // U
+
 
   var cartLoading=false.obs;
 
@@ -316,23 +347,24 @@ TextEditingController country = TextEditingController();
      dynamic gst,
      dynamic quantity,
       dynamic cartId,
+      dynamic fabricMeter,
   }) async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");
     cartLoading(true);
     Map body = {
       'pattern_id':'$id',
-      'fabric_metre':'1',
+      'fabric_metre':fabricMeter,
       'quantity':'$quantity',
       'price':'$price',
       'gst_percentage':'$gst',
-      'measurement':{
-        'length':'${length.text}',
-        'shoulder':'${shoulder.text}',
-        'chest':'${chest.text}',
-        'waist':'${waist.text}',
-        'hip':'${hip.text}',
-      },
+      // 'measurement':{
+      //   'length':'${length.text}',
+      //   'shoulder':'${shoulder.text}',
+      //   'chest':'${chest.text}',
+      //   'waist':'${waist.text}',
+      //   'hip':'${hip.text}',
+      // },
       'action':'$action',
       'cart_id':'$cartId',
       'coupon_apply':'',

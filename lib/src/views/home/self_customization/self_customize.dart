@@ -1,13 +1,21 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/contact.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/select_sellers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../res/widgets/common_app_bar.dart';
 
 class SelfCustomize extends StatefulWidget {
-  const SelfCustomize({super.key});
-
+  const SelfCustomize({super.key, this.data});
+  final PatternListDatum? data;
   @override
   State<SelfCustomize> createState() => _SelfCustomizeState();
 }
@@ -106,6 +114,36 @@ class _SelfCustomizeState extends State<SelfCustomize> {
       ]
     },
   ];
+  final GlobalKey _globalKey = GlobalKey();
+
+
+  Future<void> captureAndSavePng() async {
+    try {
+      RenderRepaintBoundary boundary =
+      _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+      if (boundary.debugNeedsPaint) {
+        await Future.delayed(const Duration(milliseconds: 20));
+        return captureAndSavePng();
+      }
+
+      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ByteData? byteData =
+      await image.toByteData(format: ui.ImageByteFormat.png);
+      final Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/rendered_image.png';
+      final imgFile = File(filePath);
+      await imgFile.writeAsBytes(pngBytes);
+
+      print('Saved image at: $filePath');
+      await Get.to(()=> SelectSellers(image: imgFile,data:widget.data));
+    } catch (e) {
+      print('Error capturing image: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +154,18 @@ class _SelfCustomizeState extends State<SelfCustomize> {
           100,
           5.5.hp,
         ),
-        child: const CommonAppBar(
+        child:  CommonAppBar(
           title: 'Self Customize',
+          isCheck: true,
+          actionButton:    CommonButton(
+            width: 80.0,
+            height: 40.0,
+            borderRadius: 12.0,
+            text: 'Finish',
+            press: () async{
+            await  captureAndSavePng();
+            },
+          ),
         ),
       ),
       body: SafeArea(
@@ -125,87 +173,90 @@ class _SelfCustomizeState extends State<SelfCustomize> {
           children: [
             // Display selected shirt and pant with overlays
             Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          SizedBox(
-                            width: Get.width,
-                            height: Get.height * 0.67,
-                            //color: Colors.cyan,
-                          ),
-                          selectedMaterial != null
-                              ? Positioned(
-                                  top: 35,
-                                  left: 0,
-                                  child: Container(
-                                    width: Get.width,
-                                    height: Get.height * 0.165,
-                                    color: selectedMaterial,
-                                  ),
-                                )
-                              : const SizedBox(),
-                          selectedTop != null
-                              ? Positioned(
-                                  top: Get.height*0.2,
-                                  left: 0,
-                                  child: Container(
-                                    width: Get.width,
-                                    height: Get.height * 0.16,
-                                    color: selectedTop,
-                                  ),
-                                )
-                              : const SizedBox(),
-                          selectedPant != null
-                              ? Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Image.asset(
-                                    //  selectedPant != null ?
-                                    selectedPant!,
-                                    //:defaultBottom,
-                                    height: 560,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Container(),
-                          selectedSleeve != null
-                              ? Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Image.asset(
-                                    // selectedSleeve != null ?
-                                    selectedSleeve!,
-                                    // :defaultSleeve,
-                                    height: 560,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Container(),
-                          selectedShirt != null
-                              ? Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Image.asset(
-                                    // selectedShirt != null ?
-                                    selectedShirt!,
-                                    // :defaultTop,
-                                    height: 560,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Container(),
-                        ],
-                      ),
-                    ],
+              child: RepaintBoundary(
+                key: _globalKey,
+                child: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                              width: Get.width,
+                              height: Get.height * 0.67,
+                              //color: Colors.cyan,
+                            ),
+                            selectedMaterial != null
+                                ? Positioned(
+                                    top: 35,
+                                    left: 0,
+                                    child: Container(
+                                      width: Get.width,
+                                      height: Get.height * 0.165,
+                                      color: selectedMaterial,
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            selectedTop != null
+                                ? Positioned(
+                                    top: Get.height*0.2,
+                                    left: 0,
+                                    child: Container(
+                                      width: Get.width,
+                                      height: Get.height * 0.16,
+                                      color: selectedTop,
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            selectedPant != null
+                                ? Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Image.asset(
+                                      //  selectedPant != null ?
+                                      selectedPant!,
+                                      //:defaultBottom,
+                                      height: 560,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(),
+                            selectedSleeve != null
+                                ? Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Image.asset(
+                                      // selectedSleeve != null ?
+                                      selectedSleeve!,
+                                      // :defaultSleeve,
+                                      height: 560,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(),
+                            selectedShirt != null
+                                ? Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: Image.asset(
+                                      // selectedShirt != null ?
+                                      selectedShirt!,
+                                      // :defaultTop,
+                                      height: 560,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

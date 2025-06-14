@@ -4,6 +4,7 @@ import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customize.dart';
 import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,7 +44,11 @@ class _ProductDetailsState extends State<ProductDetails> {
     HomeController.to.cartLoading(false);
     Future.delayed(const Duration(milliseconds: 500), () {
       HomeController.to.getReviewList(isRefresh: true, id: widget.data!.id);
-      HomeController.to.getTailors(isRefresh: true,id: widget.data!.id,city: 'Madurai');
+      HomeController.to.getTailors(
+        isRefresh: true,
+        id: widget.data!.id,
+        city: 'Madurai',
+      );
     });
     if (HomeController.to.reviewList.isNotEmpty) {
       reviewImages = HomeController.to.reviewList.value[0].images.split(',');
@@ -95,18 +100,14 @@ class _ProductDetailsState extends State<ProductDetails> {
     final String selectedValue = _fabric.first;
 
     return Scaffold(
-        backgroundColor: AppColor.white,
-        appBar: PreferredSize(
-          preferredSize: Size(
-            100,
-            5.5.hp,
-          ),
-          child: const CommonAppBar(
-            title: 'Product',
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(children: [
+      backgroundColor: AppColor.white,
+      appBar: PreferredSize(
+        preferredSize: Size(100, 5.5.hp),
+        child: const CommonAppBar(title: 'Product'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
             SizedBox(height: screenHeight * 0.022),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -115,16 +116,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.data!.title ?? '',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18.39.sp,
-                            color: AppColor.black)),
-                    Text('Starts from',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12.00.sp,
-                            color: AppColor.red))
+                    Text(
+                      widget.data!.title ?? '',
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18.39.sp,
+                        color: AppColor.black,
+                      ),
+                    ),
+                    Text(
+                      'Starts from',
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12.00.sp,
+                        color: AppColor.red,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -135,140 +142,212 @@ class _ProductDetailsState extends State<ProductDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                      width: screenWidth * 0.5,
-                      child: Row(children: [
+                    width: screenWidth * 0.5,
+                    child: Row(
+                      children: [
                         RatingBar(
-                            initialRating: widget.rating,
-                            direction: Axis.horizontal,
-                            ignoreGestures: true,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 15,
-                            unratedColor: Colors.grey,
-                            ratingWidget: RatingWidget(
-                                full: const Icon(Icons.star_rounded,
-                                    color: Color(0xffFFA800)),
-                                half: const Icon(Icons.star_half_rounded,
-                                    color: Color(0xffFFA800)),
-                                empty: const Icon(Icons.star_outline_rounded,
-                                    color: Color(0xffFFA800))),
-                            onRatingUpdate: (value) {}),
+                          initialRating: widget.rating,
+                          direction: Axis.horizontal,
+                          ignoreGestures: true,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemSize: 15,
+                          unratedColor: Colors.grey,
+                          ratingWidget: RatingWidget(
+                            full: const Icon(
+                              Icons.star_rounded,
+                              color: Color(0xffFFA800),
+                            ),
+                            half: const Icon(
+                              Icons.star_half_rounded,
+                              color: Color(0xffFFA800),
+                            ),
+                            empty: const Icon(
+                              Icons.star_outline_rounded,
+                              color: Color(0xffFFA800),
+                            ),
+                          ),
+                          onRatingUpdate: (value) {},
+                        ),
                         SizedBox(width: screenWidth * 0.01),
                         InkWell(
                           onTap: () {
-                            Get.to(() => ReviewList(
-                                  id: widget.data!.id,
-                                  value: 'review_id',
-                                ));
+                            Get.to(
+                              () => ReviewList(
+                                id: widget.data!.id,
+                                value: 'review_id',
+                              ),
+                            );
                           },
-                          child: Text('View Review',
-                              style: GoogleFonts.dmSans(
-                                  fontSize: 14.00.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.black,
-                                  decoration: TextDecoration.underline)),
-                        )
-                      ])),
-                  Text('₹${widget.data!.startsFrom ?? ''}',
-                      style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22.00.sp,
-                          color: AppColor.black))
+                          child: Text(
+                            'View Review',
+                            style: GoogleFonts.dmSans(
+                              fontSize: 14.00.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.black,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    '₹${widget.data!.startsFrom ?? ''}',
+                    style: GoogleFonts.dmSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22.00.sp,
+                      color: AppColor.black,
+                    ),
+                  ),
                 ],
               ),
             ),
             SizedBox(height: screenHeight * 0.03),
             Center(
-                child: Container(
-                    height: screenHeight * 0.22,
-                    width: screenWidth / 1.1,
-                    decoration: BoxDecoration(
-                      color: AppColor.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: Row(
+              child: Container(
+                height: screenHeight * 0.22,
+                width: screenWidth / 1.1,
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    child: Icon(Icons.favorite_border,
-                                        color: AppColor.black)),
-                                InkWell(
-                                    onTap: () {
-                                      if (_isArrowClickable &&
-                                          currentIndex > 0) {
-                                        _handleArrowClick(true);
-                                      }
-                                    },
-                                    child: Icon(Icons.arrow_back_ios,
-                                        size: 24,
-                                        color: AppColor.greyTitleColor)),
-                              ]),
-                          SizedBox(
-                            width: screenWidth * 0.3,
-                            child: ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: images.length,
-                                itemBuilder: (context, i) {
-                                  return Container(
-                                    child: Image.network(
-                                      images[i],
+                          CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.favorite_border,
+                              color: AppColor.black,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              if (_isArrowClickable && currentIndex > 0) {
+                                _handleArrowClick(true);
+                              }
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              size: 24,
+                              color: AppColor.greyTitleColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: screenWidth * 0.3,
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: images.length,
+                          itemBuilder: (context, i) {
+                            return Container(
+                              child: CachedNetworkImage(
+                                width: screenWidth * 0.3,
+                                fit: BoxFit.cover,
+                                errorWidget:
+                                    (
+                                      BuildContext context,
+                                      String url,
+                                      Object error,
+                                    ) => Image.asset(
+                                      'assets/images/doll.png',
                                       width: screenWidth * 0.3,
                                       fit: BoxFit.cover,
                                     ),
-                                  );
-                                }),
+                                progressIndicatorBuilder:
+                                    (
+                                      BuildContext context,
+                                      String url,
+                                      DownloadProgress progress,
+                                    ) => Container(
+                                      width: screenWidth * 0.3,
+                                      color: Colors.black,
+                                      child: Center(
+                                        child: Transform.scale(
+                                          scale: 0.5,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.grey,
+                                            strokeWidth: 2,
+                                            value: progress.progress,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                imageUrl: (images[i]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColor.primary,
+                            child: Image.asset(
+                              'assets/images/send.png',
+                              color: AppColor.white,
+                            ),
                           ),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                    backgroundColor: AppColor.primary,
-                                    child: Image.asset(
-                                      'assets/images/send.png',
-                                      color: AppColor.white,
-                                    )),
-                                InkWell(
-                                  onTap: () {
-                                    if (_isArrowClickable &&
-                                        currentIndex < images.length - 1) {
-                                      _handleArrowClick(false);
-                                    }
-                                  },
-                                  child: Icon(Icons.arrow_forward_ios,
-                                      size: 24, color: AppColor.greyTitleColor),
-                                ),
-                              ]),
+                          InkWell(
+                            onTap: () {
+                              if (_isArrowClickable &&
+                                  currentIndex < images.length - 1) {
+                                _handleArrowClick(false);
+                              }
+                            },
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 24,
+                              color: AppColor.greyTitleColor,
+                            ),
+                          ),
                         ],
                       ),
-                    ))),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             SizedBox(height: screenHeight * 0.03),
             SizedBox(
-                width: screenWidth,
-                child: ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.022),
-                      child: Text('Description',
-                          style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15.00.sp,
-                              color: AppColor.black)),
+              width: screenWidth,
+              child: ListTile(
+                title: Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight * 0.022),
+                  child: Text(
+                    'Description',
+                    style: GoogleFonts.dmSans(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15.00.sp,
+                      color: AppColor.black,
                     ),
-                    subtitle: Text(widget.data!.description ?? '',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.subTitleColor)))),
+                  ),
+                ),
+                subtitle: Text(
+                  widget.data!.description ?? '',
+                  style: GoogleFonts.dmSans(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 11.00.sp,
+                    color: AppColor.subTitleColor,
+                  ),
+                ),
+              ),
+            ),
             const Gap(18),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -283,18 +362,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                           TextSpan(
                             text: "Want to Customize this",
                             style: GoogleFonts.dmSans(
-                                textStyle: TextStyle(
-                                    fontSize: 18.00.sp,
-                                    color: AppColor.primary,
-                                    fontWeight: FontWeight.w500)),
+                              textStyle: TextStyle(
+                                fontSize: 18.00.sp,
+                                color: AppColor.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                           TextSpan(
                             text: ' Dress',
                             style: GoogleFonts.dmSans(
-                                textStyle: TextStyle(
-                                    fontSize: 18.00.sp,
-                                    color: AppColor.red,
-                                    fontWeight: FontWeight.w500)),
+                              textStyle: TextStyle(
+                                fontSize: 18.00.sp,
+                                color: AppColor.red,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -306,169 +389,218 @@ class _ProductDetailsState extends State<ProductDetails> {
             const Gap(24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                color: AppColor.primary,
-                padding: const EdgeInsets.all(8),
-                child: Center(
+              child: InkWell(
+                onTap: () {
+                  Get.to(() => SelfCustomize(data : widget.data));
+                },
+                child: Container(
+                  color: AppColor.primary,
+                  padding: const EdgeInsets.all(8),
+                  child: Center(
                     child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Customize',
-                        style: GoogleFonts.dmSans(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Customize',
+                          style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11.00.sp,
-                            color: AppColor.white)),
-                    Gap(8),
-                    Image.asset(
-                      'assets/images/custo.png',
-                      height: 3.0.hp,
+                            color: AppColor.white,
+                          ),
+                        ),
+                        Gap(8),
+                        Image.asset('assets/images/custo.png', height: 3.0.hp),
+                      ],
                     ),
-                  ],
-                )),
+                  ),
+                ),
               ),
             ),
             const Gap(18),
             Container(
-                width: screenHeight,
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.01,
-                    horizontal: screenWidth * 0.1),
-                child: Text('Ratings & Reviews',
-                    style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.00.sp,
-                        color: AppColor.textColor))),
+              width: screenHeight,
+              padding: EdgeInsets.symmetric(
+                vertical: screenHeight * 0.01,
+                horizontal: screenWidth * 0.1,
+              ),
+              child: Text(
+                'Ratings & Reviews',
+                style: GoogleFonts.dmSans(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.00.sp,
+                  color: AppColor.textColor,
+                ),
+              ),
+            ),
             Obx(
-              () => HomeController.to.reviewLoading.value
-                  ? const CommonLoading()
-                  : HomeController.to.reviewList.isEmpty
+              () =>
+                  HomeController.to.reviewLoading.value
+                      ? const CommonLoading()
+                      : HomeController.to.reviewList.isEmpty
                       ? const SizedBox()
                       : Column(
-                          children: [
-                            RatingsWidget(
-                                rating: widget.data!.rating,
-                                totalRatings:
-                                    HomeController.to.totalRating.value,
-                                ratingCounts: HomeController.to.ratingCount
-                                    .value // Replace with actual rating counts
-                                ),
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(32, 8, 8, 8),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8)),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                            width: screenWidth / 1.3,
-                                            child: ListTile(
-                                                title: Text('${HomeController.to.reviewList.value[0].user!.username ?? ''}'.capitalizeFirst!,
-                                                    style: GoogleFonts.dmSans(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 13.00.sp,
-                                                        color: AppColor
-                                                            .textColor)),
-                                                subtitle: RatingBar(
-                                                    initialRating: double.parse(
-                                                        HomeController
-                                                            .to
-                                                            .reviewList
-                                                            .value[0]
-                                                            .rating),
-                                                    direction: Axis.horizontal,
-                                                    ignoreGestures: true,
-                                                    allowHalfRating: true,
-                                                    itemCount: 5,
-                                                    itemSize: 15,
-                                                    unratedColor: Colors.grey,
-                                                    ratingWidget: RatingWidget(
-                                                        full: const Icon(
-                                                            Icons.star_rounded,
-                                                            color: Color(0xffFFA800)),
-                                                        half: const Icon(Icons.star_half_rounded, color: Color(0xffFFA800)),
-                                                        empty: const Icon(Icons.star_outline_rounded, color: Color(0xffFFA800))),
-                                                    onRatingUpdate: (value) {}),
-                                                trailing: Text('${HomeController.to.reviewList.value[0].date ?? ""} ${HomeController.to.reviewList.value[0].time ?? ""}', style: GoogleFonts.dmSans(fontWeight: FontWeight.w400, fontSize: 11.00.sp, color: AppColor.borderGrey)))),
-                                        Text(
-                                            '''
-                                              ${HomeController.to.reviewList.value[0].comment ?? ''}'''
+                        children: [
+                          RatingsWidget(
+                            rating: widget.data!.rating,
+                            totalRatings: HomeController.to.totalRating.value,
+                            ratingCounts:
+                                HomeController
+                                    .to
+                                    .ratingCount
+                                    .value, // Replace with actual rating counts
+                          ),
+                          Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(32, 8, 8, 8),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: screenWidth / 1.3,
+                                        child: ListTile(
+                                          title: Text(
+                                            '${HomeController.to.reviewList.value[0].user!.username ?? ''}'
                                                 .capitalizeFirst!,
                                             style: GoogleFonts.dmSans(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 13.00.sp,
+                                              color: AppColor.textColor,
+                                            ),
+                                          ),
+                                          subtitle: RatingBar(
+                                            initialRating: double.parse(
+                                              HomeController
+                                                  .to
+                                                  .reviewList
+                                                  .value[0]
+                                                  .rating,
+                                            ),
+                                            direction: Axis.horizontal,
+                                            ignoreGestures: true,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 15,
+                                            unratedColor: Colors.grey,
+                                            ratingWidget: RatingWidget(
+                                              full: const Icon(
+                                                Icons.star_rounded,
+                                                color: Color(0xffFFA800),
+                                              ),
+                                              half: const Icon(
+                                                Icons.star_half_rounded,
+                                                color: Color(0xffFFA800),
+                                              ),
+                                              empty: const Icon(
+                                                Icons.star_outline_rounded,
+                                                color: Color(0xffFFA800),
+                                              ),
+                                            ),
+                                            onRatingUpdate: (value) {},
+                                          ),
+                                          trailing: Text(
+                                            '${HomeController.to.reviewList.value[0].date ?? ""} ${HomeController.to.reviewList.value[0].time ?? ""}',
+                                            style: GoogleFonts.dmSans(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 11.00.sp,
+                                              color: AppColor.borderGrey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        '''
+                                              ${HomeController.to.reviewList.value[0].comment ?? ''}'''
+                                            .capitalizeFirst!,
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 10.00.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.textColor,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          right: screenWidth * 0.033,
+                                          bottom: screenHeight * 0.03,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Helpful',
+                                              style: GoogleFonts.dmSans(
                                                 fontSize: 10.00.sp,
                                                 fontWeight: FontWeight.w400,
-                                                color: AppColor.textColor)),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                                right: screenWidth * 0.033,
-                                                bottom: screenHeight * 0.03),
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text('Helpful',
-                                                      style: GoogleFonts.dmSans(
-                                                          fontSize: 10.00.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColor
-                                                              .borderGrey)),
-                                                  Image.asset(
-                                                      'assets/images/like.png',
-                                                      height:
-                                                          screenHeight * 0.045)
-                                                ])),
-                                      ],
+                                                color: AppColor.borderGrey,
+                                              ),
+                                            ),
+                                            Image.asset(
+                                              'assets/images/like.png',
+                                              height: screenHeight * 0.045,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                left: 8,
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                    '${HomeController.to.reviewList.value[0].user!.username}',
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          HomeController.to.reviewList.length > 1
+                              ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: screenWidth,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white, //AppColor.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      'All ${HomeController.to.reviewList.length} review',
+                                      style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 11.00.sp,
+                                        color: AppColor.textColor,
+                                      ),
+                                    ),
+                                    trailing: InkWell(
+                                      onTap: () {
+                                        Get.to(
+                                          () => ReviewList(
+                                            id: widget.data!.id,
+                                            value: 'review_id',
+                                          ),
+                                        );
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/arrow_right_orange.png',
+                                        height: screenHeight * 0.022,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Positioned(
-                                  top: 8,
-                                  left: 8,
-                                  child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          '${HomeController.to.reviewList.value[0].user!.username}')),
-                                ),
-                              ],
-                            ),
-                            HomeController.to.reviewList.length > 1
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                        width: screenWidth,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.white, //AppColor.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4)),
-                                        child: ListTile(
-                                            title: Text(
-                                                'All ${HomeController.to.reviewList.length} review',
-                                                style: GoogleFonts.dmSans(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 11.00.sp,
-                                                    color: AppColor.textColor)),
-                                            trailing:   InkWell(
-                                              onTap: () {
-                                                Get.to(() => ReviewList(
-                                                  id: widget.data!.id,
-                                                  value: 'review_id',
-                                                ));
-                                              },
-                                              child: Image.asset(
-                                                  'assets/images/arrow_right_orange.png',
-                                                  height: screenHeight * 0.022),
-                                            ))),
-                                  )
-                                : const SizedBox(),
-                          ],
-                        ),
+                              )
+                              : const SizedBox(),
+                        ],
+                      ),
             ),
             SizedBox(height: screenHeight * 0.03),
             Padding(
@@ -476,95 +608,149 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Column(
                 children: [
                   SizedBox(
-                      width: screenWidth,
-                      child: Text('Top Sellers',
-                          style: GoogleFonts.dmSans(
-                              fontSize: 12.00.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.black))),
+                    width: screenWidth,
+                    child: Text(
+                      'Top Sellers',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 12.00.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColor.black,
+                      ),
+                    ),
+                  ),
                   const Gap(16),
 
-                  Obx(()=>HomeController.to.tailorLoading.value?
-                      CommonLoading():
-                     Container(
-                        width: screenWidth,
-                      //  margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
-                        decoration:
-                            BoxDecoration(color: Colors.white, boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              offset: const Offset(0, 1),
-                              blurRadius: 5,
-                              spreadRadius: 0)
-                        ]),
-                        child: Column(children: [
-                          ListTile(
-                              tileColor: Colors.white,
-                              selectedTileColor: Colors.white,
-                              leading:  CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      '${HomeController.to.tailorList.value[0].shopName}')),
-                              title: Text(HomeController.to.tailorList.value[0].shopName,
-                                  style: GoogleFonts.dmSans(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14.00.sp)),
-                              subtitle: SizedBox(
-                                  width: screenWidth * 0.3,
-                                  child: Row(children: [
-                                    RatingBar(
-                                        initialRating: HomeController.to.tailorList.value[0].avgRate.toDouble(),
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 12,
-                                        ignoreGestures: true,
-                                        unratedColor: Colors.grey,
-                                        ratingWidget: RatingWidget(
-                                            full: const Icon(Icons.star_rounded,
-                                                color: Color(0xffFFA800)),
-                                            half: const Icon(Icons.star_half_rounded,
-                                                color: Color(0xffFFA800)),
-                                            empty: const Icon(
+                  Obx(
+                    () =>
+                        HomeController.to.tailorLoading.value
+                            ? CommonLoading()
+                            : Container(
+                              width: screenWidth,
+                              //  margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    offset: const Offset(0, 1),
+                                    blurRadius: 5,
+                                    spreadRadius: 0,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    tileColor: Colors.white,
+                                    selectedTileColor: Colors.white,
+                                    leading: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        '${HomeController.to.tailorList.value[0].shopName}',
+                                      ),
+                                    ),
+                                    title: Text(
+                                      HomeController
+                                          .to
+                                          .tailorList
+                                          .value[0]
+                                          .shopName,
+                                      style: GoogleFonts.dmSans(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14.00.sp,
+                                      ),
+                                    ),
+                                    subtitle: SizedBox(
+                                      width: screenWidth * 0.3,
+                                      child: Row(
+                                        children: [
+                                          RatingBar(
+                                            initialRating:
+                                                HomeController
+                                                    .to
+                                                    .tailorList
+                                                    .value[0]
+                                                    .avgRate
+                                                    .toDouble(),
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemCount: 5,
+                                            itemSize: 12,
+                                            ignoreGestures: true,
+                                            unratedColor: Colors.grey,
+                                            ratingWidget: RatingWidget(
+                                              full: const Icon(
+                                                Icons.star_rounded,
+                                                color: Color(0xffFFA800),
+                                              ),
+                                              half: const Icon(
+                                                Icons.star_half_rounded,
+                                                color: Color(0xffFFA800),
+                                              ),
+                                              empty: const Icon(
                                                 Icons.star_outline_rounded,
-                                                color: Color(0xffFFA800))),
-                                        onRatingUpdate: (value) {
-                                          setState(() {
-                                            // ratinglist[index] =
-                                            //     value;
-                                          });
-                                        }),
-                                    SizedBox(width: screenWidth * 0.01),
-                                    Text('${HomeController.to.tailorList.value[0].avgRate} star',
-                                        style: GoogleFonts.dmSans(
-                                            fontSize: 9.00.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColor.black))
-                                  ])),
-                              trailing: Column(children: [
-                                Text('₹ ${HomeController.to.tailorList.value[0].category!.price}',
-                                    style: GoogleFonts.dmSans(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16.00.sp,
-                                        color: AppColor.black))
-                              ])),
-                       //   SizedBox(height: screenHeight * 0.01),
-                          ExpansionTile(
-                              title: Text('About Seller',
-                                  style: GoogleFonts.dmSans(
-                                      fontSize: 10.00.sp,
-                                      fontWeight: FontWeight.w400)),
-                              trailing:
-                                  Image.asset('assets/images/arrow_down.png'),
-                              shape: const Border(),
-                              expandedAlignment: Alignment.centerLeft,
-                              children: [
-                                Text('Reseller',
-                                    style: GoogleFonts.dmSans(
+                                                color: Color(0xffFFA800),
+                                              ),
+                                            ),
+                                            onRatingUpdate: (value) {
+                                              setState(() {
+                                                // ratinglist[index] =
+                                                //     value;
+                                              });
+                                            },
+                                          ),
+                                          SizedBox(width: screenWidth * 0.01),
+                                          Text(
+                                            '${HomeController.to.tailorList.value[0].avgRate} star',
+                                            style: GoogleFonts.dmSans(
+                                              fontSize: 9.00.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColor.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    trailing: Column(
+                                      children: [
+                                        Text(
+                                          '₹ ${HomeController.to.tailorList.value[0].category!.price}',
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16.00.sp,
+                                            color: AppColor.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  //   SizedBox(height: screenHeight * 0.01),
+                                  ExpansionTile(
+                                    title: Text(
+                                      'About Seller',
+                                      style: GoogleFonts.dmSans(
                                         fontSize: 10.00.sp,
                                         fontWeight: FontWeight.w400,
-                                        color: AppColor.hintTextColor))
-                              ]),
-                        ])),
+                                      ),
+                                    ),
+                                    trailing: Image.asset(
+                                      'assets/images/arrow_down.png',
+                                    ),
+                                    shape: const Border(),
+                                    expandedAlignment: Alignment.centerLeft,
+                                    children: [
+                                      Text(
+                                        'Reseller',
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 10.00.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.hintTextColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                   ),
                   const Gap(24),
                   Padding(
@@ -572,28 +758,36 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: InkWell(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AddMeasurement()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddMeasurement(),
+                          ),
+                        );
                       },
                       child: Container(
                         color: AppColor.primary,
                         padding: const EdgeInsets.all(8),
                         child: Center(
-                            child: Text('Continue',
-                                style: GoogleFonts.dmSans(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 11.00.sp,
-                                    color: AppColor.white))),
+                          child: Text(
+                            'Continue',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 11.00.sp,
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: screenHeight * 0.03)
-          ]),
-        ));
+            SizedBox(height: screenHeight * 0.03),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -617,18 +811,26 @@ class RatingsWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Column(children: [
-                Text('${rating}',
+              Column(
+                children: [
+                  Text(
+                    '${rating}',
                     style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 38.00.sp,
-                        color: AppColor.textColor)),
-                Text('$totalRatings ratings',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 38.00.sp,
+                      color: AppColor.textColor,
+                    ),
+                  ),
+                  Text(
+                    '$totalRatings ratings',
                     style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12.00.sp,
-                        color: AppColor.borderGrey))
-              ]),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12.00.sp,
+                      color: AppColor.borderGrey,
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -643,10 +845,13 @@ class RatingsWidget extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: List.generate(
-                                  5 - i,
-                                  (index) => Icon(Icons.star,
-                                      color: AppColor.starColor,
-                                      size: Get.height * 0.022)),
+                                5 - i,
+                                (index) => Icon(
+                                  Icons.star,
+                                  color: AppColor.starColor,
+                                  size: Get.height * 0.022,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -654,20 +859,25 @@ class RatingsWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                  width: (150 *
-                                          ratingCounts[4 - i] /
-                                          int.parse(totalRatings))
-                                      .clamp(0, 200),
-                                  height: Get.height * 0.022,
-                                  decoration: BoxDecoration(
-                                      color: AppColor.primary,
-                                      borderRadius: BorderRadius.circular(19))),
+                                width: (150 *
+                                        ratingCounts[4 - i] /
+                                        int.parse(totalRatings))
+                                    .clamp(0, 200),
+                                height: Get.height * 0.022,
+                                decoration: BoxDecoration(
+                                  color: AppColor.primary,
+                                  borderRadius: BorderRadius.circular(19),
+                                ),
+                              ),
                               const SizedBox(width: 8),
-                              Text(ratingCounts[4 - i].toString(),
-                                  style: GoogleFonts.dmSans(
-                                      fontSize: 12.00.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColor.ratingTextColor))
+                              Text(
+                                ratingCounts[4 - i].toString(),
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 12.00.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColor.ratingTextColor,
+                                ),
+                              ),
                             ],
                           ),
                         ],

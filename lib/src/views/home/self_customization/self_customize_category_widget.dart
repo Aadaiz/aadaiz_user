@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
@@ -35,6 +37,8 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
       return 2;
     }
   }
+
+
 
   @override
   void initState() {
@@ -140,6 +144,16 @@ class CategoryWidget extends StatelessWidget {
   final dynamic index;
   @override
   Widget build(BuildContext context) {
+    final random = Random();
+
+    Color getRandomColor() {
+      return Color.fromARGB(
+        255,
+        random.nextInt(256),
+        random.nextInt(256),
+        random.nextInt(256),
+      );
+    }
     return InkWell(
       onTap: () {
         Get.to(() =>  ProductListScreen(id:id,index:index));
@@ -157,15 +171,49 @@ class CategoryWidget extends StatelessWidget {
                       bottomRight: Radius.circular(bottomRight),
                       bottomLeft: Radius.circular(bottomLeft),
                     ),
-                    child: Image.network(
-                      image,
-                      fit: BoxFit.cover,
-                      height: height,
-                      // width: width/2,
-                    ),
+                    child: CachedNetworkImage(
+                        height: height,
+                         width: width,
+                        fit: BoxFit.cover,
+                        errorWidget: (BuildContext context, String url,
+                            Object error) =>
+                            Container(decoration:
+                            BoxDecoration(
+                              color: getRandomColor(),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(topRight),
+                                topLeft: Radius.circular(topLeft),
+                                bottomRight: Radius.circular(bottomRight),
+                                bottomLeft: Radius.circular(bottomLeft),
+                              ),
+                            ),
+                              child: Image.asset('assets/images/doll.png',
+                                    fit: BoxFit.fill,
+                                    height: height,
+                                    width: width,
+                              ),
+                            ),
+                        progressIndicatorBuilder: (BuildContext context,
+                            String url, DownloadProgress progress) =>
+                            Container(
+                                height: height,
+                                 width: width,
+                              color: Colors.black,
+                              child: Center(
+                                  child: Transform.scale(
+                                    scale: 0.5,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey,
+                                      strokeWidth: 2,
+                                      value: progress.progress,
+                                    ),
+                                  )),
+                            ),
+                        imageUrl:
+                        (image)),
                   ),
                   Positioned(
-                    left: width * 0.3,
+                    right: width * 0.05,
                     child: SizedBox(
                       width: width / 1.5,
                       child: Text(
@@ -195,12 +243,46 @@ class CategoryWidget extends StatelessWidget {
                         topLeft: Radius.circular(topLeft),
                         bottomRight: Radius.circular(bottomRight),
                         bottomLeft: Radius.circular(bottomLeft)),
-                    child: Image.network(
-                      image,
-                      fit: BoxFit.cover,
-                      width: width,
-                      height: height,
-                    ),
+                    child: CachedNetworkImage(
+                        width: width,
+                        height: height,
+                        fit: BoxFit.cover,
+                        errorWidget: (BuildContext context, String url,
+                            Object error) =>
+                            Container(decoration:
+                            BoxDecoration(
+                              color: getRandomColor(),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(topRight),
+                                topLeft: Radius.circular(topLeft),
+                                bottomRight: Radius.circular(bottomRight),
+                                bottomLeft: Radius.circular(bottomLeft),
+                              ),
+                            ),
+                              child: Image.asset('assets/images/doll.png',
+                                fit: BoxFit.fill,
+                                height: height,
+                                width: width,
+                              ),
+                            ),
+                        progressIndicatorBuilder: (BuildContext context,
+                            String url, DownloadProgress progress) =>
+                            Container(
+                              width: width,
+                              height: height,
+                              color: Colors.black,
+                              child: Center(
+                                  child: Transform.scale(
+                                    scale: 0.5,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey,
+                                      strokeWidth: 2,
+                                      value: progress.progress,
+                                    ),
+                                  )),
+                            ),
+                        imageUrl:
+                        (image)),
                   ),
                   Positioned(
                     top: height / 4,

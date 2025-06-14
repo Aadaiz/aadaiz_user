@@ -96,6 +96,7 @@ class Datum {
   dynamic id;
   dynamic accountType;
   dynamic shopName;
+  dynamic image;
   dynamic email;
   dynamic mobileNumber;
   Category? category;
@@ -120,6 +121,7 @@ class Datum {
     this.id,
     this.accountType,
     this.shopName,
+    this.image,
     this.email,
     this.mobileNumber,
     this.category,
@@ -149,6 +151,7 @@ class Datum {
     id: json["id"],
     accountType: json["account_type"],
     shopName: json["shop_name"],
+    image: json["image"]??'',
     email: json["email"],
     mobileNumber: json["mobile_number"],
     category: json["category"] == null ? null : Category.fromMap(json["category"]),
@@ -174,6 +177,7 @@ class Datum {
     "id": id,
     "account_type": accountType,
     "shop_name": shopName,
+    "image": image??"",
     "email": email,
     "mobile_number": mobileNumber,
     "category": category?.toMap(),
