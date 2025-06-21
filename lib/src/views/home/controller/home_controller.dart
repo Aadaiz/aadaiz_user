@@ -13,6 +13,7 @@ import 'package:aadaiz_customer_crm/src/views/home/model/review_list_model.dart'
 import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart' as tailor;
 import 'package:aadaiz_customer_crm/src/views/home/repository/home_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/order/payment_success.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -440,6 +441,26 @@ TextEditingController country = TextEditingController();
     return true;
   }
 
+  Future<dynamic> placeOrder({add,gst,dis,tot,sub,cpn,pat,type,payt})async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    Map body ={
+      'address_id':add,
+      'gst_amount':gst,
+      'discount_amount':dis,
+      'total_price':tot,
+      'sub_totalprice':sub,
+      'coupon_id':cpn,
+      'pattern_ids':pat,
+      'payment_type':type,
+      'payment_token':payt,
+      'token':'$token',
+    };
+    OrderRes res = await repo.placeOrder(jsonEncode(body));
+    if(res.status){
+      await Get.to(()=> PaymentSuccess());
+    }
+  }
   Future<dynamic>  cancelOrder() async{
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");

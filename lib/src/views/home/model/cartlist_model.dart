@@ -35,7 +35,7 @@ class Data {
   dynamic gstAmount;
   dynamic discountAmount;
   dynamic totalAmount;
-  List<dynamic>? couponDetails;
+  CouponDetails? couponDetails;
 
   Data({
     this.shippingAddress,
@@ -58,8 +58,7 @@ class Data {
     gstAmount: json["gstAmount"]??null,
     discountAmount: json["discountAmount"]??null,
     totalAmount: json["TotalAmount"]??null,
-    couponDetails: json["coupon_details"] == null ? [] : List<dynamic>.from(json["coupon_details"]!.map((x) => x)),
-  );
+    couponDetails: json["coupon_details"] == null ? null : CouponDetails.fromMap(json["coupon_details"]),  );
 
   Map<String, dynamic> toMap() => {
     "shippingAddress": shippingAddress?.toMap(),
@@ -68,7 +67,39 @@ class Data {
     "gstAmount": gstAmount??null,
     "discountAmount": discountAmount??null,
     "TotalAmount": totalAmount??null,
-    "coupon_details": couponDetails == null ? [] : List<dynamic>.from(couponDetails!.map((x) => x)),
+    "coupon_details": couponDetails?.toMap(),
+  };
+}
+
+class CouponDetails {
+  int? id;
+  String? couponType;
+  String? couponCode;
+  String? discount;
+
+  CouponDetails({
+    this.id,
+    this.couponType,
+    this.couponCode,
+    this.discount,
+  });
+
+  factory CouponDetails.fromJson(String str) => CouponDetails.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory CouponDetails.fromMap(Map<String, dynamic> json) => CouponDetails(
+    id: json["id"],
+    couponType: json["coupon_type"],
+    couponCode: json["coupon_code"],
+    discount: json["discount"],
+  );
+
+  Map<String, dynamic> toMap() => {
+    "id": id,
+    "coupon_type": couponType,
+    "coupon_code": couponCode,
+    "discount": discount,
   };
 }
 

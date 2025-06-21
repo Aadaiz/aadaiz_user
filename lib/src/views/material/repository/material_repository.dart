@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/material/model/material_cart_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_favorites_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_model.dart';
@@ -47,11 +48,11 @@ class MaterialRepository {
     return res;
   }
 
-  Future<dynamic> getCart({page}) async {
+  Future<dynamic> getCart() async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");
-    var response = await _http.get("${Api.materialCartList}?token=$token&page=$page");
-    MaterialFavoritesListRes res  = MaterialFavoritesListRes.fromMap(jsonDecode(response));
+    var response = await _http.get("${Api.materialCartList}?token=$token");
+    MaterialCartListRes res  = MaterialCartListRes.fromMap(jsonDecode(response));
     return res;
   }
 }

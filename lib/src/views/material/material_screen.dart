@@ -45,8 +45,11 @@ class _MaterialScreenState extends State<MaterialScreen> {
             100,
             6.0.hp,
           ),
-          child: const CommonAppBar(
+          child:  CommonAppBar(
             title: 'Material',
+            isCheck: true,
+            actionButton: Image.asset('assets/dashboard/fabric.png',color: AppColor.primary,
+            ),
           ),
         ),
       body: SingleChildScrollView(

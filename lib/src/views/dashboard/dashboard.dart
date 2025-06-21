@@ -5,6 +5,7 @@ import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -36,7 +37,7 @@ class _DashboardState extends State<Dashboard> {
     const HomeScreen(),
     const ProfileScreen(),
     const HomeScreen(),
-    const Cart(),
+    const MaterialCart(),
     const ProfileScreen(),
   ];
 
