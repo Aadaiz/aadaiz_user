@@ -44,7 +44,7 @@ class AuthController extends GetxController{
     signUpLoading(false);
     if(res.success==true){
       otpToken.value= res.data!.otpToken;
-      await Get.to(()=>const OtpScreen(isLogin: false));
+      await Get.to(()=>const OtpScreen(isLogin: false,));
      // Get.to(()=>const SignupOtpScreen());
     }else{
       // if(res.data!.email!=null) {
@@ -73,6 +73,13 @@ class AuthController extends GetxController{
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('token', '${res.data!.token}');
+      name.clear();
+      mobile.clear();
+      email.clear();
+      age.clear();
+      genderValue.value = ''; // Adjust based on your default gender value
+      otp.clear();
+      otpToken.value = '';
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
             Dashboard(), // Navigate to home if logged in
@@ -123,6 +130,9 @@ var loginLoading = false.obs;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('token', '${res.data!.token}');
+      loginMobile.clear();
+      otp.clear();
+      otpToken.value = '';
       await Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) =>
             Dashboard(), // Navigate to home if logged in

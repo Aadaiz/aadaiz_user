@@ -30,6 +30,8 @@ class _DesignerDetailState extends State<DesignerDetail> {
   String date = '';
   String time = '';
   int selected = 0;
+  DateTime selectedDate = DateTime.now();
+
   dateConvert(dat) {
     var formatter = DateFormat('dd-MM-yyyy');
     setState(() {
@@ -230,16 +232,20 @@ class _DesignerDetailState extends State<DesignerDetail> {
                     color: AppColor.black,
                   ),
                 ),
+
+
                 SizedBox(height: screenHeight * 0.022),
                 CalendarTimeline(
-                  initialDate: DateTime.now(),
+                  initialDate: selectedDate,
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2050),
                   activeDayColor: AppColor.white,
                   activeBackgroundDayColor: AppColor.primary,
                   monthColor: AppColor.black.withOpacity(0.5),
-                  onDateSelected: (DateTime val) async {
-                    await dateConvert(val);
+                  onDateSelected: (val) async{
+                    setState(() {
+                      selectedDate = val;
+                    });
                     await ConsultingController.to.getAvailableSlots(widget.data.id, date);
                   },
                 ),

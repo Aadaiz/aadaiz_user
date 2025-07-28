@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/custom_widgets.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GetTechnicalSupport extends StatefulWidget {
@@ -14,7 +20,14 @@ class GetTechnicalSupport extends StatefulWidget {
 }
 
 class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
-
+  TextEditingController title = TextEditingController();
+  TextEditingController description = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ProfileController.to.image.value = File('');
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -65,6 +78,7 @@ class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
                     )
                 ),
                 child: TextFormField(
+                    controller: title,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
@@ -107,6 +121,7 @@ class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
                 padding: EdgeInsets.fromLTRB(8, screenHeight * 0.022, 5, 0),
               child: TextFormField(
                 // expands: true,
+                controller: description,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.next,
                   maxLines: null,
@@ -141,31 +156,38 @@ class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
                         color: AppColor.black
                     )
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColor.black.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 4)
-                      )
-                    ]
-                  ),
-                  child: ListTile(
-                    leading: Image.asset(
-                      'assets/images/camera.png',
-                      height: screenHeight * 0.033
-                    ),
-                    title: Text(
-                        'Add your photos',
-                        style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.textColor
+                child: InkWell(
+                  onTap: (){
+                    ProfileController.to.showdialog(
+                      context
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 4)
                         )
+                      ]
+                    ),
+                    child: ListTile(
+                      leading: Image.asset(
+                        'assets/images/camera.png',
+                        height: screenHeight * 0.033
+                      ),
+                      title: Text(
+                          'Add your photos',
+                          style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 11.00.sp,
+                              color: AppColor.textColor
+                          )
+                      )
                     )
-                  )
+                  ),
                 )
             )
           ]
@@ -198,9 +220,17 @@ class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
             ),
             SizedBox(
               width: screenWidth / 2.2,
-              child: CommonButton(
-                  press: (){},
-                text: 'Create Ticket'
+              child: Obx(()=>
+                 CommonButton(
+                  loading: ProfileController.to.addSupportLoading.value,
+                    press: ()async{
+                    await  ProfileController.to.uploadImage();
+                    await  ProfileController.to.addSupport(title.text, description.text);
+                    ProfileController.to.getSupportList();
+                    Get.back();
+                    },
+                  text: 'Create Ticket'
+                ),
               )
             )
           ]

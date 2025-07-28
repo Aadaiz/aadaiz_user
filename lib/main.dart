@@ -27,7 +27,7 @@ void main() async {
   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   // call the useSystemCallingUI
-  ZegoUIKit().initLog().then((value) {
+  await ZegoUIKit().initLog().then((value) {
     ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
       [ZegoUIKitSignalingPlugin()],
     );

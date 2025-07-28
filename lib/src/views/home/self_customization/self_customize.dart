@@ -36,91 +36,46 @@ class _SelfCustomizeState extends State<SelfCustomize> {
     {
       "name": "Material",
       "categories": [
-        {
-          "color": Colors.transparent,
-          "name": "Half Sleeve",
-        },
-        {
-          "color": Colors.blue,
-          "name": "Half Sleeve",
-        },
-        {
-          "color": Colors.green,
-          "name": "Half Sleeve",
-        },
-        {
-          "color": Colors.orange,
-          "name": "Half Sleeve",
-        },
-      ]
+        {"color": Colors.transparent, "name": "Half Sleeve"},
+        {"color": Colors.blue, "name": "Half Sleeve"},
+        {"color": Colors.green, "name": "Half Sleeve"},
+        {"color": Colors.orange, "name": "Half Sleeve"},
+      ],
     },
     {
       "name": "Skirt",
       "categories": [
-        {
-          "image": 'assets/self/b1.png',
-          "name": "Knee",
-        },
-        {
-          "image": 'assets/self/b2.png',
-          "name": "Knee",
-        },
-        {
-          "image": 'assets/self/b3.png',
-          "name": "Knee",
-        },
-      ]
+        {"image": 'assets/self/b1.png', "name": "Knee"},
+        {"image": 'assets/self/b2.png', "name": "Knee"},
+        {"image": 'assets/self/b3.png', "name": "Knee"},
+      ],
     },
     {
       "name": "Top",
       "categories": [
-        {
-          "image": 'assets/self/t1.png',
-          "name": "Full Top",
-        },
-        {
-          "image": 'assets/self/t2.png',
-          "name": "Full Top",
-        },
-        {
-          "image": 'assets/self/t3.png',
-          "name": "Full Top",
-        },
-        {
-          "image": 'assets/self/4.png',
-          "name": "Full Top",
-        },
-        {
-          "image": 'assets/self/11.png',
-          "name": "Full Top",
-        },
-      ]
+        {"image": 'assets/self/t1.png', "name": "Full Top"},
+        {"image": 'assets/self/t2.png', "name": "Full Top"},
+        {"image": 'assets/self/t3.png', "name": "Full Top"},
+        {"image": 'assets/self/4.png', "name": "Full Top"},
+        {"image": 'assets/self/11.png', "name": "Full Top"},
+      ],
     },
     {
       "name": "Sleeve",
       "categories": [
-        {
-          "image": 'assets/self/s1.png',
-          "name": "Half Sleeve",
-        },
-        {
-          "image": 'assets/self/s2.png',
-          "name": "Half Sleeve",
-        },
-        {
-          "image": 'assets/self/s3.png',
-          "name": "Half Sleeve",
-        },
-      ]
+        {"image": 'assets/self/s1.png', "name": "Half Sleeve"},
+        {"image": 'assets/self/s2.png', "name": "Half Sleeve"},
+        {"image": 'assets/self/s3.png', "name": "Half Sleeve"},
+      ],
     },
   ];
   final GlobalKey _globalKey = GlobalKey();
 
-
   Future<void> captureAndSavePng() async {
     try {
       RenderRepaintBoundary boundary =
-      _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          _globalKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
 
       if (boundary.debugNeedsPaint) {
         await Future.delayed(const Duration(milliseconds: 20));
@@ -128,8 +83,9 @@ class _SelfCustomizeState extends State<SelfCustomize> {
       }
 
       final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      final ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+      final ByteData? byteData = await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
       final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       final directory = await getApplicationDocumentsDirectory();
@@ -138,32 +94,28 @@ class _SelfCustomizeState extends State<SelfCustomize> {
       await imgFile.writeAsBytes(pngBytes);
 
       print('Saved image at: $filePath');
-      await Get.to(()=> SelectSellers(image: imgFile,data:widget.data));
+      await Get.to(() => SelectSellers(image: imgFile, data: widget.data));
     } catch (e) {
       print('Error capturing image: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size(
-          100,
-          5.5.hp,
-        ),
-        child:  CommonAppBar(
+        preferredSize: Size(100, 5.5.hp),
+        child: CommonAppBar(
           title: 'Self Customize',
           isCheck: true,
-          actionButton:    CommonButton(
+          actionButton: CommonButton(
             width: 80.0,
             height: 40.0,
             borderRadius: 12.0,
             text: 'Finish',
-            press: () async{
-            await  captureAndSavePng();
+            press: () async {
+              await captureAndSavePng();
             },
           ),
         ),
@@ -191,67 +143,67 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                             ),
                             selectedMaterial != null
                                 ? Positioned(
-                                    top: 35,
-                                    left: 0,
-                                    child: Container(
-                                      width: Get.width,
-                                      height: Get.height * 0.165,
-                                      color: selectedMaterial,
-                                    ),
-                                  )
+                                  top: 35,
+                                  left: 0,
+                                  child: Container(
+                                    width: Get.width,
+                                    height: Get.height * 0.165,
+                                    color: selectedMaterial,
+                                  ),
+                                )
                                 : const SizedBox(),
                             selectedTop != null
                                 ? Positioned(
-                                    top: Get.height*0.2,
-                                    left: 0,
-                                    child: Container(
-                                      width: Get.width,
-                                      height: Get.height * 0.16,
-                                      color: selectedTop,
-                                    ),
-                                  )
+                                  top: Get.height * 0.2,
+                                  left: 0,
+                                  child: Container(
+                                    width: Get.width,
+                                    height: Get.height * 0.16,
+                                    color: selectedTop,
+                                  ),
+                                )
                                 : const SizedBox(),
                             selectedPant != null
                                 ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      //  selectedPant != null ?
-                                      selectedPant!,
-                                      //:defaultBottom,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    //  selectedPant != null ?
+                                    selectedPant!,
+                                    //:defaultBottom,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                                 : Container(),
                             selectedSleeve != null
                                 ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      // selectedSleeve != null ?
-                                      selectedSleeve!,
-                                      // :defaultSleeve,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    // selectedSleeve != null ?
+                                    selectedSleeve!,
+                                    // :defaultSleeve,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                                 : Container(),
                             selectedShirt != null
                                 ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      // selectedShirt != null ?
-                                      selectedShirt!,
-                                      // :defaultTop,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    // selectedShirt != null ?
+                                    selectedShirt!,
+                                    // :defaultTop,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                                 : Container(),
                           ],
                         ),
@@ -311,29 +263,34 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                             }
                           });
                         },
-                        child: selectedIndex != 0
-                            ? Container(
-                                decoration: BoxDecoration(
+                        child:
+                            selectedIndex != 0
+                                ? Container(
+                                  decoration: BoxDecoration(
                                     //   color: Colors.blue,
                                     border: Border.all(
-                                        color: selectedIndex == index
-                                            ? Colors.teal
-                                            : Colors.grey),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Image.asset(
-                                  data['image'],
-                                  height: Get.height * 0.1,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
+                                      color:
+                                          selectedIndex == index
+                                              ? Colors.teal
+                                              : Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Image.asset(
+                                    data['image'],
+                                    height: Get.height * 0.1,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                                : Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
                                     color: data['color'],
                                     border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8)),
-                              ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
                       ),
                     );
                   },
@@ -359,20 +316,24 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: selectedIndex == index
-                                  ? Colors.teal.shade400
-                                  : Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(8)),
+                            color:
+                                selectedIndex == index
+                                    ? Colors.teal.shade400
+                                    : Colors.grey.shade400,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
                               child: Text(
                                 data['name'],
                                 style: TextStyle(
-                                    color: selectedIndex == index
-                                        ? Colors.white
-                                        : Colors.white,
-                                    fontSize: 15),
+                                  color:
+                                      selectedIndex == index
+                                          ? Colors.white
+                                          : Colors.white,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
                           ),

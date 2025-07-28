@@ -497,6 +497,7 @@ TextEditingController country = TextEditingController();
       for(var i=0;i<res.ratingCounts!.length;i++){
         ratingCount.add(res.ratingCounts![i]);
       }
+      print('dfafd $ratingCount');
       if(res.data!.data!.isNotEmpty){
         if(isRefresh){
           reviewList.value = res.data!.data!;

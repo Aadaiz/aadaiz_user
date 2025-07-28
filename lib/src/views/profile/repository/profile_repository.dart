@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,4 +89,19 @@ class ProfileRepository {
       }
     }
   }
+  Future<dynamic> supportLists() async {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    var response = await _http.get("${Api.supportLists}?token=$token");
+    SupportListRes res  = SupportListRes.fromMap(jsonDecode(response));
+    return res;
+  }
+
+  Future<dynamic> addSupport(body) async {
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    var response = await _http.post(Api.support,body,contentType: true);
+    return jsonDecode(response);
+  }
+
 }

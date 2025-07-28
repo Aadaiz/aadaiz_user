@@ -30,14 +30,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
     return Scaffold(
       backgroundColor: AppColor.primary,
-      body: SafeArea(
-          child: Center(
-            child: Image.asset(
-              'assets/dashboard/aadaiz.png',
-              height: Get.height * 0.7,
-              width: Get.width * 0.5
-            )
-          )
+      body: Center(
+        child: Image.asset(
+          'assets/dashboard/aadaiz.png',
+          height: Get.height * 0.7,
+          width: Get.width * 0.5
+        )
       )
     );
 

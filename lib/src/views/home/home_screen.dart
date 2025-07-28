@@ -38,35 +38,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.backGroundColor,
-      body:  SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Gap(2.0.hp),
-                const TopWidget(),
-                Gap(3.0.hp),
-                Image.asset(
-                  'assets/images/fc.png',
-                  fit:BoxFit.fill,
-                  //  height: 10.0.hp,
-                  width: Get.width,
-                ),
-                Gap(3.0.hp),
-                const CustomizeWidget(),
-                Gap(3.0.hp),
-                Image.asset(
-                  'assets/images/mb.png',
-                  fit:BoxFit.fill,
-                  //  height: 10.0.hp,
-                  width: Get.width,
-                ),
-                Gap(3.0.hp),
-               const FabricWidget(),
-                Gap(3.0.hp),
-              ],
-            ),
-          )),
+       backgroundColor: AppColor.white,
+      body:  SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 40),
+          child: Column(
+
+            children: [
+              Gap(2.0.hp),
+              const TopWidget(),
+              Gap(3.0.hp),
+              Image.asset(
+                'assets/images/fc.png',
+                fit:BoxFit.fill,
+                //  height: 10.0.hp,
+                width: Get.width,
+              ),
+              Gap(3.0.hp),
+              const CustomizeWidget(),
+              Gap(3.0.hp),
+              Image.asset(
+                'assets/images/mb.png',
+                fit:BoxFit.fill,
+                //  height: 10.0.hp,
+                width: Get.width,
+              ),
+              Gap(3.0.hp),
+
+              const FabricWidget(),
+              Gap(3.0.hp),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
