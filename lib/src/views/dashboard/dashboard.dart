@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
   List<Widget> screens = <Widget>[
     const HomeScreen(),
     const ProfileScreen(),
-    const HomeScreen(),
+    const MyOrderScreen(),
     const MaterialCart(),
     const ProfileScreen(),
   ];
@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
     {'icon': 'assets/dashboard/fabric.png', 'text': 'Material','screen': const MaterialScreen()},
     {'icon': 'assets/dashboard/cor.png', 'text': 'Customer orders','screen':  CustomerDashboard()},
   ];
-   final controller =  Get.put(DashboardController());
+   final controller =  DashboardController.to;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -111,32 +111,36 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ),
-      body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(child: screens[controller.tabSelected.value])
-            ],
-          )),
-      bottomNavigationBar: Container(
+      body:
+       Column(
+          children: [
+           Obx(()=> Expanded(child: screens[controller.tabSelected.value],))
+          ],
+
+      ),
+      bottomNavigationBar:  Container(
         height: 7.00.hp,
         color: AppColor.backGroundColor,
         child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: icon.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: (){
-                  if(index!=4){
-                    setState(() {
-                      controller.tabSelected.value=index;
-                    });
-                  }else{
-                    _scaffoldKey.currentState?.openDrawer();
-                  }
-                },
-                child: SizedBox(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: icon.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                if (index != 4) {
+                  setState(() {
+                    controller.tabSelected.value = index;
+
+                  });
+
+                } else {
+                  _scaffoldKey.currentState?.openDrawer();
+                }
+              },
+              child: Obx(()=>
+                SizedBox(
                   width: 20.00.wp,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,24 +150,31 @@ class _DashboardState extends State<Dashboard> {
                         icon[index]['icon'],
                         height: 03.00.hp,
                         width: 06.00.wp,
-                        color: controller.tabSelected.value==index || index==4
-                            ? AppColor.primary:
-                        AppColor.unSelectColor,
+                        color: controller.tabSelected.value == index || index == 4
+                            ? AppColor.primary
+                            : AppColor.unSelectColor,
                       ),
-                      Text(icon[index]['text'],
-                          style: GoogleFonts.dmSans(
-                              textStyle:  TextStyle(
-                                  fontSize: 8.00.sp,
-                                  color: controller.tabSelected.value==index || index==4? AppColor.primary:
-                                  AppColor.unSelectColor,
-                                  fontWeight: FontWeight.w400))),
-                      //const Gap(4)
+                      Text(
+                        icon[index]['text'],
+                        style: GoogleFonts.dmSans(
+                          textStyle: TextStyle(
+                            fontSize: 8.00.sp,
+                            color: controller.tabSelected.value == index || index == 4
+                                ? AppColor.primary
+                                : AppColor.unSelectColor,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              );
-            }),
+              ),
+            );
+          },
+        ),
       ),
+
     );
   }
 }

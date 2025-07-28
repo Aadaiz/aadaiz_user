@@ -22,7 +22,7 @@ class ReviewList extends StatefulWidget {
 
 class _ReviewListState extends State<ReviewList> {
   final RefreshController refreshController =
-      RefreshController(initialRefresh: true);
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     // TODO: implement initState

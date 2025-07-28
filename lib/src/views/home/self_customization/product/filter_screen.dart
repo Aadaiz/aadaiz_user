@@ -38,14 +38,15 @@ class _FilterScreenState extends State<FilterScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () async {
+    Future.delayed(const Duration(milliseconds: 100), () async {
       await HomeController.to.getFilterList();
+      category = HomeController
+          .to
+          .filterList
+      [selectedCategory]
+          .patternCategories!;
     });
-    category = HomeController
-        .to
-        .filterList
-        .value[selectedCategory]
-        .patternCategories!;
+
   }
 
   @override

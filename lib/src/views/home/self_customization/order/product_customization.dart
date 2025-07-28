@@ -859,10 +859,9 @@ class RatingsWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width: (150 *
-                                        ratingCounts[4 - i] /
-                                        int.parse(totalRatings))
-                                    .clamp(0, 200),
+                                width: totalRatings == "0"
+                                    ? 0
+                                    : (150 * ratingCounts[4 - i] / int.parse(totalRatings)).clamp(0, 150),
                                 height: Get.height * 0.022,
                                 decoration: BoxDecoration(
                                   color: AppColor.primary,

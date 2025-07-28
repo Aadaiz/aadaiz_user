@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart'as support;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +28,7 @@ class ProfileController extends GetxController{
   }
   var profileLoading = false.obs;
   var profileData= profile.User().obs;
-
+var UpdateprofileLoading=false.obs;
   getProfile() async {
     profileLoading(true);
     ProfileRes res = await repo.profile();
@@ -41,48 +44,103 @@ class ProfileController extends GetxController{
   }
 
   Future<dynamic> updateProfile() async {
-    profileLoading(true);
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    Map body ={
-      'token': token,
-      'username': profileName.text,
-      'profile_image': '${uploadImages.value}',
-    };
-    ProfileRes res = await repo.updateProfile(jsonEncode(body));
-    if(res.status==true){
-      profileLoading(false);
-      getProfile();
-    }
+    UpdateprofileLoading(true);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token");
 
+    try {
+      // Check if there are selected images to upload
+      if (selectedImages.isNotEmpty) {
+        await uploadImage(); // Call uploadImage to upload images and set uploadImages.value
+      }
+
+      // Prepare the body for the profile update
+      Map body = {
+        'token': token,
+        'username': profileName.text,
+        'profile_image': uploadImages.value, // Use the uploaded image URL
+      };
+      print('Update Profile Body: $body'); // Debug log to verify body
+
+      ProfileRes res = await repo.updateProfile(jsonEncode(body));
+      if (res.status == true) {
+        getProfile();
+
+
+
+
+
+
+
+      } else {
+        Get.snackbar('Error', 'Failed to update profile');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'An error occurred: $e');
+      rethrow;
+    } finally {
+      UpdateprofileLoading(false); // Reset loading state
+    }
   }
 
   var addPostLoading=false.obs;
   var uploadImages = ''.obs;
   var selectedImages = <File>[];
- Future<dynamic> uploadImage() async {
+  Future<dynamic> uploadImage() async {
     List upload = [];
     uploadImages.value = '';
-      addPostLoading(true);
-    for (var i = 0; i < selectedImages.length; i++) {
-      try {
-        var response =
-        await repo.uploadImage(image: selectedImages[i].path);
+
+    try {
+      for (var i = 0; i < selectedImages.length; i++) {
+        var response = await repo.uploadImage(image: selectedImages[i].path);
         if (response != null) {
           upload.add(response.url);
-        } else {}
-      } catch (e) {
-        rethrow;
+        }
       }
-
-      ///list to string convert here
+      uploadImages.value = upload.join(',');
+      if (uploadImages.value.isEmpty) {
+        Get.snackbar('Error', 'Failed to upload image');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Image upload failed: $e');
+      rethrow;
     }
-    uploadImages.value = upload.join(',');
   }
 
   TextEditingController profileName = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController mobile = TextEditingController();
+
+  var addSupportLoading=false.obs;
+  addSupport(title,description)async{
+    addSupportLoading(true);
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString("token");
+    Map body ={
+      'title': title,
+      'description': description,
+      'attachment': '${uploadImages.value}',
+      'token': token,
+    };
+    final res = await repo.addSupport(jsonEncode(body));
+    addSupportLoading(false);
+    CommonToast.show(msg: res['message']);
+  }
+
+  var supportListLoading=false.obs;
+  var supportList=<support.Datum>[].obs;
+
+  getSupportList() async{
+    supportListLoading(true);
+    SupportListRes res = await repo.supportLists();
+    supportListLoading(false);
+    if(res.success==true){
+      supportList.value = res.data!;
+    }else{
+      supportList.clear();
+    }
+
+  }
 
 
 

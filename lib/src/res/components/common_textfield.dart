@@ -76,7 +76,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
           BoxShadow(
               color: Colors.white, blurRadius: 2.0, offset: Offset(0.0, 0.0)),
         ],
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -113,9 +113,9 @@ class _CommonTextFieldState extends State<CommonTextField> {
                 hintText: widget.hintText,
                 hintStyle:GoogleFonts.dmSans(
                     textStyle:  TextStyle(
-                        fontSize: 10.0.sp,
+                        fontSize: 12.0.sp,
                         color: AppColor.greyTitleColor,
-                        fontWeight: FontWeight.w500)),
+                        fontWeight: FontWeight.w400)),
                 contentPadding: widget.forPassword
                     ? const EdgeInsets.symmetric(vertical: 10, horizontal: 0)
                     :widget.isDropDown
@@ -153,7 +153,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   textStyle:  TextStyle(
                       fontSize: 14.00,
                       color: AppColor.greyTitleColor,
-                      fontWeight: FontWeight.w500)),
+                      fontWeight: FontWeight.w700)),
               validator: widget.validator,
             ),
           ),

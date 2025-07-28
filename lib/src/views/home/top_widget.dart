@@ -127,7 +127,7 @@ class _TopWidgetState extends State<TopWidget> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: 13, // Image radius
+                            radius: 16, // Image radius
                             backgroundImage: NetworkImage(
                                 data.imageUrl),
                           ),

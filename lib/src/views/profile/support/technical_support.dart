@@ -108,8 +108,8 @@ class _TechnicalSupportState extends State<TechnicalSupport> with SingleTickerPr
                         )
                       ]
                   ),
-                  SizedBox(
-                    height: screenHeight / 1.4,
+                  Expanded(
+                  //  height: screenHeight,
                     child: TabBarView(
                       physics: NeverScrollableScrollPhysics(),
                         controller: _tabController,

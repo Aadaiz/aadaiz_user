@@ -13,10 +13,10 @@ import '../../../services/http_services.dart';
 class MaterialRepository {
   static final HttpHelper _http = HttpHelper();
 
-  Future<dynamic> getMaterialList({search, page}) async {
+  Future<dynamic> getMaterialList({search,priceLowHigh, page}) async {
     SharedPreferences prefs=await SharedPreferences.getInstance();
     var token=prefs.getString("token");
-    var response = await _http.get("${Api.materialList}?search=$search&token=$token&page=$page");
+    var response = await _http.get("${Api.materialList}?search=$search&sort_by_price=${priceLowHigh??""}&token=$token&page=$page");
     MaterialListRes res  = MaterialListRes.fromMap(jsonDecode(response));
     return res;
   }

@@ -5,6 +5,7 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/controller/auth_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/my_orders_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/payment_history.dart';
@@ -34,328 +35,364 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     ProfileController.to.getProfile();
+  }
+  @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size(
-            100,
-            6.0.hp,
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size(100, 6.0.hp),
+        child:  CommonAppBar(title: 'Profile',leadingclick:(){
+        DashboardController.to.tabSelected.value=0;}
+       ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.045,
+            vertical: screenHeight * 0.03,
           ),
-          child: const CommonAppBar(
-            title: 'Profile',
-          ),
-        ),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.045,
-                    vertical: screenHeight * 0.03),
-                child: Obx(
-                  () => ProfileController.to.profileLoading.value
-                      ? const CommonLoading()
-                      : Column(children: [
-                          Center(
-                              child: Stack(children: <Widget>[
-                            ProfileController
-                                        .to.profileData.value.profileImage !=
-                                    null
-                                ? ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(screenWidth),
+          child: Obx(
+            () =>
+                ProfileController.to.profileLoading.value
+                    ? const CommonLoading()
+                    : Column(
+                      children: [
+                        Center(
+                          child: Stack(
+                            children: <Widget>[
+                              ProfileController
+                                          .to
+                                          .profileData
+                                          .value
+                                          .profileImage !=
+                                      null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      screenWidth,
+                                    ),
                                     child: CachedNetworkImage(
                                       fit: BoxFit.cover,
                                       height: 15.0.hp,
                                       width: 15.0.hp,
-                                      errorWidget: (context, url, error) =>
-                                          const CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  'assets/images/emtpy_profile.png'),
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              radius: 55),
-                                      progressIndicatorBuilder:
-                                          (context, url, progress) =>
-                                              Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
+                                      errorWidget:
+                                          (
+                                            context,
+                                            url,
+                                            error,
+                                          ) => const CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                              'assets/images/emtpy_profile.png',
+                                            ),
+                                            backgroundColor: Colors.transparent,
+                                            radius: 55,
                                           ),
-                                        ),
-                                      ),
-                                      imageUrl: (ProfileController
-                                          .to.profileData.value.profileImage),
+                                      progressIndicatorBuilder:
+                                          (
+                                            context,
+                                            url,
+                                            progress,
+                                          ) => Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                      imageUrl:
+                                          (ProfileController
+                                              .to
+                                              .profileData
+                                              .value
+                                              .profileImage),
                                     ),
                                   )
-                                : const CircleAvatar(
+                                  : const CircleAvatar(
                                     backgroundImage: AssetImage(
                                       'assets/images/emtpy_profile.png',
-                                    ),
+                                    ), // Positioned(
+                                //     bottom: 0,
+                                //     right: 0,
+                                //     child: CircleAvatar(
+                                //         radius: 16,
+                                //         backgroundColor: AppColor.profileBgColor,
+                                //         child: SvgPicture.asset(
+                                //             'assets/svg/ic_edit.svg'
+                                //         )
+                                //     )
+                                // )
                                     backgroundColor: Colors.transparent,
-                                    radius: 55),
-                            // Positioned(
-                            //     bottom: 0,
-                            //     right: 0,
-                            //     child: CircleAvatar(
-                            //         radius: 16,
-                            //         backgroundColor: AppColor.profileBgColor,
-                            //         child: SvgPicture.asset(
-                            //             'assets/svg/ic_edit.svg'
-                            //         )
-                            //     )
-                            // )
-                          ])),
-                          SizedBox(height: screenHeight * 0.018),
-                          Text(
-                              '${ProfileController.to.profileData.value.username ?? ''}'
-                                  .capitalizeFirst!,
-                              style: GoogleFonts.dmSans(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 18.00.sp,
-                                  color: AppColor.black)),
-                          SizedBox(height: screenHeight * 0.022),
-                          // Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Container(
-                          //           decoration: BoxDecoration(
-                          //               border: Border.all(
-                          //                   color: AppColor.tileBorderColor)),
-                          //           width: screenWidth / 2.4,
-                          //           child: ListTile(
-                          //               onTap: () {
-                          //                 Navigator.push(
-                          //                     context,
-                          //                     MaterialPageRoute(
-                          //                         builder: (BuildContext
-                          //                                 context) =>
-                          //                             const MyOrderScreen()));
-                          //               },
-                          //               leading: Image.asset(
-                          //                   'assets/dashboard/orders.png',
-                          //                   height: screenHeight * 0.03,
-                          //                   color: AppColor.black),
-                          //               title: Text('My Orders',
-                          //                   style: GoogleFonts.dmSans(
-                          //                       fontWeight: FontWeight.w400,
-                          //                       fontSize: 12.00.sp,
-                          //                       color: AppColor.textColor)))),
-                          //       Container(
-                          //           decoration: BoxDecoration(
-                          //               border: Border.all(
-                          //                   color: AppColor.tileBorderColor)),
-                          //           width: screenWidth / 2.4,
-                          //           child: ListTile(
-                          //               onTap: () {
-                          //                 Navigator.push(
-                          //                     context,
-                          //                     MaterialPageRoute(
-                          //                         builder:
-                          //                             (BuildContext context) =>
-                          //                                 const Wishlist()));
-                          //               },
-                          //               leading: const Icon(
-                          //                   Icons.favorite_border,
-                          //                   color: AppColor.textColor),
-                          //               title: Text('Wish list',
-                          //                   style: GoogleFonts.dmSans(
-                          //                       fontWeight: FontWeight.w400,
-                          //                       fontSize: 12.00.sp,
-                          //                       color: AppColor.black))))
-                          //     ]),
-                          // SizedBox(height: screenHeight * 0.01),
-                          // Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Container(
-                          //           decoration: BoxDecoration(
-                          //               border: Border.all(
-                          //                   color: AppColor.tileBorderColor)),
-                          //           width: screenWidth / 2.4,
-                          //           child: ListTile(
-                          //               onTap: () {
-                          //                 Navigator.push(
-                          //                     context,
-                          //                     MaterialPageRoute(
-                          //                         builder:
-                          //                             (BuildContext context) =>
-                          //                                 const HelpCenter()));
-                          //               },
-                          //               leading: const Icon(Icons.info,
-                          //                   color: AppColor.textColor),
-                          //               title: Text('Help Centre',
-                          //                   style: GoogleFonts.dmSans(
-                          //                       fontWeight: FontWeight.w400,
-                          //                       fontSize: 12.00.sp,
-                          //                       color: AppColor.black)))),
-                          //       Container(
-                          //           decoration: BoxDecoration(
-                          //               border: Border.all(
-                          //                   color: AppColor.tileBorderColor)),
-                          //           width: screenWidth / 2.4,
-                          //           child: ListTile(
-                          //               leading: SvgPicture.asset(
-                          //                   'assets/svg/meetings.svg',
-                          //                   height: screenHeight * 0.03),
-                          //               title: Text('Meetings',
-                          //                   style: GoogleFonts.dmSans(
-                          //                       fontWeight: FontWeight.w400,
-                          //                       fontSize: 12.00.sp,
-                          //                       color: AppColor.black))))
-                          //     ]),
-                          // SizedBox(height: screenHeight * 0.022),
-                          ListTile(
+                                    radius: 55,
+                                  ),
+
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.018),
+                        Text(
+                          '${ProfileController.to.profileData.value.username ?? ''}'
+                              .capitalizeFirst!,
+                          style: GoogleFonts.dmSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18.00.sp,
+                            color: AppColor.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.022),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const UserProfile()));
+                                Get.to(() => MyOrderScreen());
                               },
-                              leading: SvgPicture.asset(
-                                  'assets/svg/ic_profile.svg',
-                                  width: screenWidth * 0.066),
-                              title: Text('Your Profile',
-                                  style: GoogleFonts.dmSans(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12.00.sp,
-                                      color: AppColor.black)),
-                              trailing: const Icon(Icons.chevron_right_sharp)),
-                          // ListTile(
-                          //     onTap: () {
-                          //       Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (BuildContext context) =>
-                          //                   const PaymentHistory()));
-                          //     },
-                          //     leading: SvgPicture.asset(
-                          //         'assets/svg/ic_transaction.svg',
-                          //         width: screenWidth * 0.066),
-                          //     title: Text('Payment History',
-                          //         style: GoogleFonts.dmSans(
-                          //             fontWeight: FontWeight.w400,
-                          //             fontSize: 12.00.sp,
-                          //             color: AppColor.black)),
-                          //     trailing: const Icon(Icons.chevron_right_sharp)),
-                          ListTile(
-                              // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
-                              leading: SvgPicture.asset(
-                                  'assets/svg/ic_privacy.svg',
-                                  width: screenWidth * 0.066),
-                              title: Text('Privacy Policy',
-                                  style: GoogleFonts.dmSans(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12.00.sp,
-                                      color: AppColor.black)),
-                              trailing: const Icon(Icons.chevron_right_sharp)),
-                          // ListTile(
-                          //     // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
-                          //     leading: SvgPicture.asset(
-                          //         'assets/svg/delete_account.svg',
-                          //         width: screenWidth * 0.066),
-                          //     title: Text('Delete Account',
-                          //         style: GoogleFonts.dmSans(
-                          //             fontWeight: FontWeight.w400,
-                          //             fontSize: 12.00.sp,
-                          //             color: AppColor.black))),
-                          ListTile(
+                              child: customWidget(
+                                Image.asset(
+                                  'assets/dashboard/orders.png',
+                                  height: screenHeight * 0.03,
+                                  color: AppColor.black,
+                                ),
+                                'My Orders',
+                              ),
+                            ),
+                            InkWell(
                               onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                          child: SizedBox(
-                                              height: screenHeight * 0.22,
-                                              child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Text('Logout',
-                                                        style:
-                                                            GoogleFonts.dmSans(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize:
-                                                                    19.00.sp,
-                                                                color: AppColor
-                                                                    .primary)),
-                                                    Text(
-                                                        'Are you sure you want to log out ?',
-                                                        style:
-                                                            GoogleFonts.dmSans(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize:
-                                                                    11.00.sp,
-                                                                color: AppColor
-                                                                    .primary)),
-                                                    Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () =>
-                                                                Navigator.pop(
-                                                                    context),
-                                                            child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            8),
-                                                                    border: Border.all(
-                                                                        color: AppColor
-                                                                            .primary)),
-                                                                width: screenWidth /
-                                                                    3.3,
-                                                                height:
-                                                                    screenHeight *
-                                                                        0.066,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Text(
-                                                                    'Cancel',
-                                                                    style: GoogleFonts.dmSans(
-                                                                        fontWeight: FontWeight
-                                                                            .w700,
-                                                                        fontSize:
-                                                                            13.00.sp,
-                                                                        color: AppColor.primary))),
-                                                          ),
-                                                          SizedBox(
-                                                              width:
-                                                                  screenWidth /
-                                                                      3.3,
-                                                              child: CommonButton(
-                                                                  press: () async {
-                                                                    await AuthController
-                                                                        .to
-                                                                        .logOut();
-                                                                  },
-                                                                  text: 'Logout'))
-                                                        ])
-                                                  ])));
-                                    });
+                                Get.to(() => Wishlist());
                               },
-                              leading: SvgPicture.asset(
-                                  'assets/svg/log_out.svg',
-                                  width: screenWidth * 0.066),
-                              title: Text('Log Out',
-                                  style: GoogleFonts.dmSans(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12.00.sp,
-                                      color: AppColor.exitTextColor)))
-                        ]),
-                ))));
+                              child: customWidget(
+                                const Icon(
+                                    Icons.favorite_border,
+                                    color: AppColor.textColor),
+                                'Wishlist',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Get.to(() => HelpCenter());
+                              },
+                              child: customWidget(
+                                const Icon(
+                                  Icons.info,
+                                  color: AppColor.textColor,
+                                ),
+                                'Help Center',
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                               // Get.to(() => ());
+                              },
+                              child: customWidget(
+                                SvgPicture.asset(
+                                  'assets/svg/meetings.svg',
+                                  height: screenHeight * 0.03,
+                                ),
+                                'Meetings',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.022),
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (BuildContext context) =>
+                                        const UserProfile(),
+                              ),
+                            );
+                          },
+                          leading: SvgPicture.asset(
+                            'assets/svg/ic_profile.svg',
+                            width: screenWidth * 0.066,
+                          ),
+                          title: Text(
+                            'Your Profile',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.00.sp,
+                              color: AppColor.black,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.chevron_right_sharp),
+                        ),
+                        // ListTile(
+                        //     onTap: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (BuildContext context) =>
+                        //                   const PaymentHistory()));
+                        //     },
+                        //     leading: SvgPicture.asset(
+                        //         'assets/svg/ic_transaction.svg',
+                        //         width: screenWidth * 0.066),
+                        //     title: Text('Payment History',
+                        //         style: GoogleFonts.dmSans(
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 12.00.sp,
+                        //             color: AppColor.black)),
+                        //     trailing: const Icon(Icons.chevron_right_sharp)),
+                        ListTile(
+                          // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
+                          leading: SvgPicture.asset(
+                            'assets/svg/ic_privacy.svg',
+                            width: screenWidth * 0.066,
+                          ),
+                          title: Text(
+                            'Privacy Policy',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.00.sp,
+                              color: AppColor.black,
+                            ),
+                          ),
+                          trailing: const Icon(Icons.chevron_right_sharp),
+                        ),
+                        // ListTile(
+                        //     // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
+                        //     leading: SvgPicture.asset(
+                        //         'assets/svg/delete_account.svg',
+                        //         width: screenWidth * 0.066),
+                        //     title: Text('Delete Account',
+                        //         style: GoogleFonts.dmSans(
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 12.00.sp,
+                        //             color: AppColor.black))),
+                        ListTile(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  child: SizedBox(
+                                    height: screenHeight * 0.22,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          'Logout',
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 19.00.sp,
+                                            color: AppColor.primary,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Are you sure you want to log out ?',
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 11.00.sp,
+                                            color: AppColor.primary,
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            InkWell(
+                                              onTap:
+                                                  () => Navigator.pop(context),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                    color: AppColor.primary,
+                                                  ),
+                                                ),
+                                                width: screenWidth / 3.3,
+                                                height: screenHeight * 0.066,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: GoogleFonts.dmSans(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 13.00.sp,
+                                                    color: AppColor.primary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: screenWidth / 3.3,
+                                              child: CommonButton(
+                                                press: () async {
+                                                  await AuthController.to
+                                                      .logOut();
+                                                },
+                                                text: 'Logout',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          leading: SvgPicture.asset(
+                            'assets/svg/log_out.svg',
+                            width: screenWidth * 0.066,
+                          ),
+                          title: Text(
+                            'Log Out',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.00.sp,
+                              color: AppColor.exitTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget customWidget(Widget icon, text) {
+    return Container(
+      width: Get.width * 0.43,
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColor.tileBorderColor),
+      ),
+      child: Row(
+        spacing: 8,
+        children: [
+          icon,
+          Text(
+            text,
+            style: GoogleFonts.dmSans(
+              fontWeight: FontWeight.w400,
+              fontSize: 12.00.sp,
+              color: AppColor.textColor,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

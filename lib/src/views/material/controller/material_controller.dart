@@ -24,7 +24,9 @@ class MaterialController extends GetxController {
   var peopleMostViewList = <material.Datum>[].obs;
   var materialLoading = false.obs;
 
-  Future<dynamic> getMaterials({bool isRefresh = false}) async {
+  var price = 'low_to_high'.obs;
+
+  Future<dynamic> getMaterials({bool isRefresh = false, dynamic search}) async {
     if (isRefresh) {
       currentPage.value = 1;
     } else {
@@ -32,7 +34,7 @@ class MaterialController extends GetxController {
     }
     materialLoading(true);
     MaterialListRes res =
-        await repo.getMaterialList(page: currentPage.value, search: '');
+        await repo.getMaterialList(page: currentPage.value, search: search,priceLowHigh:price);
     if (res.status == true) {
       materialLoading(false);
       if(res.materialList!.data!.isNotEmpty){

@@ -19,13 +19,13 @@ class _CustomizeWidgetState extends State<CustomizeWidget> {
         children: [
           InkWell(
             onTap: (){
-            // Get.to(()=> const SelfCustomizationHomeScreen());
+             Get.to(()=> const SelfCustomizationHomeScreen());
             },
             child: Image.asset(
               'assets/images/self.png',
               fit:BoxFit.fill,
               height: 20.0.hp,
-              width: Get.width,
+              width: Get.width*0.89,
             ),
           ),
           Row(
@@ -35,13 +35,14 @@ class _CustomizeWidgetState extends State<CustomizeWidget> {
                 'assets/images/cb.png',
                 fit:BoxFit.fill,
                 height: 20.0.hp,
-                width: Get.width*0.46,
+                width: Get.width*0.445,
+
               ),
               Image.asset(
                 'assets/images/db.png',
                 fit:BoxFit.fill,
-                height: 20.0.hp,
-                width: Get.width*0.46,
+                width: Get.width*0.440,
+
               ),
             ],
           ),

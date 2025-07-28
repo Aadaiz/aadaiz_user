@@ -4,6 +4,7 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/filter_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,7 @@ class MaterialScreen extends StatefulWidget {
 class _MaterialScreenState extends State<MaterialScreen> {
   final RefreshController refreshController =
   RefreshController(initialRefresh: true);
-
+  bool isPrice = false;
   @override
   Widget build(BuildContext context) {
 
@@ -48,8 +49,9 @@ class _MaterialScreenState extends State<MaterialScreen> {
           child:  CommonAppBar(
             title: 'Material',
             isCheck: true,
-            actionButton: Image.asset('assets/dashboard/fabric.png',color: AppColor.primary,
-            ),
+            //actionButton:
+            // Image.asset('assets/dashboard/fabric.png',color: AppColor.primary,
+            // ),
           ),
         ),
       body: SingleChildScrollView(
@@ -74,7 +76,13 @@ class _MaterialScreenState extends State<MaterialScreen> {
                 ),
                 child: SearchField(
                   onChanged: (value) {},
-                  onSubmitted: (value) {},
+                  onSubmitted: (value) async{
+                    Future.delayed(Duration(milliseconds: 100),()async{
+                    await  MaterialController.to
+                          .getMaterials(isRefresh: true,search:value);
+                    });
+
+                  },
                   hinttext: 'Search By Keyword'
                 )
               ),
@@ -88,7 +96,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
                     onTap: (){
                       Navigator.push(context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => const Filter()
+                              builder: (BuildContext context) => const FilterScreen()
                           )
                       );
                     },
@@ -97,9 +105,23 @@ class _MaterialScreenState extends State<MaterialScreen> {
                       image: 'assets/images/sort.png'
                     ),
                   ),
-                  sortWidget(
-                    title: 'Price: lowest to high',
-                    image: 'assets/images/l_h.png'
+                  InkWell(
+                    onTap: () async {
+                      setState(() {
+                        isPrice = !isPrice;
+                        if(isPrice){
+                          MaterialController.to.price.value='low_to_high';
+                        }else{
+                          MaterialController.to.price.value='high_to_low';
+                        }
+                      });
+                      await  MaterialController.to
+                          .getMaterials(isRefresh: true);
+                    },
+                    child: sortWidget(
+                        title: !isPrice ? 'Price: Low to High' : 'Price: High to Low',
+                      image: 'assets/images/l_h.png'
+                    ),
                   ),
                   // SizedBox(
                   //   width: 5.0.wp,

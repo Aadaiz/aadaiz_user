@@ -289,7 +289,7 @@ class _CompletedState extends State<Completed> {
                                                   width: screenWidth * 0.03,
                                                 ),
                                                 Text(
-                                                  'Your design',
+                                                  'Place Order',
                                                   textAlign: TextAlign.center,
                                                   style: GoogleFonts.dmSans(
                                                     fontWeight: FontWeight.w400,
