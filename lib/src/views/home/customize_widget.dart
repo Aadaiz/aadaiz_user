@@ -19,7 +19,7 @@ class _CustomizeWidgetState extends State<CustomizeWidget> {
         children: [
           InkWell(
             onTap: (){
-             Get.to(()=> const SelfCustomizationHomeScreen());
+             // Get.to(()=> const SelfCustomizationHomeScreen(catIndex: 0,));
             },
             child: Image.asset(
               'assets/images/self.png',

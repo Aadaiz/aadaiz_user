@@ -1,8 +1,10 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/saved_address.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -39,21 +41,12 @@ class _CartState extends State<Cart> {
 
     return Scaffold(
       backgroundColor: AppColor.white,
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            leading: Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
-                child: Image.asset('assets/images/back.png')),
-            title: Text('Cart',
-                style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.00.sp,
-                    color: AppColor.black)),
-            centerTitle: true,
-            elevation: 2,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false),
+        appBar: PreferredSize(
+          preferredSize: Size(100, 6.0.hp),
+          child:  CommonAppBar(title: 'Cart',leadingclick:(){
+            DashboardController.to.tabSelected.value=0;}
+          ),
+        ),
         body: Obx(() => HomeController.to.cartListLoading.value
             ? CommonLoading()
             : HomeController.to.cartList.value.data!.items!.isEmpty
@@ -96,8 +89,8 @@ class _CartState extends State<Cart> {
                               } else {
                                 rating = 1.0;
                               }
-                              return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
+                              return const Padding(
+                                  padding: EdgeInsets.only(bottom: 8),
 
                                   // child: SwipeActionCell(
                                   //     key: UniqueKey(),

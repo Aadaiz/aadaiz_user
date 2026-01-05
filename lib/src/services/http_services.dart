@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +17,7 @@ class HttpHelper {
     try {
       final response = await http.get(Uri.parse(url), headers: hd);
       responseJson = _returnResponse(response);
-      debugPrint("Api URL:$url response ${response.body}");
+      log("Api URL:$url response ${response.body}");
     } on SocketException {
       throw FetchDataException('No Internet Connection',500);
     }

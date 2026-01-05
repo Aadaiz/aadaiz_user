@@ -57,7 +57,7 @@ class _LoginState extends State<Login> {
                   children: [
                     Text(
                       'OTP Verification',
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.inter(
                         textStyle: TextStyle(
                           fontSize: 24.00.sp,
                           color: AppColor.borderGrey,
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                         'We will send you one-time password to you mobile number',
                         maxLines: 3,
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.dmSans(
+                        style: GoogleFonts.inter(
                           textStyle: TextStyle(
                             fontSize: 14.00.sp,
                             color: AppColor.black,
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                   children: [
                     Text(
                       'Enter Mobile number',
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.inter(
                         textStyle: TextStyle(
                           fontSize: 14.00.sp,
                           color: AppColor.borderGrey.withOpacity(0.5),
@@ -145,7 +145,7 @@ class _LoginState extends State<Login> {
                       ),
                   child: Text(
                     "Don't have an account? Signup Now",
-                    style: GoogleFonts.dmSans(
+                    style: GoogleFonts.inter(
                       textStyle: TextStyle(
                         fontSize: 16,
                         color: AppColor.primary,

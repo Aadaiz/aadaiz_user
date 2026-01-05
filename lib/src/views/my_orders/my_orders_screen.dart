@@ -1,3 +1,4 @@
+import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -43,89 +44,91 @@ class _MyOrderScreenState extends State<MyOrderScreen> with SingleTickerProvider
 
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: Size(
-              100,
-              6.0.hp,
+      child: ComingSoonOverlay(
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: PreferredSize(
+              preferredSize: Size(
+                100,
+                6.0.hp,
+              ),
+              child: const CommonAppBar(
+                title: 'My Orders',
+              ),
             ),
-            child: const CommonAppBar(
-              title: 'My Orders',
-            ),
-          ),
-        body: Column(
-          children: [
-            TabBar(
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.03,
-                  horizontal: screenWidth * 0.016
-                ),
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12.00.sp
-                ),
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: BoxDecoration(
-                  color: AppColor.primary
-                ),
-                dividerColor: Colors.transparent,
-                indicatorColor: AppColor.primary,
-                unselectedLabelColor: AppColor.black,
-                labelColor: Colors.white,
-                tabs: <Widget>[
-                 Container(
-                   width: double.infinity,
-                   decoration: BoxDecoration(
-                     border: Border.all(
-                       color: AppColor.primary
+          body: Column(
+            children: [
+              TabBar(
+                  padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * 0.03,
+                    horizontal: screenWidth * 0.016
+                  ),
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12.00.sp
+                  ),
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    color: AppColor.primary
+                  ),
+                  dividerColor: Colors.transparent,
+                  indicatorColor: AppColor.primary,
+                  unselectedLabelColor: AppColor.black,
+                  labelColor: Colors.white,
+                  tabs: <Widget>[
+                   Container(
+                     width: double.infinity,
+                     decoration: BoxDecoration(
+                       border: Border.all(
+                         color: AppColor.primary
+                       )
+                     ),
+                     child: const Tab(
+                         child: Text(
+                             'Active'
+                         )
                      )
                    ),
-                   child: const Tab(
-                       child: Text(
-                           'Active'
-                       )
-                   )
-                 ),
-                  Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: AppColor.primary
+                    Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppColor.primary
+                            )
+                        ),
+                      child: const Tab(
+                          child: Text(
+                              'Completed'
                           )
-                      ),
-                    child: const Tab(
-                        child: Text(
-                            'Completed'
-                        )
-                    )
-                  ),
-                  Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: AppColor.primary
+                      )
+                    ),
+                    Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppColor.primary
+                            )
+                        ),
+                      child: const Tab(
+                          child: Text(
+                              'Cancelled'
                           )
-                      ),
-                    child: const Tab(
-                        child: Text(
-                            'Cancelled'
-                        )
+                      )
                     )
-                  )
-                ]
-            ),
-            // AutoScaleTabBarView(
-            //     controller: _tabController,
-            //     children: const <Widget>[
-            //       ActiveOrders(),
-            //       CompletedOrders(),
-            //       CancelledOrders()
-            //     ]
-            // )
-          ]
-        )
+                  ]
+              ),
+              // AutoScaleTabBarView(
+              //     controller: _tabController,
+              //     children: const <Widget>[
+              //       ActiveOrders(),
+              //       CompletedOrders(),
+              //       CancelledOrders()
+              //     ]
+              // )
+            ]
+          )
+        ),
       )
     );
 

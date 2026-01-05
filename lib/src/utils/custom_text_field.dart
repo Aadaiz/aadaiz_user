@@ -9,13 +9,16 @@ class CustomTextField extends StatefulWidget {
   final String hintText;
   final TextEditingController? controller;
   final bool enabled;
-  final dynamic width;
+  final double? width;
+  final TextInputType keyboardType; // ✅ added
 
   const CustomTextField({
     Key? key,
     required this.hintText,
     this.controller,
-    this.enabled = true, this.width,
+    this.enabled = true,
+    this.width,
+    this.keyboardType = TextInputType.text, // ✅ default
   }) : super(key: key);
 
   @override
@@ -77,9 +80,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ],
         ),
         child: TextField(
+          keyboardType: widget.keyboardType,
           enabled: widget.enabled,
           controller: _controller,
           decoration: InputDecoration(
+
             label: Text(widget.hintText, style: TextStyle(color: Colors.grey)),
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Colors.grey),

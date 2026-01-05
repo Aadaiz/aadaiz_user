@@ -1,14 +1,17 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/coupon.dart';
 import 'package:aadaiz_customer_crm/src/views/order/payment_success.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../res/widgets/common_app_bar.dart';
@@ -30,8 +33,14 @@ class _CheckoutState extends State<Checkout> {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      HomeController.to.getCartList();
+      // Replace HomeController.to.getCartList() with MaterialController.to.getCart()
+      MaterialController.to.getCart();
+      coupon.addListener(() {
+        setState(() {});
+      });
     });
+
+    bool isCouponApplied = false;
 
     address =
         "${widget.data!.address}," +
@@ -43,6 +52,8 @@ class _CheckoutState extends State<Checkout> {
 
   TextEditingController coupon = TextEditingController();
 
+  bool isCouponApplied = false;
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -52,7 +63,12 @@ class _CheckoutState extends State<Checkout> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size(100, 8.0.hp),
-        child: const CommonAppBar(title: 'Checkout'),
+        child: CommonAppBar(
+          title: 'Checkout',
+          leadingclick: () {
+            Get.back();
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Obx(
@@ -141,16 +157,16 @@ class _CheckoutState extends State<Checkout> {
                     horizontal: screenWidth * 0.04,
                   ),
                   itemCount:
-                      HomeController.to.cartList.value.data!.items!.length,
+                      MaterialController.to.cartList.value?.items?.length ?? 0,
                   itemBuilder: (context, index) {
                     var data =
-                        HomeController.to.cartList.value.data!.items![index];
-                    List images = data.pattern!.image.split(',');
+                        MaterialController.to.cartList.value!.items![index];
+                    List images = data.product!.image!.split(',');
                     double rating;
-                    if (data.pattern!.rating is int) {
-                      rating = data.pattern!.rating.toDouble();
-                    } else if (data.pattern!.rating is double) {
-                      rating = data.pattern!.rating;
+                    if (data.product!.rating is int) {
+                      rating = data.product!.rating.toDouble();
+                    } else if (data.product!.rating is double) {
+                      rating = data.product!.rating;
                     } else {
                       rating = 1.0;
                     }
@@ -166,7 +182,7 @@ class _CheckoutState extends State<Checkout> {
                             padding: const EdgeInsets.all(8.0),
                             child: Stack(
                               children: [
-                                data.pattern!.image != null
+                                data.product!.image != null
                                     ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: CachedNetworkImage(
@@ -242,7 +258,7 @@ class _CheckoutState extends State<Checkout> {
                                     height: screenHeight * 0.033,
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '₹${data.pattern!.price}',
+                                      '₹${data.product!.price}',
                                       style: GoogleFonts.dmSans(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 10.00.sp,
@@ -262,7 +278,7 @@ class _CheckoutState extends State<Checkout> {
                                 width: screenWidth / 1.6,
                                 child: ListTile(
                                   title: Text(
-                                    data.pattern!.title ?? '',
+                                    data.product!.category ?? '',
                                     style: GoogleFonts.dmSans(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16.00.sp,
@@ -270,7 +286,7 @@ class _CheckoutState extends State<Checkout> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    data.pattern!.subTitle ?? '',
+                                    data.product!.color ?? '',
                                     style: GoogleFonts.dmSans(
                                       fontSize: 10.00.sp,
                                       fontWeight: FontWeight.w400,
@@ -278,34 +294,33 @@ class _CheckoutState extends State<Checkout> {
                                     ),
                                   ),
                                   trailing: SizedBox(
-                                    width: screenWidth * 0.2,
+                                    width: screenWidth * 0.3,
                                     child: Row(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        InkWell(
-                                          onTap: () {
-                                            HomeController.to.decrement(index);
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/ic_decrement.png',
-                                            height: screenHeight * 0.022,
+                                        Text(
+                                          'Quantity',
+                                          style: GoogleFonts.dmSans(
+                                            fontSize: 13.00.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColor.black,
                                           ),
                                         ),
-                                        SizedBox(width: screenWidth * 0.01),
+
                                         SizedBox(
                                           width: 25,
                                           height: screenHeight * 0.022,
                                           child: Center(
                                             child:
-                                                HomeController
+                                                MaterialController
                                                         .to
-                                                        .cartCountLoading
+                                                        .cartListLoading
                                                         .value
                                                     ? const SizedBox()
                                                     : Text(
-                                                      '${HomeController.to.itemValues[index]}',
+                                                      '${data.quantity ?? 1}',
                                                       style: GoogleFonts.dmSans(
                                                         fontWeight:
                                                             FontWeight.w700,
@@ -316,15 +331,6 @@ class _CheckoutState extends State<Checkout> {
                                           ),
                                         ),
                                         SizedBox(width: screenWidth * 0.01),
-                                        InkWell(
-                                          onTap: () {
-                                            HomeController.to.increment(index);
-                                          },
-                                          child: Image.asset(
-                                            'assets/images/ic_increment.png',
-                                            height: screenHeight * 0.022,
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -396,54 +402,122 @@ class _CheckoutState extends State<Checkout> {
                     title: Row(
                       children: [
                         DottedBorder(
-                            color: AppColor.dottedBorderColor,
-                            borderType: BorderType.RRect,
-                            radius: const Radius.circular(8),
-                            padding: EdgeInsets.zero,
-                            child: SizedBox(
-                                width: screenWidth / 1.6,
-                                height: screenHeight * 0.055,
-                                child: TextFormField(
-                                  controller: coupon,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.only(top: 8),
-                                        border: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        prefixIcon: Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical:
-                                                    screenHeight * 0.01),
-                                            child: Image.asset(
-                                                'assets/images/pre_coupon.png')),
-                                        hintText: 'Enter coupon code',
-                                        hintStyle: GoogleFonts.dmSans(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 10.00.sp,
-                                            color: AppColor.borderGrey))))),
-                        InkWell(
-                          onTap: () async {
-                            await HomeController.to.getCartList(
-                              apply: 'apply',
-                              code: coupon.text,
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(left: screenWidth * 0.01),
-                            color: AppColor.primary,
-                            width: screenWidth * .18,
-                            height: screenHeight * .055,
-                            alignment: Alignment.center,
-                            child: Text(
-                              'add'.toUpperCase(),
-                              style: GoogleFonts.dmSans(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 10.00.sp,
-                                color: Colors.white,
+                          color: AppColor.dottedBorderColor,
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(8),
+                          padding: EdgeInsets.zero,
+                          child: SizedBox(
+                            width: screenWidth / 1.6,
+                            height: screenHeight * 0.055,
+                            child: TextFormField(
+                              controller: coupon,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.only(top: 8),
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: screenHeight * 0.01,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/pre_coupon.png',
+                                  ),
+                                ),
+
+                                /// 🔹 SUFFIX CLOSE ICON
+                                suffixIcon:
+                                    coupon.text.isNotEmpty
+                                        ? IconButton(
+                                          icon: const Icon(
+                                            Icons.close,
+                                            size: 18,
+                                          ),
+                                          onPressed: () {
+                                            coupon.clear();
+                                            isCouponApplied = false;
+                                            setState(() {});
+                                          },
+                                        )
+                                        : null,
+
+                                hintText: 'Enter coupon code',
+                                hintStyle: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 10.00.sp,
+                                  color: AppColor.borderGrey,
+                                ),
                               ),
                             ),
                           ),
                         ),
+                        (coupon.text.isEmpty &&
+                                    MaterialController
+                                            .to
+                                            .cartList
+                                            .value!
+                                            .couponCode !=
+                                        null ||
+                                MaterialController
+                                        .to
+                                        .cartList
+                                        .value!
+                                        .couponCode !=
+                                    '')
+                            ? InkWell(
+                              onTap: () async {
+                                if (coupon.text.isEmpty) return;
+
+                                await MaterialController.to.getCart(
+                                  couponCode: coupon.text,
+                                );
+
+                                isCouponApplied = true;
+                                setState(() {});
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  left: screenWidth * 0.01,
+                                ),
+                                color: AppColor.primary,
+                                width: screenWidth * .18,
+                                height: screenHeight * .055,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'ADD',
+                                  style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.00.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            )
+                            : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'Applied',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
                       ],
                     ),
                     subtitle: InkWell(
@@ -494,8 +568,10 @@ class _CheckoutState extends State<Checkout> {
                 ),
                 child: Obx(
                   () =>
-                      HomeController.to.cartListLoading.value
+                      MaterialController.to.cartListLoading.value
                           ? const SizedBox()
+                          : MaterialController.to.cartList.value == null
+                          ? const Center(child: Text('Cart is empty'))
                           : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -511,25 +587,33 @@ class _CheckoutState extends State<Checkout> {
                               amountText(
                                 title: 'Subtotal',
                                 value:
-                                    '${HomeController.to.cartList.value.data!.subTotalAmount ?? ''}',
+                                    '${MaterialController.to.cartList.value!.subtotal ?? 0}',
                               ),
                               SizedBox(height: screenHeight * 0.01),
                               amountText(
                                 title: 'Discounts',
                                 value:
-                                    '${HomeController.to.cartList.value.data!.discountAmount ?? ''}',
+                                    '${MaterialController.to.cartList.value!.discounts ?? 0}',
                                 isDiscount: true,
                               ),
                               SizedBox(height: screenHeight * 0.01),
                               amountText(
                                 title: 'Tax & Charges',
                                 value:
-                                    '${HomeController.to.cartList.value.data!.gstAmount ?? ''}',
+                                    '${MaterialController.to.cartList.value!.taxAndCharges ?? 0}',
                               ),
                               SizedBox(height: screenHeight * 0.01),
                               amountText(
                                 title: 'Delivery Charges',
-                                value: 'Free',
+                                value:
+                                    MaterialController
+                                                .to
+                                                .cartList
+                                                .value!
+                                                .deliveryCharges ==
+                                            0
+                                        ? 'Free'
+                                        : '${MaterialController.to.cartList.value!.deliveryCharges}',
                               ),
                             ],
                           ),
@@ -559,10 +643,12 @@ class _CheckoutState extends State<Checkout> {
               ),
             ),
             subtitle:
-                HomeController.to.cartListLoading.value
+                MaterialController.to.cartListLoading.value
+                    ? const SizedBox()
+                    : MaterialController.to.cartList.value == null
                     ? const SizedBox()
                     : Text(
-                      '₹${HomeController.to.cartList.value.data!.totalAmount ?? ''}',
+                      '₹${MaterialController.to.cartList.value!.total ?? 0}',
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 13.00.sp,
@@ -570,59 +656,47 @@ class _CheckoutState extends State<Checkout> {
                       ),
                     ),
             trailing: InkWell(
-              onTap: () {
-                HomeController.to.placeOrder(
-                  add: widget.data!.id,
-                  tot: HomeController.to.cartList.value.data!.totalAmount??'',
-                  sub: HomeController.to.cartList.value.data!.subTotalAmount??'',
-                  dis: HomeController.to.cartList.value.data!.discountAmount??'',
-                  gst: HomeController.to.cartList.value.data!.gstAmount??'',
-                  cpn: '',
-                  pat: '',
-                  payt: '',
-                  type: '',
-                );
-
-                // showDialog(
-                //     context: context,
-                //     builder: (BuildContext context){
-                //
-                //       return DialogWidgets.paymentFailed(
-                //           context, context
-                //           screenWidth: screenWidth,
-                //           screenHeight: screenHeight
-                //       );
-                //
-                //     }
-                // );
+              onTap: HomeController.to.placeOrderLoading.value?null: () {
+                if (MaterialController.to.cartList.value != null) {
+                  // Updated: Only pass address ID (or address string)
+                  HomeController.to.placeOrder(addressId: widget.data!.address);
+                }
               },
-              child: Container(
-                height: screenHeight * 0.066,
-                width: screenWidth * 0.35,
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.033,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/images/ic_pay.png',
-                      width: screenWidth * 0.066,
-                    ),
-                    Text(
-                      'Payment',
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12.00.sp,
-                        color: AppColor.black,
-                      ),
-                    ),
-                  ],
+              child: Obx(
+                () => Container(
+                  height: screenHeight * 0.066,
+                  width: screenWidth * 0.35,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.033,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child:
+                      HomeController.to.placeOrderLoading.value
+                          ? LoadingAnimationWidget.horizontalRotatingDots(
+                            color: AppColor.primary,
+                            size: 50,
+                          )
+                          : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Image.asset(
+                                'assets/images/ic_pay.png',
+                                width: screenWidth * 0.066,
+                              ),
+                              Text(
+                                'Payment',
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12.00.sp,
+                                  color: AppColor.black,
+                                ),
+                              ),
+                            ],
+                          ),
                 ),
               ),
             ),

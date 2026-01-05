@@ -29,6 +29,7 @@ class CartListRes {
 }
 
 class Data {
+
   ShippingAddress? shippingAddress;
   List<Item>? items;
   dynamic subTotalAmount;

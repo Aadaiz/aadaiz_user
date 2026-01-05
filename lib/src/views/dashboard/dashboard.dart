@@ -1,6 +1,7 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/consulting.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
@@ -8,24 +9,29 @@ import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate_border/flutter_animate_border.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../customer_crm/screens/customer_dashboard.dart';
-import '../home/self_customization/costume_designer.dart';
 import '../home/self_customization/self_customize.dart';
 import '../my_orders/my_orders_screen.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
   static const route = '/homepage';
+
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
-  List icon = [
+  final controller = DashboardController.to;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final List icon = [
     {'icon': 'assets/dashboard/home.png', 'text': 'Home'},
     {'icon': 'assets/dashboard/profile.png', 'text': 'Profile'},
     {'icon': 'assets/dashboard/orders.png', 'text': 'My Orders'},
@@ -33,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
     {'icon': 'assets/dashboard/menu.png', 'text': 'Menu'},
   ];
 
-  List<Widget> screens = <Widget>[
+  final List<Widget> screens = <Widget>[
     const HomeScreen(),
     const ProfileScreen(),
     const MyOrderScreen(),
@@ -41,85 +47,173 @@ class _DashboardState extends State<Dashboard> {
     const ProfileScreen(),
   ];
 
-  List<Map<String, dynamic>> drawerIcon = <Map<String, dynamic>>[
-    {'icon': 'assets/dashboard/self.png', 'text': 'Self Customization','screen': const SelfCustomize()},
-    {'icon': 'assets/dashboard/consult.png', 'text': 'Consulting','screen': const Consulting()},
-    {'icon': 'assets/dashboard/fabric.png', 'text': 'Material','screen': const MaterialScreen()},
-    {'icon': 'assets/dashboard/cor.png', 'text': 'Customer orders','screen':  CustomerDashboard()},
+  final List<Map<String, dynamic>> drawerIcon = <Map<String, dynamic>>[
+    {
+      'icon': 'assets/dashboard/self.png',
+      'text': 'Self Customization',
+      'screen': const SelfCustomize()
+    },
+    {
+      'icon': 'assets/dashboard/consult.png',
+      'text': 'Consulting',
+      'screen': const Consulting()
+    },
+    {
+      'icon': 'assets/dashboard/fabric.png',
+      'text': 'Material',
+      'screen': const MaterialScreen()
+    },
+    {
+      'icon': 'assets/dashboard/cor.png',
+      'text': 'Customer orders',
+      'screen': const CustomerDashboard()
+    },
   ];
-   final controller =  DashboardController.to;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FlutterAnimateBorderController aniController =
+  FlutterAnimateBorderController(isLoading: true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
+        backgroundColor: AppColor.white,
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: Column(
               children: [
                 Row(
                   children: [
-                    Image.asset(
-                      'assets/dashboard/aadai.png',
-                      height: 10.0.hp,
-                      width: 20.0.wp,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Image.asset(
+                        'assets/dashboard/aadai.png',
+                        height: 10.0.hp,
+                        width: 23.0.wp,
+                      ),
                     ),
                   ],
                 ),
-                Gap(3.0.hp),
+
                 ListView.builder(
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: drawerIcon.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: (){
-                          Navigator.pop(context); // Close the drawer
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => drawerIcon[index]['screen']));
-                        },
-                        child: SizedBox(
-                          width: 20.00.wp,
-                          height: 10.0.hp,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                drawerIcon[index]['icon'],
-                                height: 03.00.hp,
-                                width: 06.00.wp,
-                                color:
-                                     AppColor.primary,
-                              ),
-                              Gap(5.0.wp),
-                              Text(drawerIcon[index]['text'],
-                                  style: GoogleFonts.dmSans(
-                                      textStyle:  TextStyle(
-                                          fontSize: 9.00.sp,
-                                          color: AppColor.primary,
-                                          fontWeight: FontWeight.w400))),
-                              //const Gap(4)
-                            ],
+                  shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: drawerIcon.length,
+                  itemBuilder: (context, index) {
+                    bool isCustomerOrders =
+                        drawerIcon[index]['text'] == 'Customer orders';
+
+                    Widget menuRow = Row(
+                      children: [
+                        Image.asset(
+                          drawerIcon[index]['icon'],
+                          height: 3.0.hp,
+                          width: 6.0.wp,
+                          color: AppColor.primary,
+                        ),
+                        Gap(5.0.wp),
+                        Text(
+                          drawerIcon[index]['text']=='Customer orders'?'StitchPro Orders':drawerIcon[index]['text'],
+                          style: GoogleFonts.inter(
+                            fontSize: 9.0.sp,
+                            color: AppColor.primary,
+                            fontWeight: isCustomerOrders
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                           ),
                         ),
-                      );
-                    }),
+                        if (isCustomerOrders) ...[
+                          Gap(3.0.wp),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              'NEW',
+                              style: GoogleFonts.inter(
+                                fontSize: 7.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    );
+
+                    return InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                            drawerIcon[index]['screen'],
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(1.0.hp, 2.0.hp, 3.0.hp, 3.0.hp),
+
+
+                        child: isCustomerOrders
+                            ? FlutterAnimateBorder(
+                          lineThickness: 2,
+                          lineWidth: 75,
+                          linePadding: 0,
+                          cornerRadius: 7,
+                          gradient: const RadialGradient(
+                            radius: 1,
+                            colors: [
+                              AppColors.orangeColor2,
+                              AppColors.projectcolor,
+                              AppColors.orangeColor,
+
+                            ],
+                          ),
+                       
+                          controller: aniController,
+                          child: AnimatedScale(
+
+                            scale: 1.02,
+                            duration:
+                            const Duration(milliseconds: 900),
+
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,vertical: 4),
+                              child: menuRow,
+                            ),
+                          ),
+                        )
+                            : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12),
+                          child: menuRow,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
         ),
       ),
-      body:
-       Column(
-          children: [
-           Obx(()=> Expanded(child: screens[controller.tabSelected.value],))
-          ],
-
+      body: Column(
+        children: [
+          Obx(
+                () => Expanded(
+              child: screens[controller.tabSelected.value],
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar:  Container(
-        height: 7.00.hp,
+      bottomNavigationBar: Container(
+        height: 7.0.hp,
         color: AppColor.backGroundColor,
         child: ListView.builder(
           shrinkWrap: true,
@@ -130,40 +224,35 @@ class _DashboardState extends State<Dashboard> {
             return InkWell(
               onTap: () {
                 if (index != 4) {
-                  setState(() {
-                    controller.tabSelected.value = index;
-
-                  });
-
+                  controller.tabSelected.value = index;
                 } else {
                   _scaffoldKey.currentState?.openDrawer();
                 }
               },
-              child: Obx(()=>
-                SizedBox(
-                  width: 20.00.wp,
+              child: Obx(
+                    () => SizedBox(
+                  width: 20.0.wp,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Image.asset(
                         icon[index]['icon'],
-                        height: 03.00.hp,
-                        width: 06.00.wp,
-                        color: controller.tabSelected.value == index || index == 4
+                        height: 3.0.hp,
+                        width: 6.0.wp,
+                        color: controller.tabSelected.value == index ||
+                            index == 4
                             ? AppColor.primary
                             : AppColor.unSelectColor,
                       ),
                       Text(
                         icon[index]['text'],
-                        style: GoogleFonts.dmSans(
-                          textStyle: TextStyle(
-                            fontSize: 8.00.sp,
-                            color: controller.tabSelected.value == index || index == 4
-                                ? AppColor.primary
-                                : AppColor.unSelectColor,
-                            fontWeight: FontWeight.w400,
-                          ),
+                        style: GoogleFonts.inter(
+                          fontSize: 8.0.sp,
+                          color: controller.tabSelected.value == index ||
+                              index == 4
+                              ? AppColor.primary
+                              : AppColor.unSelectColor,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ],
@@ -174,7 +263,6 @@ class _DashboardState extends State<Dashboard> {
           },
         ),
       ),
-
     );
   }
 }

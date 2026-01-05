@@ -48,11 +48,20 @@ class MaterialRepository {
     return res;
   }
 
-  Future<dynamic> getCart() async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    var response = await _http.get("${Api.materialCartList}?token=$token");
-    MaterialCartListRes res  = MaterialCartListRes.fromMap(jsonDecode(response));
-    return res;
+  Future<MaterialCartListRes> getCart({String? couponCode}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token");
+
+    /// Base URL
+    String url = "${Api.materialCartList}?token=$token";
+
+    /// Add coupon_code only if not null & not empty
+    if (couponCode != null && couponCode.isNotEmpty) {
+      url += "&coupon_code=$couponCode";
+    }
+
+    var response = await _http.get(url);
+    return MaterialCartListRes.fromMap(jsonDecode(response));
   }
+
 }

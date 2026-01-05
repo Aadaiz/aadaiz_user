@@ -1,32 +1,26 @@
-import 'dart:ffi';
-
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'
-    as material;
-
-import '../home/self_customization/order/product_customization.dart';
-import '../home/self_customization/product/people_viewed_product_widget.dart';
 
 class MaterialDetails extends StatefulWidget {
-  const MaterialDetails({super.key, this.data, required this.rating});
+  const MaterialDetails({super.key, this.data, required this.rating ,required this.index});
   final dynamic data;
   final double rating;
+  final int index;
+
   @override
   State<MaterialDetails> createState() => _MaterialDetailsState();
 }
@@ -37,14 +31,31 @@ class _MaterialDetailsState extends State<MaterialDetails> {
   String displayImage = '';
   int selected = 0;
   List images = [];
+  final TextEditingController _quantityController = TextEditingController();
+
+  // Track if cart is loaded
+  bool _cartLoaded = false;
+
+   int cartQuantity=0;
+
+  bool isInCart=false;
+
+
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    MaterialController.to.cartLoading(false);
     images = widget.data!.image.split(',');
     displayImage = images[0];
     HomeController.to.cartLoading(false);
+    MaterialController.to.cartLoading(false);
+
+    // Set initial quantity to 1
+    _quantityController.text = '1';
+
+    // Load cart data when screen opens
+    _loadCartData();
+
     Future.delayed(const Duration(milliseconds: 500), () {
       HomeController.to.getReviewList(
         isRefresh: true,
@@ -54,11 +65,67 @@ class _MaterialDetailsState extends State<MaterialDetails> {
     });
   }
 
+  // Method to load cart data
+  Future<void> _loadCartData() async {
+    try {
+      await MaterialController.to.getCart();
+      _cartLoaded = true;
+setState(() {
+  isInCart = MaterialController.to.isItemInCart(widget.data.id);
+});
+      // Check if current product is in cart and set quantity
+
+      if (isInCart) {
+        setState(() {
+          cartQuantity = MaterialController.to.getItemQuantity(widget.data.id);
+          _quantityController.text = cartQuantity.toString();
+
+        });
+
+
+      }
+    } catch (e) {
+      print('Error loading cart: $e');
+
+          }
+  }
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    super.dispose();
+  }
+
+  // Helper method to get cart quantity for this product
+  int _getCartQuantity() {
+    if (!_cartLoaded || MaterialController.to.cartList.value == null) {
+      return 0;
+    }
+
+    // Find this product in cart items
+    var cartItems = MaterialController.to.cartList.value!.items;
+    if (cartItems == null || cartItems.isEmpty) {
+      return 0;
+    }
+
+    for (var cartItem in cartItems) {
+      if (cartItem.product?.id == widget.data.id) {
+        return cartItem.quantity ?? 0;
+      }
+    }
+
+    return 0;
+  }
+
+  // Helper method to check if product is in cart
+  bool _isProductInCart() {
+    return _getCartQuantity() > 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     final double screenWidth = Utils.getActivityScreenWidth(context);
-    final String selectedValue = _fabric.first;
 
     return Scaffold(
       backgroundColor: AppColor.white,
@@ -67,778 +134,728 @@ class _MaterialDetailsState extends State<MaterialDetails> {
         surfaceTintColor: Colors.white,
         leading: InkWell(
           onTap: () {
-            Get.back();
+            Navigator.pop(context);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
             child: Image.asset('assets/images/back.png'),
           ),
         ),
+        actions: [
+          // Cart Icon with badge
+          Obx(() {
+            int cartCount = MaterialController.to.getTotalItemsCount();
+            return Stack(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MaterialCart(),
+                      ),
+                    );
+                  },
+                  icon: Image.asset(
+                    'assets/images/bag.png',
+                    height: screenHeight * 0.025,
+                  ),
+                ),
+                if (cartCount > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppColor.primary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        cartCount.toString(),
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          SizedBox(width: screenWidth * 0.02),
+        ],
         shadowColor: AppColor.black,
         forceMaterialTransparency: false,
         elevation: 4,
       ),
-      body: SingleChildScrollView(
-        child: Obx(
-          () => Column(
-            children: [
-              SizedBox(height: screenHeight * 0.022),
-              Center(
-                child: Container(
-                  height: screenHeight * 0.22,
-                  width: screenWidth / 1.1,
-                  decoration: BoxDecoration(
-                    color: AppColor.productBgColor,
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(displayImage),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: screenWidth * 0.03,
-                          top: screenHeight * 0.01,
-                        ),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: AppColor.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.03),
-              SizedBox(
-                height: Get.width * 0.15,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    displayImage = images[0];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.018,
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            displayImage = images[index];
-                            selected = index;
-                          });
-                        },
-                        child: Container(
+      body: Obx(() {
+        bool isLoading = MaterialController.to.cartLoading.value;
+
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product Images Section
+                  SizedBox(height: screenHeight * 0.01),
+                  // Main Product Image
+                  Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: screenHeight * 0.28,
+                          width: screenWidth * 0.9,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color:
-                                  selected == index
-                                      ? AppColor.primary
-                                      : Colors
-                                          .transparent, // Set the border width
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              10,
-                            ), // Match the border radius with ClipRRect
+                            color: AppColor.productBgColor,
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
                             child: CachedNetworkImage(
-                              width: Get.width * 0.15,
-                              height: Get.width * 0.15,
+                              imageUrl: displayImage,
                               fit: BoxFit.cover,
-                              errorWidget:
-                                  (context, url, error) => Shimmer.fromColors(
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error,
+                                color: Colors.grey,
+                                size: screenHeight * 0.1,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                            top: 5,
+                            right: 5,
+                            child: InkWell(
+                              onTap: (){
+                                setState(() {
+                                  widget.data.isLiked = widget.data.isLiked == 0 ? 1 : 0;
+                                  MaterialController.to.likeList[widget.index];
+                                });
+                                 HomeController.to.addFavorite('material_id', widget.data.id);
+                                MaterialController.to
+                                    .getMaterials(isRefresh: true);
+                              },
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      color: AppColor.white,
+                                      shape: BoxShape.circle
+                                  ),
+                                  padding: const EdgeInsets.all(6),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 8,
+                                    child: widget.data.isLiked==1
+                                        ? Icon(
+                                      Icons.favorite,
+                                      size: 2.0.hp,
+                                      color: AppColor.red,
+                                    )
+                                        : Icon(
+                                      Icons.favorite_border_rounded,
+                                      size: 2.0.hp,
+                                      color: AppColor.greyTitleColor,
+                                    ),
+                                  )
+                              ),
+                            )
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  // Thumbnail Images
+                  SizedBox(
+                    height: screenHeight * 0.09,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: images.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: index == 0 ? screenWidth * 0.05 : 8,
+                            right: index == images.length - 1
+                                ? screenWidth * 0.05
+                                : 0,
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                displayImage = images[index];
+                                selected = index;
+                              });
+                            },
+                            child: Container(
+                              width: screenHeight * 0.08,
+                              height: screenHeight * 0.08,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: selected == index
+                                      ? AppColor.primary
+                                      : Colors.transparent,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: CachedNetworkImage(
+                                  imageUrl: images[index],
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Shimmer.fromColors(
                                     baseColor: Colors.grey[300]!,
                                     highlightColor: Colors.grey[100]!,
                                     child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                              progressIndicatorBuilder:
-                                  (context, url, progress) =>
-                                      Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                              imageUrl: (images[index]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.03),
-              SizedBox(
-                //color: Colors.red,
-                width: screenWidth,
-                child: ListTile(
-                  title: Text(
-                    widget.data!.title ?? '',
-                    style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18.39.sp,
-                      color: AppColor.black,
-                    ),
-                  ),
-                  subtitle: Text(
-                    widget.data!.subtitle ?? '',
-                    style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 10.24.sp,
-                      color: AppColor.subTitleColor,
-                    ),
-                  ),
-                  trailing: Column(
-                    children: [
-                      Text(
-                        '₹${widget.data!.price ?? ''}',
-                        style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22.00.sp,
-                          color: AppColor.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: screenWidth,
-                      child: Row(
-                        children: [
-                          RatingBar(
-                            initialRating: widget.rating,
-                            direction: Axis.horizontal,
-                            ignoreGestures: true,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 15,
-                            unratedColor: Colors.grey,
-                            ratingWidget: RatingWidget(
-                              full: const Icon(
-                                Icons.star_rounded,
-                                color: Color(0xffFFA800),
-                              ),
-                              half: const Icon(
-                                Icons.star_half_rounded,
-                                color: Color(0xffFFA800),
-                              ),
-                              empty: const Icon(
-                                Icons.star_outline_rounded,
-                                color: Color(0xffFFA800),
-                              ),
-                            ),
-                            onRatingUpdate: (value) {},
-                          ),
-                          SizedBox(width: screenWidth * 0.01),
-                          Text(
-                            'View Review',
-                            style: GoogleFonts.dmSans(
-                              fontSize: 14.00.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.black,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.03),
-                    SizedBox(
-                      width: screenWidth,
-                      child: Text(
-                        'Required Quantity',
-                        style: GoogleFonts.dmSans(
-                          fontSize: 14.00.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColor.primary,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.03),
-                    TextFormField(
-                      controller: MaterialController.to.length,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        hintText: 'Enter Here',
-                        hintStyle: GoogleFonts.dmSans(
-                          color: AppColor.black.withOpacity(0.5),
-                          fontSize: 10.00.sp,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: AppColor.black.withOpacity(0.5),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(
-                            color: AppColor.black.withOpacity(0.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: screenWidth,
-                      child: ListTile(
-                        title: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: screenHeight * 0.022,
-                          ),
-                          child: Text(
-                            'Description',
-                            style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15.00.sp,
-                              color: AppColor.black,
-                            ),
-                          ),
-                        ),
-                        subtitle: Text(
-                          widget.data!.description ?? '',
-                          style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 11.00.sp,
-                            color: AppColor.subTitleColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: screenWidth,
-                height: screenHeight * 0.022,
-                color: AppColor.containerDividerColor,
-              ),
-              Container(
-                width: screenHeight,
-                padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.01,
-                  horizontal: screenWidth * 0.1,
-                ),
-                child: Text(
-                  'Ratings & Reviews',
-                  style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.00.sp,
-                    color: AppColor.textColor,
-                  ),
-                ),
-              ),
-              Obx(
-                () =>
-                    HomeController.to.reviewLoading.value
-                        ? const CommonLoading()
-                        : HomeController.to.reviewList.isEmpty
-                        ? const SizedBox()
-                        : Column(
-                          children: [
-                            RatingsWidget(
-                              rating: widget.data!.rating,
-                              averageRating:
-                                  HomeController.to.averageRating.value,
-                              totalRatings: HomeController.to.totalRating.value,
-                              ratingCounts:
-                                  HomeController
-                                      .to
-                                      .ratingCount, // Replace with actual rating counts
-                            ),
-
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    32,
-                                    8,
-                                    8,
-                                    8,
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Column(
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  // Product Info Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title and Price
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.data!.title ?? '',
+                                    style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 20.00.sp,
+                                      color: AppColor.black,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: screenHeight * 0.005),
+                                  Text(
+                                    widget.data!.subtitle ?? '',
+                                    style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12.00.sp,
+                                      color: AppColor.subTitleColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '₹${widget.data!.price ?? ''}',
+                                  style: GoogleFonts.dmSans(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 24.00.sp,
+                                    color: AppColor.primary,
+                                  ),
+                                ),
+                                if (widget.data!.aadaizPrice != null &&
+                                    widget.data!.aadaizPrice != widget.data!.price)
+                                  Text(
+                                    '₹${widget.data!.aadaizPrice}',
+                                    style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.00.sp,
+                                      color: AppColor.subTitleColor,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.015),
+                        // Rating
+                        Row(
+                          children: [
+                            RatingBar(
+                              initialRating: widget.rating,
+                              direction: Axis.horizontal,
+                              ignoreGestures: true,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 18,
+                              unratedColor: Colors.grey[300],
+                              ratingWidget: RatingWidget(
+                                full: const Icon(
+                                  Icons.star_rounded,
+                                  color: Color(0xffFFA800),
+                                ),
+                                half: const Icon(
+                                  Icons.star_half_rounded,
+                                  color: Color(0xffFFA800),
+                                ),
+                                empty: const Icon(
+                                  Icons.star_outline_rounded,
+                                  color: Color(0xffFFA800),
+                                ),
+                              ),
+                              onRatingUpdate: (value) {},
+                            ),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              'View Review',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 12.00.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColor.primary,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.025),
+                       if(cartQuantity!=0||isInCart)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Required Quantity',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 14.00.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColor.black,
+                              ),
+                            ),
+                            SizedBox(height: screenHeight * 0.01),
+                            Row(
+                              children: [
+                                // Quantity Controls
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColor.primary,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // Minus Button
+                                      InkWell(
+                                        onTap: isLoading
+                                            ? null
+                                            : () async {
+                                          bool isInCart = _isProductInCart();
+                                          if (isInCart) {
+                                            // If item is in cart, use controller method
+                                            await MaterialController.to
+                                                .decrementQuantity(widget.data.id);
+                                          } else {
+                                            // If not in cart, just update local controller
+                                            int currentQty = int.tryParse(
+                                                _quantityController.text) ??
+                                                1;
+                                            if (currentQty > 1) {
+                                              setState(() {
+                                                _quantityController.text =
+                                                    (currentQty - 1).toString();
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          width: screenWidth * 0.1,
+                                          height: screenHeight * 0.045,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primary,
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(7),
+                                              bottomLeft: Radius.circular(7),
+                                            ),
+                                          ),
+                                          child: isLoading
+                                              ? const Center(
+                                            child: SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                              : const Icon(
+                                            Icons.remove,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      // Quantity Display
+                                      Container(
+                                        width: screenWidth * 0.12,
+                                        height: screenHeight * 0.045,
+                                        color: Colors.white,
+                                        alignment: Alignment.center,
+                                        child: Obx(() {
+                                          bool isInCart = MaterialController.to
+                                              .isItemInCart(widget.data.id);
+                                          int cartQuantity = MaterialController.to
+                                              .getItemQuantity(widget.data.id);
+
+                                          return Text(
+                                            isInCart
+                                                ? '$cartQuantity'
+                                                : _quantityController.text,
+                                            style: GoogleFonts.dmSans(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 16.00.sp,
+                                              color: AppColor.black,
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                      // Plus Button
+                                      InkWell(
+                                        onTap: isLoading
+                                            ? null
+                                            : () async {
+                                          bool isInCart = _isProductInCart();
+                                          if (isInCart) {
+                                            // If item is in cart, use controller method
+                                            await MaterialController.to
+                                                .incrementQuantity(widget.data.id);
+                                          } else {
+                                            // If not in cart, just update local controller
+                                            int currentQty = int.tryParse(
+                                                _quantityController.text) ??
+                                                1;
+                                            setState(() {
+                                              _quantityController.text =
+                                                  (currentQty + 1).toString();
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          width: screenWidth * 0.1,
+                                          height: screenHeight * 0.045,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.primary,
+                                            borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(7),
+                                              bottomRight: Radius.circular(7),
+                                            ),
+                                          ),
+                                          child: isLoading
+                                              ? const Center(
+                                            child: SizedBox(
+                                              width: 16,
+                                              height: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          )
+                                              : const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: screenWidth * 0.02),
+                                // Quantity Input Field
+                                Expanded(
+                                  child: Obx(() {
+                                    bool isInCart = MaterialController.to
+                                        .isItemInCart(widget.data.id);
+
+                                    // Get quantity from cart if item is in cart
+                                    int cartQuantity = _getCartQuantity();
+
+                                    // Sync text field with cart quantity
+                                    if (isInCart && _quantityController.text != cartQuantity.toString()) {
+                                      _quantityController.text = cartQuantity.toString();
+                                    }
+
+                                    return TextFormField(
+                                      controller: _quantityController,
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.done,
+                                      readOnly: isInCart,
+                                      onChanged: (value) {
+                                        if (value.isEmpty) {
+                                          _quantityController.text = '1';
+                                        } else {
+                                          int qty = int.tryParse(value) ?? 1;
+                                          if (qty < 1) {
+                                            _quantityController.text = '1';
+                                          }
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        hintText: isInCart
+                                            ? 'In Cart'
+                                            : 'Enter quantity',
+                                        hintStyle: GoogleFonts.dmSans(
+                                          color: isInCart
+                                              ? AppColor.primary
+                                              : AppColor.black.withOpacity(0.5),
+                                          fontSize: 12.00.sp,
+                                        ),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                            color: isInCart
+                                                ? AppColor.primary
+                                                : AppColor.black.withOpacity(0.3),
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                            color: isInCart
+                                                ? AppColor.primary
+                                                : AppColor.black.withOpacity(0.3),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: BorderSide(
+                                            color: AppColor.primary,
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.025),
+                        // Description
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Description',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.00.sp,
+                                color: AppColor.black,
+                              ),
+                            ),
+                            SizedBox(height: screenHeight * 0.01),
+                            Text(
+                              widget.data!.description ?? '',
+                              style: GoogleFonts.dmSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12.00.sp,
+                                color: AppColor.subTitleColor,
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.03),
+                  // Action Buttons Section
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            // Share Button
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                height: screenHeight * 0.055,
+                                decoration: BoxDecoration(
+                                  color: AppColor.primary,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      // Share functionality
+                                    },
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        SizedBox(
-                                          width: screenWidth / 1.3,
-                                          child: ListTile(
-                                            title: Text(
-                                              '${HomeController.to.reviewList[0].user!.username ?? ''}'
-                                                  .capitalizeFirst!,
-                                              style: GoogleFonts.dmSans(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 13.00.sp,
-                                                color: AppColor.textColor,
-                                              ),
-                                            ),
-                                            subtitle: RatingBar(
-                                              initialRating: double.parse(
-                                                HomeController
-                                                    .to
-                                                    .reviewList
-                                                    [0]
-                                                    .rating,
-                                              ),
-                                              direction: Axis.horizontal,
-                                              ignoreGestures: true,
-                                              allowHalfRating: true,
-                                              itemCount: 5,
-                                              itemSize: 15,
-                                              unratedColor: Colors.grey,
-                                              ratingWidget: RatingWidget(
-                                                full: const Icon(
-                                                  Icons.star_rounded,
-                                                  color: Color(0xffFFA800),
-                                                ),
-                                                half: const Icon(
-                                                  Icons.star_half_rounded,
-                                                  color: Color(0xffFFA800),
-                                                ),
-                                                empty: const Icon(
-                                                  Icons.star_outline_rounded,
-                                                  color: Color(0xffFFA800),
-                                                ),
-                                              ),
-                                              onRatingUpdate: (value) {},
-                                            ),
-                                            trailing: Text(
-                                              '${HomeController.to.reviewList[0].date ?? ""} ${HomeController.to.reviewList[0].time ?? ""}',
-                                              style: GoogleFonts.dmSans(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 11.00.sp,
-                                                color: AppColor.borderGrey,
-                                              ),
-                                            ),
-                                          ),
+                                        Icon(
+                                          Icons.share,
+                                          color: Colors.white,
+                                          size: 20,
                                         ),
+                                        SizedBox(width: screenWidth * 0.02),
                                         Text(
-                                          '''
-                                              ${HomeController.to.reviewList[0].comment ?? ''}'''
-                                              .capitalizeFirst!,
+                                          'Share',
                                           style: GoogleFonts.dmSans(
-                                            fontSize: 10.00.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColor.textColor,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            right: screenWidth * 0.033,
-                                            bottom: screenHeight * 0.03,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Helpful',
-                                                style: GoogleFonts.dmSans(
-                                                  fontSize: 10.00.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColor.borderGrey,
-                                                ),
-                                              ),
-                                              Image.asset(
-                                                'assets/images/like.png',
-                                                height: screenHeight * 0.045,
-                                              ),
-                                            ],
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14.00.sp,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                // Positioned(
-                                //   top: 8,
-                                //   left: 8,
-                                //   child: CircleAvatar(
-                                //     backgroundImage: NetworkImage(
-                                //       '${HomeController.to.reviewList[0].user!.profile}',
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                            HomeController.to.reviewList.length > 1
-                                ? Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    width: screenWidth,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white, //AppColor.white,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: ListTile(
-                                      title: Text(
-                                        'All ${HomeController.to.reviewList.length} review',
-                                        style: GoogleFonts.dmSans(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 11.00.sp,
-                                          color: AppColor.textColor,
-                                        ),
-                                      ),
-                                      trailing: Image.asset(
-                                        'assets/images/arrow_right_orange.png',
-                                        height: screenHeight * 0.022,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                : const SizedBox(),
-                          ],
-                        ),
-              ),
-              SizedBox(height: screenHeight * 0.03),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    // Container(
-                    //     width: screenWidth,
-                    //     margin: EdgeInsets.only(bottom: screenHeight * 0.01),
-                    //     child: ListTile(
-                    //         contentPadding: EdgeInsets.zero,
-                    //         leading: Image.asset('assets/images/truck.png',
-                    //             height: screenHeight * 0.05),
-                    //         title: Text('Fast Delivery',
-                    //             style: GoogleFonts.dmSans(
-                    //                 fontWeight: FontWeight.w400,
-                    //                 fontSize: 13.00.sp,
-                    //                 color: AppColor.black)),
-                    //         subtitle: Text('Deliver from 2 Feb',
-                    //             style: GoogleFonts.dmSans(
-                    //                 fontWeight: FontWeight.w400,
-                    //                 fontSize: 11.00.sp,
-                    //                 color: AppColor.hintTextColor)),
-                    //         trailing: Text('Learn more',
-                    //             style: GoogleFonts.dmSans(
-                    //                 fontWeight: FontWeight.w400,
-                    //                 fontSize: 11.00.sp,
-                    //                 color: AppColor.primary)))),
-                    SizedBox(
-                      width: screenWidth,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: screenHeight * 0.05,
-                            //width: screenWidth * 0.28,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: AppColor.primary,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.asset(
-                                  'assets/images/share.png',
-                                  width: screenWidth * 0.08,
-                                ),
-                                Gap(8),
-                                Text(
-                                  'Share',
-                                  style: GoogleFonts.dmSans(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12.00.sp,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Gap(screenWidth * 0.05),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                MaterialController.to.addToCart(
-                                  widget.data.id,
-                                  1,
-                                );
-                              },
-                              child: Container(
-                                height: screenHeight * 0.05,
-                                // width: screenWidth * 0.45,
-                                // padding: EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: AppColor.black,
-                                    width: 2,
-                                  ),
-                                ),
-                                child:
-                                    MaterialController.to.cartLoading.value
-                                        ? SizedBox(
-                                          // height: 1.00.hp,
-                                          width: 1.00.wp,
-                                          child:
-                                              LoadingAnimationWidget.horizontalRotatingDots(
-                                                color: AppColor.primary,
-                                                size: 5.00.hp,
-                                              ),
-                                        )
-                                        :
-                                    Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/bag.png',
-                                              height: screenHeight * 0.025,
-                                            ),
-                                            SizedBox(width: screenWidth * 0.05),
-                                            Text(
-                                              'Add to cart',
-                                              style: GoogleFonts.dmSans(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 12.00.sp,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gap(screenWidth * 0.05),
-                    Container(
-                      width: screenWidth,
-                      alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.symmetric(
-                        vertical: screenHeight * 0.022,
-                      ),
-                      child: Text(
-                        'People Also Viewed',
-                        style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14.00.sp,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    MaterialController.to.peopleMostViewList.isEmpty
-                        ? const SizedBox()
-                        : Row(
-                          children: [
-                            SizedBox(
-                              height: screenHeight * 0.45,
-                              width: screenWidth * 0.92,
-                              child: ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                itemCount:
-                                    MaterialController
-                                        .to
-                                        .peopleMostViewList
-                                        .length,
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final data =
-                                      MaterialController
-                                          .to
-                                          .peopleMostViewList[index];
-                                  final images = data.image.split(',');
-                                  double rating;
-                                  if (data.rating is int) {
-                                    rating = data.rating.toDouble();
-                                  } else if (data.rating is double) {
-                                    rating = data.rating;
-                                  } else {
-                                    rating = 1.0;
-                                  }
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
+                            SizedBox(width: screenWidth * 0.03),
+                            // Add to Cart / View Cart Button
+                            Expanded(
+                              flex: 2,
+                              child: Obx(() {
+                                bool isInCart = MaterialController.to
+                                    .isItemInCart(widget.data.id);
+                                bool isLoading = MaterialController.to.cartLoading.value;
+
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: isLoading
+                                        ? null
+                                        : () async {
+                                      if (isInCart) {
+                                        // Navigate to cart
+                                        await Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder:
-                                                (context) => MaterialDetails(
-                                                  data: data,
-                                                  rating: rating,
-                                                ),
+                                            builder: (context) =>
+                                            const MaterialCart(),
                                           ),
                                         );
-                                      },
-                                      child: PeopleViewedProductWidget(
-                                        data: data,
-                                        images: images,
-                                        rating: rating,
+                                      } else {
+                                        // Add to cart
+                                        int quantity = int.tryParse(
+                                            _quantityController.text) ??
+                                            1;
+                                        if (quantity <= 0) {
+                                          CommonToast.show(
+                                              msg: 'Please enter a valid quantity');
+                                          return;
+                                        }
+
+                                        // Use addToCart method (not addToCartWithQuantity)
+                                        await MaterialController.to.addToCart(
+                                          id: widget.data.id,
+                                          quantity: quantity,
+                                        );
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                      height: screenHeight * 0.055,
+                                      decoration: BoxDecoration(
+                                        color: isInCart
+                                            ? AppColor.primary
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: isInCart
+                                              ? AppColor.primary
+                                              : AppColor.black,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: isLoading
+                                          ? Center(
+                                        child: LoadingAnimationWidget
+                                            .horizontalRotatingDots(
+                                          color: isInCart
+                                              ? Colors.white
+                                              : AppColor.primary,
+                                          size: 30,
+                                        ),
+                                      )
+                                          : Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            isInCart
+                                                ? Icons.shopping_cart_checkout
+                                                : Icons.shopping_cart_outlined,
+                                            color: isInCart
+                                                ? Colors.white
+                                                : AppColor.black,
+                                            size: 20,
+                                          ),
+                                          SizedBox(
+                                              width: screenWidth * 0.02),
+                                          Text(
+                                            isInCart
+                                                ? 'View in Cart'
+                                                : 'Add to Cart',
+                                            style: GoogleFonts.dmSans(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14.00.sp,
+                                              color: isInCart
+                                                  ? Colors.white
+                                                  : AppColor.black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              }),
                             ),
                           ],
                         ),
-                    // Gap(screenWidth * 0.05),
-                    // InkWell(
-                    //   onTap: () {},
-                    //   child: Container(
-                    //       width: screenWidth,
-                    //       height: screenHeight * 0.055,
-                    //       decoration: BoxDecoration(
-                    //           color: Colors.white,
-                    //           border: Border.all(color: AppColor.primary)),
-                    //       alignment: Alignment.center,
-                    //       child: Text('View More',
-                    //           style: GoogleFonts.dmSans(
-                    //               fontWeight: FontWeight.w400,
-                    //               fontSize: 12.00.sp,
-                    //               color: AppColor.black))),
-                    // ),
-                  ],
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.03),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RatingsWidget extends StatelessWidget {
-  final double averageRating;
-  final dynamic totalRatings;
-  final List<dynamic> ratingCounts;
-  final dynamic rating;
-  const RatingsWidget({
-    Key? key,
-    required this.averageRating,
-    required this.totalRatings,
-    required this.ratingCounts,
-    this.rating,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    '${rating}',
-                    style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 38.00.sp,
-                      color: AppColor.textColor,
-                    ),
-                  ),
-                  Text(
-                    '$totalRatings ratings',
-                    style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12.00.sp,
-                      color: AppColor.borderGrey,
+                        SizedBox(height: screenHeight * 0.03),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i <= 4; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: Get.width * 0.25,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: List.generate(
-                                5 - i,
-                                (index) => Icon(
-                                  Icons.star,
-                                  color: AppColor.starColor,
-                                  size: Get.height * 0.022,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: (150 *
-                                        ratingCounts[4 - i] /
-                                        int.parse(totalRatings))
-                                    .clamp(0, 200),
-                                height: Get.height * 0.022,
-                                decoration: BoxDecoration(
-                                  color: AppColor.primary,
-                                  borderRadius: BorderRadius.circular(19),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                ratingCounts[4 - i].toString(),
-                                style: GoogleFonts.dmSans(
-                                  fontSize: 12.00.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColor.ratingTextColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
+            ),
+            // Loading overlay
+
+          ],
+        );
+      }),
     );
   }
 }

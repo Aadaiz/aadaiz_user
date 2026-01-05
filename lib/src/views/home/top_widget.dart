@@ -20,12 +20,12 @@ class TopWidget extends StatefulWidget {
 
 class _TopWidgetState extends State<TopWidget> {
   //
-  // List categoryList = [
-  //   {'image': 'assets/images/women.png', 'text': 'Women'},
-  //   {'image': 'assets/images/men.png', 'text': 'Men'},
-  //   {'image': 'assets/images/girl.png', 'text': 'Girls'},
-  //   {'image': 'assets/images/boy.png', 'text': 'Boys'},
-  // ];
+  List categoryList = [
+    {'image': 'assets/images/women.png', 'text': 'Women'},
+    {'image': 'assets/images/men.png', 'text': 'Men'},
+    {'image': 'assets/images/girl.png', 'text': 'Girls'},
+    {'image': 'assets/images/boy.png', 'text': 'Boys'},
+  ];
   @override
   void initState() {
     // TODO: implement initState
@@ -35,7 +35,7 @@ class _TopWidgetState extends State<TopWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Obx(()=>
+      child:
          Column(
           children: [
             Row(
@@ -56,7 +56,7 @@ class _TopWidgetState extends State<TopWidget> {
                   children: [
                     InkWell(
                       onTap: (){
-                        Get.to(() => UserNotification());
+                        Get.to(() => const UserNotification());
                       },
                       child: Image.asset(
                         'assets/images/notification.png',
@@ -98,7 +98,7 @@ class _TopWidgetState extends State<TopWidget> {
             Row(
               children: [
                 Text('Category',
-                  style: GoogleFonts.dmSans(
+                  style: GoogleFonts.inter(
                       textStyle: TextStyle(
                           fontSize: 14.00.sp,
                           color:AppColor.primary,
@@ -109,31 +109,35 @@ class _TopWidgetState extends State<TopWidget> {
             SizedBox(
               height: 5.0.hp,
               width: Get.width,
-              child: HomeController.to.genderLoading.value?
-                  Text('loading'):
-              HomeController.to.genderList.value.isEmpty ?
-                  Text('gender empty')
-:                ListView.builder(
+              child:
+//               HomeController.to.genderLoading.value?
+//                   const Text('loading'):
+//               HomeController.to.genderList.value.isEmpty ?
+//                   const Text('gender empty')
+//
+// :
+              ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: HomeController.to.genderList.value.length,
+                  itemCount: categoryList.length,
                   itemBuilder: (context, index){
-                    var data = HomeController.to.genderList.value[index];
+                    var data = categoryList[index];
                     return   InkWell(
                       onTap: (){
-                        Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
+                        // Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
+                        Get.to(()=>  const SelfCustomizationHomeScreen(catIndex: 0,id:0));
                       },
                       child: Row(
                         children: [
                           CircleAvatar(
                             radius: 16, // Image radius
-                            backgroundImage: NetworkImage(
-                                data.imageUrl),
+                            backgroundImage: AssetImage(
+                                data['image']),
                           ),
                           Gap(2.0.wp),
-                          Text(data.catName??'',
-                            style: GoogleFonts.dmSans(
+                          Text(data['text'],
+                            style: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 11.00.sp,
                                     color:AppColor.black,
@@ -146,7 +150,7 @@ class _TopWidgetState extends State<TopWidget> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

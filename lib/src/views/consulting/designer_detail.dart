@@ -8,7 +8,7 @@ import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_desig
 import 'package:aadaiz_customer_crm/src/views/consulting/review_designer.dart';
 import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
+// import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -235,20 +235,20 @@ class _DesignerDetailState extends State<DesignerDetail> {
 
 
                 SizedBox(height: screenHeight * 0.022),
-                CalendarTimeline(
-                  initialDate: selectedDate,
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2050),
-                  activeDayColor: AppColor.white,
-                  activeBackgroundDayColor: AppColor.primary,
-                  monthColor: AppColor.black.withOpacity(0.5),
-                  onDateSelected: (val) async{
-                    setState(() {
-                      selectedDate = val;
-                    });
-                    await ConsultingController.to.getAvailableSlots(widget.data.id, date);
-                  },
-                ),
+                // CalendarTimeline(
+                //   initialDate: selectedDate,
+                //   firstDate: DateTime.now(),
+                //   lastDate: DateTime(2050),
+                //   activeDayColor: AppColor.white,
+                //   activeBackgroundDayColor: AppColor.primary,
+                //   monthColor: AppColor.black.withOpacity(0.5),
+                //   onDateSelected: (val) async{
+                //     setState(() {
+                //       selectedDate = val;
+                //     });
+                //     await ConsultingController.to.getAvailableSlots(widget.data.id, date);
+                //   },
+                // ),
                 SizedBox(height: screenHeight * 0.03),
                 Text(
                   'Available Time',

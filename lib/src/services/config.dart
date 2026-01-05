@@ -1,3 +1,3 @@
 class AppConfig {
-  static const baseUrl = 'http://52.2.234.121/staging/Aadaiz/public/index.php/api/';
+  static const baseUrl = 'https://aadaizcrm.aadaiz.com/aadaiz-new/public/index.php/api/';
 }

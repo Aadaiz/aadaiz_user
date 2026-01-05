@@ -111,7 +111,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: widget.hintText,
-                hintStyle:GoogleFonts.dmSans(
+                hintStyle:GoogleFonts.inter(
                     textStyle:  TextStyle(
                         fontSize: 12.0.sp,
                         color: AppColor.greyTitleColor,
@@ -140,7 +140,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                 Padding(
                   padding: const EdgeInsets.only(top: 16,right: 8),
                   child: Text(widget.edit,
-                      style: GoogleFonts.dmSans(
+                      style: GoogleFonts.inter(
                           textStyle:  const TextStyle(
                               fontSize: 11.00,
                               color: Colors.red,
@@ -149,7 +149,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                 null,
               ),
               onChanged: (value) => widget.onchange!(value),
-              style: GoogleFonts.dmSans(
+              style: GoogleFonts.inter(
                   textStyle:  TextStyle(
                       fontSize: 14.00,
                       color: AppColor.greyTitleColor,

@@ -24,7 +24,7 @@ class ChatController extends GetxController {
   }
 
   void connectSocket(receiverId,orderId) {
-    socket = IO.io('http://52.2.234.121:3001/', <String, dynamic>{
+    socket = IO.io('http://13.202.37.237:6002/', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });

@@ -7,6 +7,8 @@ class ExpandInfo extends StatelessWidget {
   final String date;
   final int itemCount;
   final String shopName;
+  final String shopAddress;
+
 
   const ExpandInfo({
     super.key,
@@ -14,6 +16,7 @@ class ExpandInfo extends StatelessWidget {
     required this.date,
     required this.itemCount,
     required this.shopName,
+    required this.shopAddress,
   });
 
   @override
@@ -39,7 +42,7 @@ class ExpandInfo extends StatelessWidget {
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
-          _buildDetailRow('Date', date),
+          _buildDetailRow('Order date', date),
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
@@ -47,7 +50,8 @@ class ExpandInfo extends StatelessWidget {
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
-          _buildDetailRow('Shop Name', shopName??""),
+          _buildDetailRow('Shop Name', shopName??""),  SizedBox(height: 20.h),
+          _buildDetailRow('Shop Address', shopAddress??""),
         ],
       ),
     );
@@ -55,7 +59,6 @@ class ExpandInfo extends StatelessWidget {
 
   Widget _buildDetailRow(String title, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
@@ -64,16 +67,26 @@ class ExpandInfo extends StatelessWidget {
             color: Colors.grey[600],
           ),
         ),
-        Text(
-          "${value??""}",
-          style: GoogleFonts.montserrat(
-            fontSize: 12.0.sp,
-            color: Colors.black,
+
+        const Spacer(),
+
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: GoogleFonts.montserrat(
+                fontSize: 12.0.sp,
+                color: Colors.black,
+              ),
+            ),
           ),
         ),
       ],
     );
   }
+
 
   Widget _divider() {
     return Divider(

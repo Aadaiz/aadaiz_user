@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:aadaiz_customer_crm/src/views/auth/model/signup_model.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/model/verify_otp_model.dart';
@@ -7,6 +8,7 @@ import 'package:aadaiz_customer_crm/src/views/auth/ui/otp_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,6 +60,8 @@ class AuthController extends GetxController{
 
   Future<dynamic> verifyOtp(context) async {
     verifyLoading(true);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var fcmToken= prefs.getString('fcm_token');
      Map body = {
       "username": name.text,
       "mobile_number": mobile.text,
@@ -66,33 +70,40 @@ class AuthController extends GetxController{
       "gender": genderValue.value,
       "otp_token": otpToken.value,
       "otp_code": otp.text,
+       'fcm_token':fcmToken
     };
     VerifyOtpRes res = await repo.verifyOtp(body: jsonEncode(body));
     verifyLoading(false);
-    if(res.success==true){
+
+    if (res.success == true) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      log("User ID before save: ${res.data!.id}"); // Before saving
+
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('token', '${res.data!.token}');
+      await prefs.setString('user_id', res.data!.id.toString()); // Notice: removed extra space
+
+      log("User ID after save: ${prefs.getString('user_id')}"); // After saving
+
+      // Clear controllers
       name.clear();
       mobile.clear();
       email.clear();
       age.clear();
-      genderValue.value = ''; // Adjust based on your default gender value
+      genderValue.value = ''; // Reset gender value
       otp.clear();
       otpToken.value = '';
-      await Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) =>
-            Dashboard(), // Navigate to home if logged in
-      ));
 
-    }else{
+      await Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Dashboard(), // Navigate to home
+        ),
+      );
+    } else {
       CommonToast.show(msg: "${res.message}");
-      // if(res.data!.email!=null) {
-      //   CommonToast.show(msg: "${res.data!.email}");
-      // }else{
-      //   CommonToast.show(msg: "${res.data!.mobileNumber}");
-      // }
     }
+
   }
 
 var loginLoading = false.obs;
@@ -119,17 +130,27 @@ var loginLoading = false.obs;
 
   Future<dynamic> verifyOtpLogin(context) async {
     verifyLoading(true);
-    Map body = {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final fcmToken= prefs.getString('fcm_token');
+    Map<String, dynamic> body = {
       "mobile_number": loginMobile.text,
       "otp_token": otpToken.value,
       "otp_code": otp.text,
+      // Only include fcm_token if it's not null
+      if (fcmToken != null) 'fcm_token': fcmToken,
     };
+
     VerifyOtpRes res = await repo.verifyOtpLogin(body: jsonEncode(body));
     verifyLoading(false);
     if(res.success==true){
       final SharedPreferences prefs = await SharedPreferences.getInstance();
+      log("User ID before save: ${res.data!.id.toString()}"); // Before saving
+
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('token', '${res.data!.token}');
+      await prefs.setString('user_id', res.data!.id.toString());  // Notice: removed extra space
+
+      log("User ID after save: ${prefs.getString('user_id')}"); // After saving
       loginMobile.clear();
       otp.clear();
       otpToken.value = '';
@@ -165,10 +186,14 @@ var loginLoading = false.obs;
       ));
     }
   }
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   ///Logout
  Future<dynamic> logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
+    final fCMToken = await firebaseMessaging.getToken();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+   await prefs.setString('fcm_token',fCMToken!);
     DashboardController.to.tabSelected.value=0;
     // await FirebaseApi().initNotifications();
     //await _signOut();

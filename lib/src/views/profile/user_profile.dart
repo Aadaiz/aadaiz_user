@@ -46,9 +46,10 @@ class _UserProfileState extends State<UserProfile> {
         preferredSize: Size(100, 6.0.hp),
         child: Obx(()=>
        CommonAppBar(
+         leadingclick: ()=>Get.back(),
             isLoading: ProfileController.to.UpdateprofileLoading.value,
             title: 'Profile',
-            isCheck: true,
+            isCheck: ProfileController.to.image.value.path !=''? true:false,
             onTap: () async {
               await ProfileController.to.updateProfile();
                Get.back();

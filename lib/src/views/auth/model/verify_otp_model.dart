@@ -11,7 +11,8 @@ class VerifyOtpRes {
     this.data,
   });
 
-  factory VerifyOtpRes.fromJson(String str) => VerifyOtpRes.fromMap(json.decode(str));
+  factory VerifyOtpRes.fromJson(String str) =>
+      VerifyOtpRes.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -29,29 +30,39 @@ class VerifyOtpRes {
 }
 
 class Data {
+  dynamic id;
   dynamic username;
   dynamic email;
   dynamic mobileNumber;
   dynamic gender;
+  dynamic profileImage;
   dynamic age;
   dynamic role;
+  dynamic fcmToken;
   dynamic isVerify;
-  DateTime? updatedAt;
-  DateTime? createdAt;
-  dynamic id;
+  dynamic socialId;
+  dynamic userWallet;
+  dynamic deleted;
+ dynamic createdAt;
+ dynamic updatedAt;
   dynamic token;
 
   Data({
+    this.id,
     this.username,
     this.email,
     this.mobileNumber,
     this.gender,
+    this.profileImage,
     this.age,
     this.role,
+    this.fcmToken,
     this.isVerify,
-    this.updatedAt,
+    this.socialId,
+    this.userWallet,
+    this.deleted,
     this.createdAt,
-    this.id,
+    this.updatedAt,
     this.token,
   });
 
@@ -60,30 +71,44 @@ class Data {
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    username: json["username"]??null,
-    email: json["email"]??null,
-    mobileNumber: json["mobile_number"]??null,
-    gender: json["gender"]??null,
-    age: json["age"]??null,
-    role: json["role"]??null,
-    isVerify: json["is_verify"]??null,
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    id: json["id"]??null,
-    token: json["token"]??null,
+    id: json["id"],
+    username: json["username"],
+    email: json["email"],
+    mobileNumber: json["mobile_number"],
+    gender: json["gender"],
+    profileImage: json["profile_image"],
+    age: json["age"],
+    role: json["role"],
+    fcmToken: json["fcm_token"],
+    isVerify: json["is_verify"],
+    socialId: json["social_id"],
+    userWallet: json["user_wallet"],
+    deleted: json["deleted"],
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
+    token: json["token"],
   );
 
   Map<String, dynamic> toMap() => {
-    "username": username??null,
-    "email": email??null,
-    "mobile_number": mobileNumber??null,
-    "gender": gender??null,
-    "age": age??null,
-    "role": role??null,
-    "is_verify": isVerify??null,
-    "updated_at": updatedAt?.toIso8601String(),
+    "id": id,
+    "username": username,
+    "email": email,
+    "mobile_number": mobileNumber,
+    "gender": gender,
+    "profile_image": profileImage,
+    "age": age,
+    "role": role,
+    "fcm_token": fcmToken,
+    "is_verify": isVerify,
+    "social_id": socialId,
+    "user_wallet": userWallet,
+    "deleted": deleted,
     "created_at": createdAt?.toIso8601String(),
-    "id": id??null,
-    "token": token??null,
+    "updated_at": updatedAt?.toIso8601String(),
+    "token": token,
   };
 }

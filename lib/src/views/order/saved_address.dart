@@ -39,7 +39,9 @@ class _SavedAddressState extends State<SavedAddress> {
       backgroundColor: AppColor.addressBgColor,
       appBar: PreferredSize(
         preferredSize: Size(100, 8.0.hp),
-        child: const CommonAppBar(title: 'Shipping Addresses'),
+        child:  CommonAppBar(title: 'Shipping Addresses',leadingclick: (){
+          Get.back();
+        },),
       ),
       body: Obx(
         () =>

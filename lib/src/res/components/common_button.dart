@@ -46,7 +46,7 @@ class CommonButton extends StatelessWidget {
                         ),
                       )
                     : Text(text,
-                        style: GoogleFonts.dmSans(
+                        style: GoogleFonts.inter(
                             fontSize: 15,
                             color: AppColor.primary,
                             fontWeight: FontWeight.w700)),
@@ -69,7 +69,7 @@ class CommonButton extends StatelessWidget {
                         ),
                       )
                     : Text(text,
-                        style: GoogleFonts.dmSans(
+                        style: GoogleFonts.inter(
                             fontSize: 15,
                             color: AppColor.white,
                             fontWeight: FontWeight.w700)),

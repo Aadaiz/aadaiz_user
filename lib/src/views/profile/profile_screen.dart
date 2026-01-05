@@ -34,12 +34,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-     ProfileController.to.getProfile();
-  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -109,17 +104,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                       imageUrl:
-                                          (ProfileController
+                                          ProfileController
                                               .to
                                               .profileData
                                               .value
-                                              .profileImage),
+                                              .profileImage,
                                     ),
                                   )
                                   : const CircleAvatar(
                                     backgroundImage: AssetImage(
                                       'assets/images/emtpy_profile.png',
-                                    ), // Positioned(
+                                    ),
+                                // Positioned(
                                 //     bottom: 0,
                                 //     right: 0,
                                 //     child: CircleAvatar(
@@ -193,18 +189,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 'Help Center',
                               ),
                             ),
-                            InkWell(
-                              onTap: () {
-                               // Get.to(() => ());
-                              },
-                              child: customWidget(
-                                SvgPicture.asset(
-                                  'assets/svg/meetings.svg',
-                                  height: screenHeight * 0.03,
-                                ),
-                                'Meetings',
-                              ),
-                            ),
+                            // InkWell(
+                            //   onTap: () {
+                            //    // Get.to(() => ());
+                            //   },
+                            //   child: customWidget(
+                            //     SvgPicture.asset(
+                            //       'assets/svg/meetings.svg',
+                            //       height: screenHeight * 0.03,
+                            //     ),
+                            //     'Meetings',
+                            //   ),
+                            // ),
                           ],
                         ),
                         SizedBox(height: screenHeight * 0.022),

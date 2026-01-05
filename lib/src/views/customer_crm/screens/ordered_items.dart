@@ -5,20 +5,32 @@ import 'package:get/get.dart';
 
 import '../app_components/app_colors.dart';
 import '../app_components/items.dart';
-import 'chat_screen.dart';
+import '../chat/screens/chat_screen.dart';
 
 class OrderedItems extends StatefulWidget {
-  
   final String product_name;
-  final List<String> images;
-  final String shopId;
-  final String orderId;
-  final String shopName;
-   OrderedItems({
+  final List<String> materialImages;
+  final List<String> referenceImages;
+  final List<String> drawnImages;
+
+  final dynamic shopId;
+  final dynamic orderId;
+  final dynamic shopName;
+  final dynamic price;
+  final dynamic quantity;
+  OrderedItems({
     super.key,
     required this.product_name,
-    required this.images, required this.shopId, required this.shopName, required this.orderId
-    });
+    required this.materialImages,
+    required this.referenceImages,
+    required this.drawnImages,
+    required this.shopId,
+    required this.shopName,
+    required this.orderId,
+    required this.price,
+    required this.quantity,
+
+  });
 
   @override
   State<OrderedItems> createState() => _OrderedItemsState();
@@ -33,28 +45,35 @@ class _OrderedItemsState extends State<OrderedItems> {
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         leading: InkWell(
-          onTap: ()=> Get.back(),
+          onTap: () => Get.back(),
           child: Padding(
             padding: const EdgeInsets.only(left: 16.0),
-            child: Image.asset("assets/images/bac1.png",height: 39.h,width: 39.w,),
+            child: Image.asset(
+              "assets/images/bac1.png",
+              height: 39.h,
+              width: 39.w,
+            ),
           ),
         ),
-         ),
+      ),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProductDetails(
-              title:widget.product_name,
-              price: 198.00,
-              imageUrls:widget.images,
+              title: widget.product_name,
+              price: widget.price,
+              materialImages: widget.materialImages,
+              referenceImages: widget.referenceImages,
+              drawnImages: widget.drawnImages,
+                quantity: widget.quantity,
+
             ),
-            SizedBox(height: 94.h,),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0,right: 16),
-              child: AadaizButton(title: "Chat with team",onTap: (){Get.to(ChatScreen(shopName:widget.shopName,shopId: widget.shopId,orderId: widget.orderId,));},),
-            )
+            SizedBox(height: 94.h),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 16.0,right: 16),
+            //   child: AadaizButton(title: "Chat with team",onTap: (){Get.to(ChatScreen(shopName:widget.shopName,shopId: widget.shopId,orderId: widget.orderId,));},),
+            // )
           ],
         ),
       ),

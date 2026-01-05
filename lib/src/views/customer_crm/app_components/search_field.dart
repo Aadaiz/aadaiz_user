@@ -8,11 +8,13 @@ import 'package:google_fonts/google_fonts.dart';
 class SearchOrdersField extends StatelessWidget {
   final String hintText;
   final ValueChanged<String>? onChanged;
+  final TextEditingController controller;
 
   const SearchOrdersField({
     super.key,
     this.hintText = 'Search Orders',
     this.onChanged,
+    required this.controller,
   });
 
   @override
@@ -42,10 +44,11 @@ class SearchOrdersField extends StatelessWidget {
            SizedBox(width: 10.w),
           Expanded(
             child: TextField(
+              controller: controller,
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,
-                hintStyle: GoogleFonts.montserrat(
+                hintStyle: GoogleFonts.inter(
                   fontSize: 14.0.sp,
                   color: Colors.grey,
                 ),

@@ -400,6 +400,8 @@ class _NewAddressState extends State<NewAddress> {
               ),
               SizedBox(height: screenHeight * 0.022),
               CustomTextField(
+                keyboardType: TextInputType.number,
+
                 hintText: 'Zip Code (Postal Code)',
                 controller: HomeController.to.zipCode,
               ),

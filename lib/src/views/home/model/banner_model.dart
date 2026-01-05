@@ -52,7 +52,7 @@ class Datum {
   factory Datum.fromMap(Map<String, dynamic> json) => Datum(
     id: json["id"]??null,
     title: json["title"]??null,
-    imageUrl: json["image_url"]??null,
+    imageUrl: json["images"]??null,
     status: json["status"]??null,
     createdAt: json["created_at"]??null,
     updatedAt: json["updated_at"] ??null,
@@ -61,7 +61,7 @@ class Datum {
   Map<String, dynamic> toMap() => {
     "id": id??null,
     "title": title??null,
-    "image_url": imageUrl??null,
+    "images": imageUrl??null,
     "status": status??null,
     "created_at": createdAt??null,
     "updated_at": updatedAt??null,

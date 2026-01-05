@@ -39,10 +39,7 @@ class DeliveryDetails extends StatelessWidget {
           SizedBox(height: 20.h),
           _buildDetailRow('Name', name),
           SizedBox(height: 20.h),
-          _divider(),
-          SizedBox(height: 20.h),
-          _buildDetailRow('Email', email),
-          SizedBox(height: 20.h),
+
           _divider(),
           SizedBox(height: 20.h),
           _buildDetailRow('Phone', phone),
