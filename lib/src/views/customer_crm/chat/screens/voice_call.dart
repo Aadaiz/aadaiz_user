@@ -598,6 +598,8 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   static const Color _darkBackground = Color(0xFF0F1B2D);
   static const Color _cardBackground = Color(0xFF1E2B3E);
   final Color _iconColor = Colors.white70;
+  Timer? _ringTimeoutTimer;
+  static const int _ringTimeoutSeconds = 30;
 
   @override
   void initState() {
@@ -610,6 +612,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   Future<void> _initializeCall() async {
     try {
       await initAgora();
+      _startRingTimeout();
       _startCallTimer();
       _startHideControlsTimer();
     } catch (e, stack) {
@@ -620,6 +623,19 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
         });
       }
     }
+  }
+  void _startRingTimeout() {
+    _ringTimeoutTimer?.cancel();
+
+    _ringTimeoutTimer = Timer(
+      const Duration(seconds: _ringTimeoutSeconds),
+          () {
+        if (!remoteJoined) {
+          log("⏱️ Call not answered. Auto ending call.");
+          _endCall();
+        }
+      },
+    );
   }
 
   Future<void> initAgora() async {
@@ -641,6 +657,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
             setState(() => localJoined = true);
           },
           onUserJoined: (connection, remoteUid, elapsed) {
+            _ringTimeoutTimer?.cancel();
             if (!mounted) return;
             log("Remote joined");
             setState(() => remoteJoined = true);
@@ -750,6 +767,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
 
     _callTimer.cancel();
     _hideControlsTimer?.cancel();
+    callCon.isCallActive(false);
 
     callCon.endCall();
 
@@ -776,6 +794,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   @override
   void dispose() {
     _callTimer.cancel();
+    _callTimer.cancel();
     _hideControlsTimer?.cancel();
 
     try {
@@ -784,7 +803,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
     } catch (e) {
       log("Error in dispose: $e");
     }
-
+    callCon.isCallActive(false);
     super.dispose();
   }
 

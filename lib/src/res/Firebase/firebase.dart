@@ -56,6 +56,7 @@ class FirebaseNotificationHandler {
       description: 'High priority incoming call notifications',
       importance: Importance.max,
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('incoming_call'),
       enableVibration: true,
     );
 

@@ -212,7 +212,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           radius: 20,
                           backgroundColor: Colors.blue.shade50,
                           child: Text(
-                            (widget.name?.substring(0, 1) ?? "").toUpperCase(),
+                            (widget.adminName?.substring(0, 1) ?? "").toUpperCase(),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,

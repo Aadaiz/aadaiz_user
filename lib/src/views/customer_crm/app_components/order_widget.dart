@@ -52,7 +52,7 @@ class OrderWidget extends StatefulWidget {
     required this.free,
     required this.shopAddress,
     required this.adminName,
-    required this.adminProfile
+    required this.adminProfile,
   });
 
   @override
@@ -86,9 +86,9 @@ class _OrderWidgetState extends State<OrderWidget> {
               productStatus: widget.productStatus,
               adminId: widget.adminId,
               isCompleted: widget.isCompleted,
-              free:widget.free,
-                shopAddress:widget.shopAddress,
-              adminName:widget.adminName
+              free: widget.free,
+              shopAddress: widget.shopAddress,
+              adminName: widget.adminName,
             ),
           ),
       child: Container(
@@ -192,7 +192,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               /// --- Dynamic Product List ---
               ...widget.products.map(
                 (p) => buildStatusCard(
-                  title: p.styleName,
+                  title: p.styleName!.categoryName,
                   status: p.productStatus.toString(),
                   quantity: p.quantity,
                   price: p.price,
@@ -278,8 +278,8 @@ Widget buildStatusCard({
           shopId: shopId,
           shopName: shopName,
           orderId: orderId,
-          price:price,
-          quantity:quantity
+          price: price,
+          quantity: quantity,
         ),
       );
     },
@@ -295,13 +295,14 @@ Widget buildStatusCard({
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
                 style: GoogleFonts.inter(
                   fontSize: 14.0.sp,
                   color: Colors.black,
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 3),
@@ -310,7 +311,7 @@ Widget buildStatusCard({
                 style: GoogleFonts.inter(
                   fontSize: 12.0.sp,
                   color: Colors.black,
-                    fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -318,9 +319,9 @@ Widget buildStatusCard({
           Text(
             "₹$price",
             style: GoogleFonts.inter(
-                fontSize: 16.0.sp,
-                color: Colors.black,
-                fontWeight: FontWeight.w600
+              fontSize: 16.0.sp,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
             ),
           ),
 

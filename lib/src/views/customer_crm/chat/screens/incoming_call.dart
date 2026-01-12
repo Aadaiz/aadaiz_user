@@ -1,6 +1,7 @@
 
 import 'dart:ui';
 
+import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/voice_call.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,11 +84,16 @@ class IncomingCallScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
 
+
                     _buildActionButton(
                       icon: Icons.call_end,
                       backgroundColor: Colors.red,
                       iconColor: Colors.white,
-                      onPressed: () => Get.back()
+                      onPressed: () {
+                        final callCon = Get.find<CallStateController>();
+                        callCon.isCallActive(false);
+
+                        Get.back();}
                     ),
 
                     _buildActionButton(

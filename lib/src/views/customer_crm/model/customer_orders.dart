@@ -466,7 +466,8 @@ class OrderProduct {
     final String productCreateId;
     final String subadminId;
     final String category;
-    final String styleName;
+    final StyleName? styleName;
+
     final String quantity;
     final String price;
     final String totalAmount;
@@ -500,7 +501,7 @@ class OrderProduct {
         required this.productCreateId,
         required this.subadminId,
         required this.category,
-        required this.styleName,
+        this.styleName,
         required this.quantity,
         required this.price,
         required this.totalAmount,
@@ -530,12 +531,19 @@ class OrderProduct {
         required this.productStatus,
     });
 
+
     factory OrderProduct.fromMap(Map<String, dynamic> json) => OrderProduct(
         id: json["id"] ?? 0,
         productCreateId: json["product_create_id"]?.toString() ?? "",
         subadminId: json["subadmin_id"]?.toString() ?? "",
         category: json["category"]?.toString() ?? "",
-        styleName: json["style_name"]?.toString() ?? "",
+
+        /// 👇 style_name object handling
+        styleName: json["style_name"] != null &&
+            json["style_name"] is Map<String, dynamic>
+            ? StyleName.fromMap(json["style_name"])
+            : null,
+
         quantity: json["quantity"]?.toString() ?? "",
         price: json["price"]?.toString() ?? "",
         totalAmount: json["total_amount"]?.toString() ?? "",
@@ -569,12 +577,13 @@ class OrderProduct {
         productStatus: json["product_status"] ?? false,
     );
 
+
     Map<String, dynamic> toMap() => {
         "id": id,
         "product_create_id": productCreateId,
         "subadmin_id": subadminId,
         "category": category,
-        "style_name": styleName,
+        "style_name": styleName?.toMap(),
         "quantity": quantity,
         "price": price,
         "total_amount": totalAmount,
@@ -602,6 +611,50 @@ class OrderProduct {
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "product_status": productStatus,
+    };
+
+}
+class StyleName {
+    final int id;
+    final String adminId;
+    final String categoryType;
+    final String categoryName;
+    final String categoryStatus;
+    final DateTime createdAt;
+    final DateTime updatedAt;
+
+    StyleName({
+        required this.id,
+        required this.adminId,
+        required this.categoryType,
+        required this.categoryName,
+        required this.categoryStatus,
+        required this.createdAt,
+        required this.updatedAt,
+    });
+
+    factory StyleName.fromMap(Map<String, dynamic> json) => StyleName(
+        id: json["id"] ?? 0,
+        adminId: json["admin_id"]?.toString() ?? "",
+        categoryType: json["category_type"]?.toString() ?? "",
+        categoryName: json["category_name"]?.toString() ?? "",
+        categoryStatus: json["category_status"]?.toString() ?? "",
+        createdAt: json["created_at"] != null
+            ? DateTime.parse(json["created_at"].toString())
+            : DateTime.now(),
+        updatedAt: json["updated_at"] != null
+            ? DateTime.parse(json["updated_at"].toString())
+            : DateTime.now(),
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "admin_id": adminId,
+        "category_type": categoryType,
+        "category_name": categoryName,
+        "category_status": categoryStatus,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
     };
 }
 

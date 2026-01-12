@@ -325,6 +325,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             await prefs.reload();
             final userId = prefs.getString('user_id');
             log('User Id $userId');
+            log('adminName ${widget.adminName}');
             if (userId != null && userId.isNotEmpty) {
               await Get.to(
                 ChatScreen(
