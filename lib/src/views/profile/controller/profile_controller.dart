@@ -76,7 +76,7 @@ var UpdateprofileLoading=false.obs;
         Get.snackbar('Error', 'Failed to update profile');
       }
     } catch (e) {
-      Get.snackbar('Error', 'An error occurred: $e');
+
       rethrow;
     } finally {
       UpdateprofileLoading(false); // Reset loading state
@@ -102,7 +102,7 @@ var UpdateprofileLoading=false.obs;
         Get.snackbar('Error', 'Failed to upload image');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Image upload failed: $e');
+
       rethrow;
     }
   }

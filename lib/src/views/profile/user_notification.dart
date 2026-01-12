@@ -27,6 +27,7 @@ class _UserNotificationState extends State<UserNotification> {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,

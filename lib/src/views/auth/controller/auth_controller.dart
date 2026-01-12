@@ -189,12 +189,13 @@ var loginLoading = false.obs;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   ///Logout
  Future<dynamic> logOut() async {
+   DashboardController.to.tabSelected.value=0;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
     final fCMToken = await firebaseMessaging.getToken();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
    await prefs.setString('fcm_token',fCMToken!);
-    DashboardController.to.tabSelected.value=0;
+
     // await FirebaseApi().initNotifications();
     //await _signOut();
     await Get.offAll(()=> const RegisterScreen());

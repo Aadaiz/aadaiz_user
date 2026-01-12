@@ -34,7 +34,12 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
 
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ProfileController.to.getProfile();
+  }
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -246,22 +251,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         //             fontSize: 12.00.sp,
                         //             color: AppColor.black)),
                         //     trailing: const Icon(Icons.chevron_right_sharp)),
-                        ListTile(
-                          // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
-                          leading: SvgPicture.asset(
-                            'assets/svg/ic_privacy.svg',
-                            width: screenWidth * 0.066,
-                          ),
-                          title: Text(
-                            'Privacy Policy',
-                            style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12.00.sp,
-                              color: AppColor.black,
-                            ),
-                          ),
-                          trailing: const Icon(Icons.chevron_right_sharp),
-                        ),
+                        // ListTile(
+                        //   // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
+                        //   leading: SvgPicture.asset(
+                        //     'assets/svg/ic_privacy.svg',
+                        //     width: screenWidth * 0.066,
+                        //   ),
+                        //   title: Text(
+                        //     'Privacy Policy',
+                        //     style: GoogleFonts.dmSans(
+                        //       fontWeight: FontWeight.w400,
+                        //       fontSize: 12.00.sp,
+                        //       color: AppColor.black,
+                        //     ),
+                        //   ),
+                        //   trailing: const Icon(Icons.chevron_right_sharp),
+                        // ),
                         // ListTile(
                         //     // onTap: ()=> Navigator.pushNamed(context, RoutesName.notificationPermissionActivity),
                         //     leading: SvgPicture.asset(
@@ -353,6 +358,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           title: Text(
                             'Log Out',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12.00.sp,
+                              color: AppColor.exitTextColor,
+                            ),
+                          ),
+                        ), ListTile(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  child: SizedBox(
+                                    height: screenHeight * 0.22,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          'Delete Account',
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 19.00.sp,
+                                            color: AppColor.primary,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Are you sure you want to Delete your Account ?',
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 11.00.sp,
+                                            color: AppColor.primary,
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            InkWell(
+                                              onTap:
+                                                  () => Navigator.pop(context),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  border: Border.all(
+                                                    color: AppColor.primary,
+                                                  ),
+                                                ),
+                                                width: screenWidth / 3.3,
+                                                height: screenHeight * 0.066,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: GoogleFonts.dmSans(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 13.00.sp,
+                                                    color: AppColor.primary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: screenWidth / 3.3,
+                                              child: CommonButton(
+                                                press: () async {
+                                                  await AuthController.to
+                                                      .logOut();
+                                                },
+                                                text: 'Delete Account',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          leading: SvgPicture.asset(
+                            'assets/svg/log_out.svg',
+                            width: screenWidth * 0.066,
+                          ),
+                          title: Text(
+                            'Delete Account',
                             style: GoogleFonts.dmSans(
                               fontWeight: FontWeight.w400,
                               fontSize: 12.00.sp,
