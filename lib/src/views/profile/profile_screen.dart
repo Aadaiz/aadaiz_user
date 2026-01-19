@@ -149,66 +149,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.022),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => MyOrderScreen());
-                              },
-                              child: customWidget(
-                                Image.asset(
-                                  'assets/dashboard/orders.png',
-                                  height: screenHeight * 0.03,
-                                  color: AppColor.black,
-                                ),
-                                'My Orders',
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => Wishlist());
-                              },
-                              child: customWidget(
-                                const Icon(
-                                    Icons.favorite_border,
-                                    color: AppColor.textColor),
-                                'Wishlist',
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => HelpCenter());
-                              },
-                              child: customWidget(
-                                const Icon(
-                                  Icons.info,
-                                  color: AppColor.textColor,
-                                ),
-                                'Help Center',
-                              ),
-                            ),
-                            // InkWell(
-                            //   onTap: () {
-                            //    // Get.to(() => ());
-                            //   },
-                            //   child: customWidget(
-                            //     SvgPicture.asset(
-                            //       'assets/svg/meetings.svg',
-                            //       height: screenHeight * 0.03,
-                            //     ),
-                            //     'Meetings',
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.022),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => MyOrderScreen());
+                        //       },
+                        //       child: customWidget(
+                        //         Image.asset(
+                        //           'assets/dashboard/orders.png',
+                        //           height: screenHeight * 0.03,
+                        //           color: AppColor.black,
+                        //         ),
+                        //         'My Orders',
+                        //       ),
+                        //     ),
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => Wishlist());
+                        //       },
+                        //       child: customWidget(
+                        //         const Icon(
+                        //             Icons.favorite_border,
+                        //             color: AppColor.textColor),
+                        //         'Wishlist',
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(height: screenHeight * 0.01),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => HelpCenter());
+                        //       },
+                        //       child: customWidget(
+                        //         const Icon(
+                        //           Icons.info,
+                        //           color: AppColor.textColor,
+                        //         ),
+                        //         'Help Center',
+                        //       ),
+                        //     ),
+                        //     // InkWell(
+                        //     //   onTap: () {
+                        //     //    // Get.to(() => ());
+                        //     //   },
+                        //     //   child: customWidget(
+                        //     //     SvgPicture.asset(
+                        //     //       'assets/svg/meetings.svg',
+                        //     //       height: screenHeight * 0.03,
+                        //     //     ),
+                        //     //     'Meetings',
+                        //     //   ),
+                        //     // ),
+                        //   ],
+                        // ),
+                        SizedBox(height: screenHeight * 0.012),
                         ListTile(
                           onTap: () {
                             Navigator.push(

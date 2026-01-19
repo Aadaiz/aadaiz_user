@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Gap(2.0.hp),
               const TopWidget(),
-              Gap(3.0.hp),
+              Gap(2.0.hp),
               Image.asset(
                 'assets/images/fc.png',
                 fit:BoxFit.fill,
@@ -65,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Gap(3.0.hp),
 
-              const FabricWidget(),
-              Gap(3.0.hp),
+              // const FabricWidget(),
+              // Gap(3.0.hp),
             ],
           ),
         ),

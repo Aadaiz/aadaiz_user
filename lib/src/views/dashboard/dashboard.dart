@@ -34,35 +34,35 @@ class _DashboardState extends State<Dashboard> {
   final List icon = [
     {'icon': 'assets/dashboard/home.png', 'text': 'Home'},
     {'icon': 'assets/dashboard/profile.png', 'text': 'Profile'},
-    {'icon': 'assets/dashboard/orders.png', 'text': 'My Orders'},
-    {'icon': 'assets/dashboard/cart.png', 'text': 'Cart'},
-    {'icon': 'assets/dashboard/menu.png', 'text': 'Menu'},
+    // {'icon': 'assets/dashboard/orders.png', 'text': 'My Orders'},
+    // {'icon': 'assets/dashboard/cart.png', 'text': 'Cart'},
+    {'icon': 'assets/dashboard/orders.png', 'text': 'StitchPro Orders'},
   ];
 
   final List<Widget> screens = <Widget>[
     const HomeScreen(),
     const ProfileScreen(),
-    const MyOrderScreen(),
-    const MaterialCart(),
+    // const MyOrderScreen(),
+    // const MaterialCart(),
     const ProfileScreen(),
   ];
 
   final List<Map<String, dynamic>> drawerIcon = <Map<String, dynamic>>[
-    {
-      'icon': 'assets/dashboard/self.png',
-      'text': 'Self Customization',
-      'screen': const SelfCustomize()
-    },
-    {
-      'icon': 'assets/dashboard/consult.png',
-      'text': 'Consulting',
-      'screen': const Consulting()
-    },
-    {
-      'icon': 'assets/dashboard/fabric.png',
-      'text': 'Material',
-      'screen': const MaterialScreen()
-    },
+    // {
+    //   'icon': 'assets/dashboard/self.png',
+    //   'text': 'Self Customization',
+    //   'screen': const SelfCustomize()
+    // },
+    // {
+    //   'icon': 'assets/dashboard/consult.png',
+    //   'text': 'Consulting',
+    //   'screen': const Consulting()
+    // },
+    // {
+    //   'icon': 'assets/dashboard/fabric.png',
+    //   'text': 'Material',
+    //   'screen': const MaterialScreen()
+    // },
     {
       'icon': 'assets/dashboard/cor.png',
       'text': 'Customer orders',
@@ -223,7 +223,7 @@ class _DashboardState extends State<Dashboard> {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                if (index != 4) {
+                if (index != 2) {
                   controller.tabSelected.value = index;
                 } else {
                   _scaffoldKey.currentState?.openDrawer();
@@ -231,7 +231,7 @@ class _DashboardState extends State<Dashboard> {
               },
               child: Obx(
                     () => SizedBox(
-                  width: 20.0.wp,
+                      width: 33.0.wp,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

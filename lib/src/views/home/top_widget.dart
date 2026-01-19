@@ -77,77 +77,77 @@ class _TopWidgetState extends State<TopWidget> {
               ],
             ),
             const Gap(32),
-            SearchField(
-              controllers: HomeController.to.search,
-              onChanged: (value) {
-                Future.delayed(const Duration(milliseconds: 100), () {
-                  HomeController.to.search.text = value;
-                });
-              },
-              onSubmitted: (value) async {
-                 HomeController.to.search.text = value;
-                await HomeController.to
-                    .getProductList(isRefresh:true)
-                    .then((value)=>Get.to(()=> const SearchScreen()));
-              },
-              hinttext: 'Search By Keyword' ,
-            ),
-            const Gap(32),
+            // SearchField(
+            //   controllers: HomeController.to.search,
+            //   onChanged: (value) {
+            //     Future.delayed(const Duration(milliseconds: 100), () {
+            //       HomeController.to.search.text = value;
+            //     });
+            //   },
+            //   onSubmitted: (value) async {
+            //      HomeController.to.search.text = value;
+            //     await HomeController.to
+            //         .getProductList(isRefresh:true)
+            //         .then((value)=>Get.to(()=> const SearchScreen()));
+            //   },
+            //   hinttext: 'Search By Keyword' ,
+            // ),
+            // const Gap(32),
             const OfferBannerWidget(),
             const Gap(32),
-            Row(
-              children: [
-                Text('Category',
-                  style: GoogleFonts.inter(
-                      textStyle: TextStyle(
-                          fontSize: 14.00.sp,
-                          color:AppColor.primary,
-                          fontWeight: FontWeight.w400)),),
-              ],
-            ),
-            const Gap(24),
-            SizedBox(
-              height: 5.0.hp,
-              width: Get.width,
-              child:
-//               HomeController.to.genderLoading.value?
-//                   const Text('loading'):
-//               HomeController.to.genderList.value.isEmpty ?
-//                   const Text('gender empty')
-//
-// :
-              ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: categoryList.length,
-                  itemBuilder: (context, index){
-                    var data = categoryList[index];
-                    return   InkWell(
-                      onTap: (){
-                        // Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
-                        Get.to(()=>  const SelfCustomizationHomeScreen(catIndex: 0,id:0));
-                      },
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 16, // Image radius
-                            backgroundImage: AssetImage(
-                                data['image']),
-                          ),
-                          Gap(2.0.wp),
-                          Text(data['text'],
-                            style: GoogleFonts.inter(
-                                textStyle: TextStyle(
-                                    fontSize: 11.00.sp,
-                                    color:AppColor.black,
-                                    fontWeight: FontWeight.w400)),),
-                          Gap(5.0.wp),
-                        ],
-                      ),
-                    ) ;
-                  }),
-            ),
+//             Row(
+//               children: [
+//                 Text('Category',
+//                   style: GoogleFonts.inter(
+//                       textStyle: TextStyle(
+//                           fontSize: 14.00.sp,
+//                           color:AppColor.primary,
+//                           fontWeight: FontWeight.w400)),),
+//               ],
+//             ),
+//             const Gap(24),
+//             SizedBox(
+//               height: 5.0.hp,
+//               width: Get.width,
+//               child:
+// //               HomeController.to.genderLoading.value?
+// //                   const Text('loading'):
+// //               HomeController.to.genderList.value.isEmpty ?
+// //                   const Text('gender empty')
+// //
+// // :
+//               ListView.builder(
+//                   shrinkWrap: true,
+//                   scrollDirection: Axis.horizontal,
+//                   physics: const NeverScrollableScrollPhysics(),
+//                   itemCount: categoryList.length,
+//                   itemBuilder: (context, index){
+//                     var data = categoryList[index];
+//                     return   InkWell(
+//                       onTap: (){
+//                         // Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
+//                         Get.to(()=>  const SelfCustomizationHomeScreen(catIndex: 0,id:0));
+//                       },
+//                       child: Row(
+//                         children: [
+//                           CircleAvatar(
+//                             radius: 16, // Image radius
+//                             backgroundImage: AssetImage(
+//                                 data['image']),
+//                           ),
+//                           Gap(2.0.wp),
+//                           Text(data['text'],
+//                             style: GoogleFonts.inter(
+//                                 textStyle: TextStyle(
+//                                     fontSize: 11.00.sp,
+//                                     color:AppColor.black,
+//                                     fontWeight: FontWeight.w400)),),
+//                           Gap(5.0.wp),
+//                         ],
+//                       ),
+//                     ) ;
+//                   }),
+//             ),
           ],
         ),
       

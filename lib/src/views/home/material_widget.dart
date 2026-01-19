@@ -98,7 +98,7 @@ class _FabricWidgetState extends State<FabricWidget> {
                                 ),
                               ),
                             ),
-                        imageUrl: (e.image),
+                        imageUrl: e.image,
                       )
                     ),
                     index != 3
