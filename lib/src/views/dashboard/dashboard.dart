@@ -124,22 +124,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                         if (isCustomerOrders) ...[
                           Gap(3.0.wp),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              'NEW',
-                              style: GoogleFonts.inter(
-                                fontSize: 7.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
+
                         ],
                       ],
                     );

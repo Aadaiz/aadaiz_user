@@ -88,7 +88,8 @@ class _OrderWidgetState extends State<OrderWidget> {
               isCompleted: widget.isCompleted,
               free:widget.free,
                 shopAddress:widget.shopAddress,
-              adminName:widget.adminName
+              adminName:widget.adminName,
+              adminProfile:widget.adminProfile
             ),
           ),
       child: Container(
@@ -111,10 +112,17 @@ class _OrderWidgetState extends State<OrderWidget> {
             /// --- Header Row ---
             Row(
               children: [
-                Image.asset(
-                  "assets/images/appvan.png",
-                  height: 46.h,
-                  width: 46.w,
+                Container(
+                  padding: EdgeInsets.all(Get.width * 0.03),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Get.width * 0.025),
+                    border: Border.all(color: AppColors.blackColor.withAlpha(20)),
+                  ),
+                  child: Icon(
+                    Icons.person,
+                    color: AppColors.orangeColor,
+                    size: Get.width * 0.06,
+                  ),
                 ),
                 SizedBox(width: 10.w),
                 Expanded(
@@ -192,7 +200,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               /// --- Dynamic Product List ---
               ...widget.products.map(
                 (p) => buildStatusCard(
-                  title: p.styleName,
+                  title: p.styleName!.categoryName??'',
                   status: p.productStatus.toString(),
                   quantity: p.quantity,
                   price: p.price,

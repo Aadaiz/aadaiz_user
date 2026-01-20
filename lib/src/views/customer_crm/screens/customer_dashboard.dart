@@ -147,7 +147,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               email: "",
                               address: item.shippingAddress ?? "",
                               shopId: "",
-                              adminId:item.subadminId,
+                              adminId:item.subadmin!.id,
                                 isCompleted:item.isCompleted,
                               free:item.freeServiceDays,
                               shopAddress:
@@ -156,8 +156,9 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                                   "${item.subadmin?.admin.country ?? ''} - "
                                   "${item.subadmin?.admin.pincode ?? ''}, "
                                   "${item.subadmin?.admin.areaStreet ?? ''}",
-                              adminName:item.subadmin?.admin.name??'',
-                                adminProfile:item.subadmin?.admin.profileImage??''
+                              adminName:item.subadmin?.name??'',
+                                adminProfile:item.subadmin?.profileImage??''
+
 
                             );
                           },
@@ -208,7 +209,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               email: "",
                               address: item.shippingAddress ?? "",
                               shopId: "",
-                              adminId:item.subadminId,
+                              adminId:item.subadmin!.id,
                               isCompleted:item.isCompleted,
                               free: item.freeServiceDays,
                               shopAddress:
@@ -217,8 +218,8 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                                   "${item.subadmin?.admin.country ?? ''} - "
                                   "${item.subadmin?.admin.pincode ?? ''}, "
                                   "${item.subadmin?.admin.areaStreet ?? ''}",
-                                adminName:item.subadmin?.admin.name??'',
-                                adminProfile:item.subadmin?.admin.profileImage??''
+                                adminName:item.subadmin?.name??'',
+                                adminProfile:item.subadmin?.profileImage??''
 
                         );
                           },

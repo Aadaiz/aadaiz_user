@@ -34,6 +34,7 @@ class OrderDetails extends StatefulWidget {
   final dynamic free;
   final String shopAddress;
   final String adminName;
+  final String adminProfile;
   OrderDetails({
     super.key,
     required this.order_name,
@@ -53,7 +54,8 @@ class OrderDetails extends StatefulWidget {
     required this.isCompleted,
     required this.free,
     required this.shopAddress,
-    required this.adminName
+    required this.adminName,
+    required this.adminProfile
   });
 
   @override
@@ -120,10 +122,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    "assets/images/appvan.png",
-                    height: 46.h,
-                    width: 46.w,
+                  Container(
+                    padding: EdgeInsets.all(Get.width * 0.03),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(Get.width * 0.025),
+                      border: Border.all(color: AppColors.blackColor.withAlpha(20)),
+                    ),
+                    child: Icon(
+                     Icons.person,
+                      color: AppColors.orangeColor,
+                      size: Get.width * 0.06,
+                    ),
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
@@ -174,29 +183,10 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ),
             SizedBox(height: 20.h),
-            if(widget.free!='0'||widget.free!=null||widget.free!='')
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.greyColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 12,
-                ),
-                child: Text(
-                  "Free Service Days : ${widget.free}",
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                    color: AppColors.blackColor,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20.h),
+
+
             ExpandInfo(
+              freeServiceDays:widget.free,
               orderNumber: widget.order_no,
               date: widget.order_date,
               itemCount: int.parse(widget.order_item_count),
@@ -211,18 +201,18 @@ class _OrderDetailsState extends State<OrderDetails> {
                 children: [
                   Text(
                     "Due Date",
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.0.sp,
-                      color: AppColors.blackColor,
+                    style: GoogleFonts.montserrat(
+                        fontSize: 14.0.sp,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600
                     ),
                   ),
                   Text(
                     formatDateDDMMYYYY(widget.delivery_date),
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,
-                      color: AppColors.blackColor,
+                    style: GoogleFonts.montserrat(
+                        fontSize: 14.0.sp,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600
                     ),
                   ),
                 ],
@@ -332,8 +322,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                   userId: userId,
                   senderType: 'customer',
                   orderId: widget.order_no,
-                  customerId: widget.adminId,
-                  adminName:widget.adminName
+                  customerId: widget.adminId.toString(),
+                  adminName:widget.adminName,
+                  adminProfile:widget.adminProfile
                 ),
               );
             } else {}

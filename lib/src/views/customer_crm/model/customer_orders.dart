@@ -466,7 +466,8 @@ class OrderProduct {
     final String productCreateId;
     final String subadminId;
     final String category;
-    final String styleName;
+    final StyleName? styleName;
+
     final String quantity;
     final String price;
     final String totalAmount;
@@ -535,7 +536,10 @@ class OrderProduct {
         productCreateId: json["product_create_id"]?.toString() ?? "",
         subadminId: json["subadmin_id"]?.toString() ?? "",
         category: json["category"]?.toString() ?? "",
-        styleName: json["style_name"]?.toString() ?? "",
+        styleName: json["style_name"] == null
+            ? null
+            : StyleName.fromMap(json["style_name"]),
+
         quantity: json["quantity"]?.toString() ?? "",
         price: json["price"]?.toString() ?? "",
         totalAmount: json["total_amount"]?.toString() ?? "",
@@ -574,7 +578,8 @@ class OrderProduct {
         "product_create_id": productCreateId,
         "subadmin_id": subadminId,
         "category": category,
-        "style_name": styleName,
+        "style_name": styleName?.toMap(),
+
         "quantity": quantity,
         "price": price,
         "total_amount": totalAmount,
@@ -602,6 +607,49 @@ class OrderProduct {
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "product_status": productStatus,
+    };
+}
+class StyleName {
+    int? id;
+    String? adminId;
+    String? categoryType;
+    String? categoryName;
+    String? categoryStatus;
+    DateTime? createdAt;
+    DateTime? updatedAt;
+
+    StyleName({
+        this.id,
+        this.adminId,
+        this.categoryType,
+        this.categoryName,
+        this.categoryStatus,
+        this.createdAt,
+        this.updatedAt,
+    });
+
+    factory StyleName.fromMap(Map<String, dynamic> json) => StyleName(
+        id: json["id"],
+        adminId: json["admin_id"],
+        categoryType: json["category_type"],
+        categoryName: json["category_name"],
+        categoryStatus: json["category_status"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+    );
+
+    Map<String, dynamic> toMap() => {
+        "id": id,
+        "admin_id": adminId,
+        "category_type": categoryType,
+        "category_name": categoryName,
+        "category_status": categoryStatus,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
     };
 }
 

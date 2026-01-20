@@ -1,5 +1,6 @@
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,9 +39,9 @@ class ProductDetails extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    title,
+                    title.capitalizeFirst??'',
                     style: GoogleFonts.inter(
-                        fontSize: 14.0.sp,
+                        fontSize: 16.0.sp,
                         color: Colors.black,
                         fontWeight: FontWeight.w600
                     ),
@@ -49,7 +50,7 @@ class ProductDetails extends StatelessWidget {
                   Text(
                     quantity,
                     style: GoogleFonts.inter(
-                        fontSize: 12.0.sp,
+                        fontSize: 14.0.sp,
                         color: Colors.black,
                         fontWeight: FontWeight.w500
                     ),
@@ -69,15 +70,17 @@ class ProductDetails extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 14.h),
 
           /// 🔹 Images Header
-          Text(
-            'Design Specification',
-            style: GoogleFonts.inter(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
-              color: AppColors.orangeColor,
+          Center(
+            child: Text(
+              'Design Specification',
+              style: GoogleFonts.inter(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.orangeColor,
+              ),
             ),
           ),
 

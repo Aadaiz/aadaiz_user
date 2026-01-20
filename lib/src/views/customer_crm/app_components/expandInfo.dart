@@ -8,7 +8,7 @@ class ExpandInfo extends StatelessWidget {
   final int itemCount;
   final String shopName;
   final String shopAddress;
-
+  final dynamic freeServiceDays;
 
   const ExpandInfo({
     super.key,
@@ -17,6 +17,7 @@ class ExpandInfo extends StatelessWidget {
     required this.itemCount,
     required this.shopName,
     required this.shopAddress,
+    required this.freeServiceDays,
   });
 
   @override
@@ -28,8 +29,8 @@ class ExpandInfo extends StatelessWidget {
         title: Text(
           'Order Details',
           style: GoogleFonts.montserrat(
-            fontSize: 14.0.sp,
-            fontWeight: FontWeight.w500,
+            fontSize: 18.0.sp,
+            fontWeight: FontWeight.w600,
             color: Colors.black,
           ),
         ),
@@ -50,8 +51,16 @@ class ExpandInfo extends StatelessWidget {
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
-          _buildDetailRow('Shop Name', shopName??""),  SizedBox(height: 20.h),
-          _buildDetailRow('Shop Address', shopAddress??""),
+          _buildDetailRow('Shop Name', shopName ?? ""),
+          SizedBox(height: 20.h),
+          _divider(),
+          SizedBox(height: 20.h),
+          _buildDetailRow('Shop Address', shopAddress ?? ""),
+          SizedBox(height: 20.h),
+          if(freeServiceDays!='0'||freeServiceDays!=null||freeServiceDays!='')
+          _divider(),
+          SizedBox(height: 20.h),
+          _buildDetailRow('Free Service Days', freeServiceDays ?? ""),
         ],
       ),
     );
@@ -63,8 +72,9 @@ class ExpandInfo extends StatelessWidget {
         Text(
           title,
           style: GoogleFonts.montserrat(
-            fontSize: 12.0.sp,
-            color: Colors.grey[600],
+            fontSize: 14.0.sp,
+            color: Colors.black,
+            fontWeight: FontWeight.w600
           ),
         ),
 
@@ -77,8 +87,9 @@ class ExpandInfo extends StatelessWidget {
               value,
               textAlign: TextAlign.right,
               style: GoogleFonts.montserrat(
-                fontSize: 12.0.sp,
+                fontSize: 14.0.sp,
                 color: Colors.black,
+                fontWeight: FontWeight.w600
               ),
             ),
           ),
@@ -87,12 +98,7 @@ class ExpandInfo extends StatelessWidget {
     );
   }
 
-
   Widget _divider() {
-    return Divider(
-      color: Colors.grey[300],
-      thickness: 1,
-      height: 0,
-    );
+    return Divider(color: Colors.grey[300], thickness: 1, height: 0);
   }
 }
