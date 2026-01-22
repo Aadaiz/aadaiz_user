@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
 import 'package:intl/intl.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
@@ -35,6 +36,9 @@ class OrderDetails extends StatefulWidget {
   final String shopAddress;
   final String adminName;
   final String adminProfile;
+  final String customerImage;
+  final List<OrderProduct> products;
+
   OrderDetails({
     super.key,
     required this.order_name,
@@ -55,7 +59,9 @@ class OrderDetails extends StatefulWidget {
     required this.free,
     required this.shopAddress,
     required this.adminName,
-    required this.adminProfile
+    required this.adminProfile,
+    required this.customerImage,
+    required this.products
   });
 
   @override
@@ -123,17 +129,40 @@ class _OrderDetailsState extends State<OrderDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(Get.width * 0.03),
+                    width: Get.width * 0.15,
+                    height: Get.height * 0.065,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Get.width * 0.025),
-                      border: Border.all(color: AppColors.blackColor.withAlpha(20)),
+                      border: Border.all(
+                        color: AppColors.blackColor.withAlpha(20),
+                      ),
                     ),
-                    child: Icon(
-                     Icons.person,
-                      color: AppColors.orangeColor,
-                      size: Get.width * 0.06,
+                    child: (widget.customerImage == null || widget.customerImage!.isEmpty)
+                        ? Center(
+                      child: Icon(
+                        Icons.person,
+                        color: AppColors.orangeColor,
+                        size: Get.width * 0.06,
+                      ),
+                    )
+                        : ClipRRect(
+                      borderRadius: BorderRadius.circular(Get.width * 0.025),
+                      child: Image.network(
+                        widget.customerImage!,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Center(
+                          child: Icon(
+                            Icons.person,
+                            color: AppColors.orangeColor,
+                            size: Get.width * 0.06,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
+
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Column(
@@ -141,7 +170,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.order_name,
+                          widget.order_name.capitalizeFirst??'',
                           style: GoogleFonts.inter(
                             color: AppColors.blackColor,
                             fontWeight: FontWeight.w500,
@@ -172,7 +201,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Text(
-                      widget.status,
+                      widget.status.capitalizeFirst??'',
                       style: GoogleFonts.inter(
                         fontSize: 12.0.sp,
                         color: Colors.black,
@@ -202,21 +231,27 @@ class _OrderDetailsState extends State<OrderDetails> {
                   Text(
                     "Due Date",
                     style: GoogleFonts.montserrat(
-                        fontSize: 14.0.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600
+                      fontSize: 18.0.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
                     ),
                   ),
                   Text(
                     formatDateDDMMYYYY(widget.delivery_date),
                     style: GoogleFonts.montserrat(
-                        fontSize: 14.0.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600
+                      fontSize: 18.0.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
                     ),
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 30.h),
+            ExpandItems(products:widget.products,
+              shopId:widget.shopId,
+              orderShop:widget.order_shop
+
             ),
             SizedBox(height: 30.h),
 
@@ -324,7 +359,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                   orderId: widget.order_no,
                   customerId: widget.adminId.toString(),
                   adminName:widget.adminName,
-                  adminProfile:widget.adminProfile
+                  adminProfile:widget.adminProfile,
+                  shopName:widget.order_shop
                 ),
               );
             } else {}

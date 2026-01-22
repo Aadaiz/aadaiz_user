@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Obx(
             () =>
                 ProfileController.to.profileLoading.value
-                    ? const CommonLoading()
+                    ? const ProfileShimmer()
                     : Column(
                       children: [
                         Center(
@@ -74,48 +74,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .value
                                           .profileImage !=
                                       null
-                                  ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      screenWidth,
-                                    ),
-                                    child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      height: 15.0.hp,
-                                      width: 15.0.hp,
-                                      errorWidget:
-                                          (
-                                            context,
-                                            url,
-                                            error,
-                                          ) => const CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              'assets/images/emtpy_profile.png',
-                                            ),
-                                            backgroundColor: Colors.transparent,
-                                            radius: 55,
+                                  ? SizedBox(
+                                width: 15.0.hp,
+                                height: 15.0.hp,
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: ProfileController.to.profileData.value.profileImage ?? '',
+                                    fit: BoxFit.cover,
+
+                                    /// ✅ This guarantees circular image
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.grey.withAlpha(55)),
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
                                           ),
-                                      progressIndicatorBuilder:
-                                          (
-                                            context,
-                                            url,
-                                            progress,
-                                          ) => Shimmer.fromColors(
-                                            baseColor: Colors.grey[300]!,
-                                            highlightColor: Colors.grey[100]!,
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                      imageUrl:
-                                          ProfileController
-                                              .to
-                                              .profileData
-                                              .value
-                                              .profileImage,
+                                        ),
+                                      );
+                                    },
+
+                                    /// ✅ Circular shimmer
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
-                                  )
+
+                                    /// ✅ Circular fallback image
+                                    errorWidget: (context, url, error) => const CircleAvatar(
+                                      backgroundImage: AssetImage('assets/images/emtpy_profile.png'),
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                              )
+
+
                                   : const CircleAvatar(
                                     backgroundImage: AssetImage(
                                       'assets/images/emtpy_profile.png',
@@ -144,7 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .capitalizeFirst!,
                           style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w400,
-                            fontSize: 18.00.sp,
+                            fontSize: 19.00.sp,
                             color: AppColor.black,
                           ),
                         ),

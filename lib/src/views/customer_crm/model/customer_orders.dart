@@ -23,15 +23,18 @@ class OrdersData {
 }
 
 class Data {
+    final String? customerImage;
     final OrderList? newOrders;
     final OrderList? existingOrders;
 
     Data({
+        this.customerImage,
         this.newOrders,
         this.existingOrders,
     });
 
     factory Data.fromMap(Map<String, dynamic> json) => Data(
+        customerImage: json["customer_image"],
         newOrders: json["newOrders"] != null
             ? OrderList.fromMap(json["newOrders"])
             : null,
@@ -41,10 +44,12 @@ class Data {
     );
 
     Map<String, dynamic> toMap() => {
+        "customer_image": customerImage,
         "newOrders": newOrders?.toMap(),
         "existingOrders": existingOrders?.toMap(),
     };
 }
+
 
 class OrderList {
     final int currentPage;

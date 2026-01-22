@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
     {'icon': 'assets/dashboard/profile.png', 'text': 'Profile'},
     // {'icon': 'assets/dashboard/orders.png', 'text': 'My Orders'},
     // {'icon': 'assets/dashboard/cart.png', 'text': 'Cart'},
-    {'icon': 'assets/dashboard/orders.png', 'text': 'StitchPro Orders'},
+    {'icon': 'assets/dashboard/orders.png', 'text': 'StitchPro'},
   ];
 
   final List<Widget> screens = <Widget>[
@@ -89,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
                       child: Image.asset(
                         'assets/dashboard/aadai.png',
                         height: 10.0.hp,
-                        width: 23.0.wp,
+                        width: 27.0.wp,
                       ),
                     ),
                   ],
@@ -107,15 +107,15 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         Image.asset(
                           drawerIcon[index]['icon'],
-                          height: 3.0.hp,
-                          width: 6.0.wp,
+                          height: 4.0.hp,
+                          width: 7.0.wp,
                           color: AppColor.primary,
                         ),
                         Gap(5.0.wp),
                         Text(
                           drawerIcon[index]['text']=='Customer orders'?'StitchPro Orders':drawerIcon[index]['text'],
                           style: GoogleFonts.inter(
-                            fontSize: 9.0.sp,
+                            fontSize: 14.0.sp,
                             color: AppColor.primary,
                             fontWeight: isCustomerOrders
                                 ? FontWeight.w600
@@ -144,37 +144,7 @@ class _DashboardState extends State<Dashboard> {
                         margin: EdgeInsets.fromLTRB(1.0.hp, 2.0.hp, 3.0.hp, 3.0.hp),
 
 
-                        child: isCustomerOrders
-                            ? FlutterAnimateBorder(
-                          lineThickness: 2,
-                          lineWidth: 75,
-                          linePadding: 0,
-                          cornerRadius: 7,
-                          gradient: const RadialGradient(
-                            radius: 1,
-                            colors: [
-                              AppColors.orangeColor2,
-                              AppColors.projectcolor,
-                              AppColors.orangeColor,
-
-                            ],
-                          ),
-                       
-                          controller: aniController,
-                          child: AnimatedScale(
-
-                            scale: 1.02,
-                            duration:
-                            const Duration(milliseconds: 900),
-
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,vertical: 4),
-                              child: menuRow,
-                            ),
-                          ),
-                        )
-                            : Padding(
+                        child:Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12),
                           child: menuRow,
@@ -232,12 +202,12 @@ class _DashboardState extends State<Dashboard> {
                       Text(
                         icon[index]['text'],
                         style: GoogleFonts.inter(
-                          fontSize: 8.0.sp,
+                          fontSize: 9.0.sp,
                           color: controller.tabSelected.value == index ||
                               index == 4
                               ? AppColor.primary
                               : AppColor.unSelectColor,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

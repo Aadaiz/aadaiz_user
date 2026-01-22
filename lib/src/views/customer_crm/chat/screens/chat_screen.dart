@@ -22,6 +22,7 @@ class ChatScreen extends StatefulWidget {
   final String? name;
   final String adminName;
   final String adminProfile;
+  final String shopName;
   const ChatScreen({
     super.key,
     required this.token,
@@ -31,7 +32,8 @@ class ChatScreen extends StatefulWidget {
     required this.senderType,
     this.name,
     required this.adminName,
-    required this.adminProfile
+    required this.adminProfile,
+    required this.shopName
   });
 
   @override
@@ -171,19 +173,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
 
-                sendMessageConfig: SendMessageConfiguration(
+                sendMessageConfig: const SendMessageConfiguration(
                   enableCameraImagePicker: false,
                   enableGalleryImagePicker: false,
                   allowRecordingVoice: false,
 
-                  textFieldBackgroundColor: Colors.grey.shade200,
-                  textFieldConfig: const TextFieldConfiguration(
+                  textFieldConfig: TextFieldConfiguration(
                     textStyle: TextStyle(color: Colors.black),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                   ),
 
-                  sendButtonIcon: const Icon(
+                  sendButtonIcon: Icon(
                     Icons.send_rounded,
                     size: 26,
                     color: Color(0xFF0057FF),
@@ -214,20 +215,17 @@ class _ChatScreenState extends State<ChatScreen> {
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.blue.shade50,
-                          child: Text(
-                            (
-                                (widget.adminProfile?.isNotEmpty ?? false)
-                                    ? widget.adminProfile!.substring(0, 1)
-                                    : (widget.name?.isNotEmpty ?? false)
-                                    ? widget.name!.substring(0, 1)
-                                    : ""
-                            ).toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue,
+                          child: (widget.adminProfile != null && widget.adminProfile!.isNotEmpty)
+                              ? ClipOval(
+                            child: Image.network(
+                              widget.adminProfile!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _adminInitial(),
                             ),
-                          ),
+                          )
+                              : _adminInitial(),
                         ),
 
                         const SizedBox(width: 10),
@@ -268,6 +266,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   token:
                                       callData['agoraToken'], // use server token
                                   callId: callData['id'],
+                                  callerName: widget.shopName,
                                 ),
                               );
                             }
@@ -298,4 +297,17 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
     );
   }
+  Widget _adminInitial() {
+    return Text(
+      (widget.adminName?.isNotEmpty ?? false)
+          ? widget.adminName!.substring(0, 1).toUpperCase()
+          : "",
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.blue,
+      ),
+    );
+  }
+
 }

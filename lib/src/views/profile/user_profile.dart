@@ -76,6 +76,7 @@ class _UserProfileState extends State<UserProfile> {
                             height: 15.0.hp,
                             width: 15.0.hp,
                             decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.withAlpha(55)),
                               image: DecorationImage(
                                 image: FileImage(
                                   ProfileController.to.image.value,
@@ -95,6 +96,18 @@ class _UserProfileState extends State<UserProfile> {
                             borderRadius: BorderRadius.circular(screenWidth),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
+                              imageBuilder: (context, imageProvider) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey.withAlpha(55)),
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
                               height: 15.0.hp,
                               width: 15.0.hp,
                               errorWidget:
