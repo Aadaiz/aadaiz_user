@@ -154,13 +154,14 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               adminId:item.subadmin!.id,
                                 isCompleted:item.isCompleted,
                               free:item.freeServiceDays,
-                              shopAddress:
-                              "${item.subadmin?.admin.city ?? ''}, "
-                                  "${item.subadmin?.admin.state ?? ''}, "
-                                  "${item.subadmin?.admin.country ?? ''} - "
-                                  "${item.subadmin?.admin.pincode ?? ''}, "
-                                  "${item.subadmin?.admin.areaStreet ?? ''}",
-                              adminName:item.subadmin?.name??'',
+                                shopAddress:
+                                "${item.subadmin?.admin.areaStreet ?? ''}, "
+                                    "${item.subadmin?.admin.city ?? ''}, "
+                                    "${item.subadmin?.admin.state ?? ''}, "
+                                    "${item.subadmin?.admin.country ?? ''} - "
+                                    "${item.subadmin?.admin.pincode ?? ''}",
+
+                                adminName:item.subadmin?.name??'',
                                 adminProfile:item.subadmin?.profileImage??''
 
 
@@ -218,12 +219,13 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               adminId:item.subadmin!.id,
                               isCompleted:item.isCompleted,
                               free: item.freeServiceDays,
-                              shopAddress:
-                              "${item.subadmin?.admin.city ?? ''}, "
-                                  "${item.subadmin?.admin.state ?? ''}, "
-                                  "${item.subadmin?.admin.country ?? ''} - "
-                                  "${item.subadmin?.admin.pincode ?? ''}, "
-                                  "${item.subadmin?.admin.areaStreet ?? ''}",
+                                shopAddress:
+                                "${item.subadmin?.admin.areaStreet ?? ''}, "
+                                    "${item.subadmin?.admin.city ?? ''}, "
+                                    "${item.subadmin?.admin.state ?? ''}, "
+                                    "${item.subadmin?.admin.country ?? ''} - "
+                                    "${item.subadmin?.admin.pincode ?? ''}",
+
                                 adminName:item.subadmin?.name??'',
                                 adminProfile:item.subadmin?.profileImage??''
 

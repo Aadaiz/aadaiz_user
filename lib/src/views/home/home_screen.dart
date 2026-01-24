@@ -1,19 +1,12 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/home/customize_widget.dart';
-import 'package:aadaiz_customer_crm/src/views/home/material_widget.dart';
-import 'package:aadaiz_customer_crm/src/views/home/top_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/user_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../material/controller/material_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

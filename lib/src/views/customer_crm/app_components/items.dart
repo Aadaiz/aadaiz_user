@@ -1,3 +1,4 @@
+import 'package:aadaiz_customer_crm/src/res/components/image_preview.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,6 +38,7 @@ class ProductDetails extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title.capitalizeFirst??'',
@@ -134,21 +136,28 @@ class ProductDetails extends StatelessWidget {
         itemCount: images.length,
         separatorBuilder: (_, __) => SizedBox(width: 12.w),
         itemBuilder: (context, index) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: CachedNetworkImage(
-              imageUrl: images[index],
-              width: 200.w,
-              height: 120.h,
-              fit: BoxFit.cover,
-              placeholder: (_, __) =>
-              const Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
-              errorWidget: (_, __, ___) =>
-              const Icon(Icons.error, color: Colors.red),
+          final imageUrl = images[index];
+
+          return ZoomableImageWrapper(
+            imageProvider: CachedNetworkImageProvider(imageUrl),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                width: 210.w,
+                height: 120.h,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => const Center(
+                  child: CircularProgressIndicator(strokeWidth: 1.5),
+                ),
+                errorWidget: (_, __, ___) =>
+                const Icon(Icons.error, color: Colors.red),
+              ),
             ),
           );
         },
       ),
     );
   }
+
 }

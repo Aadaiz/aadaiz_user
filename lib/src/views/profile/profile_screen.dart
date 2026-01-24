@@ -1,5 +1,6 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/components/image_preview.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -77,44 +78,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? SizedBox(
                                 width: 15.0.hp,
                                 height: 15.0.hp,
-                                child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: ProfileController.to.profileData.value.profileImage ?? '',
-                                    fit: BoxFit.cover,
+                                child: ZoomableImageWrapper(
+                                  imageProvider: CachedNetworkImageProvider(
+                                    ProfileController.to.profileData.value.profileImage ?? '',
+                                  ),
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                      ProfileController.to.profileData.value.profileImage ?? '',
+                                      fit: BoxFit.cover,
 
-                                    /// ✅ This guarantees circular image
-                                    imageBuilder: (context, imageProvider) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey.withAlpha(55)),
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                                      /// ✅ This guarantees circular image
+                                      imageBuilder: (context, imageProvider) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.grey.withAlpha(55)),
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      },
+
+                                      /// ✅ Circular shimmer
+                                      placeholder: (context, url) => Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      );
-                                    },
-
-                                    /// ✅ Circular shimmer
-                                    placeholder: (context, url) => Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.white,
-                                        ),
                                       ),
-                                    ),
 
-                                    /// ✅ Circular fallback image
-                                    errorWidget: (context, url, error) => const CircleAvatar(
-                                      backgroundImage: AssetImage('assets/images/emtpy_profile.png'),
-                                      backgroundColor: Colors.transparent,
+                                      /// ✅ Circular fallback image
+                                      errorWidget: (context, url, error) =>
+                                      const CircleAvatar(
+                                        backgroundImage:
+                                        AssetImage('assets/images/emtpy_profile.png'),
+                                        backgroundColor: Colors.transparent,
+                                      ),
                                     ),
                                   ),
                                 ),
+
                               )
 
 

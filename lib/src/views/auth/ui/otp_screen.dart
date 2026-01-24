@@ -176,7 +176,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     child: InkWell(
                       onTap: () {
                         widget.isLogin
-                            ? AuthController.to.verifyOtpLogin(context)
+                            ? AuthController.to.verifyOtpLogin()
                             : AuthController.to.verifyOtp(context);
                       },
                       child: RichText(
@@ -212,7 +212,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   CommonButton(
                     press: () {
                       if (widget.isLogin) {
-                        AuthController.to.verifyOtpLogin(context);
+                        AuthController.to.verifyOtpLogin();
                       } else {
                         AuthController.to.verifyOtp(context);
                       }

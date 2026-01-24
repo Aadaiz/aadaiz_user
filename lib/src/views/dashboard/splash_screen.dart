@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     super.initState();
     Timer(const Duration(seconds: 2), (){
-      AuthController.to.checkLoginStatus(context);
+      AuthController.to.checkLoginStatus();
     }
     );
   }
@@ -31,6 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: AppColor.primary,
       body: Center(
+
+
+
         child: Image.asset(
           'assets/dashboard/aadaiz.png',
           height: Get.height * 0.7,

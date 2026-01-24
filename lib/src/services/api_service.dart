@@ -61,6 +61,7 @@ class Api {
   static const ratings = "${AppConfig.baseUrl}crm/ratings";
   static const notification = "${AppConfig.baseUrl}selfcustomize/notification";
   static const callOthers ="${AppConfig.baseUrl}crm/callData";
+  static const callEnded ="${AppConfig.baseUrl}messages/callEnded";
   static const superAdminAttendanceExport ="${AppConfig.baseUrl}crm/invoice";
   static const String chatList = 'http://52.2.234.121/aadaiz-crm-new/public/index.php/api/chatList';
 

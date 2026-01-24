@@ -29,7 +29,7 @@ class ExpandInfo extends StatelessWidget {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
 
-      child: ExpansionTile(
+      child:ExpansionTile(
         title: Text(
           'Order Details',
           style: GoogleFonts.montserrat(
@@ -38,7 +38,6 @@ class ExpandInfo extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-
         iconColor: Colors.black,
         collapsedIconColor: Colors.black,
         childrenPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -47,30 +46,43 @@ class ExpandInfo extends StatelessWidget {
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
+
           _buildDetailRow('Order date', date),
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
+
           _buildDetailRow('Items', itemCount.toString()),
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
+
           _buildDetailRow('Shop Name', shopName ?? ""),
           SizedBox(height: 20.h),
           _divider(),
           SizedBox(height: 20.h),
+
           _buildDetailRow('Shop Address', shopAddress ?? ""),
           SizedBox(height: 20.h),
-          if(freeServiceDays!='0'||freeServiceDays!=null||freeServiceDays!='')
-          _divider(),
-          SizedBox(height: 20.h),
-          _buildDetailRow('Free Service Days', freeServiceDays ?? ""),
+
+          /// ✅ Free Service Days (fully conditional)
+          if (freeServiceDays != null &&
+              freeServiceDays.toString().isNotEmpty &&
+              freeServiceDays.toString() != '0') ...[
+            _divider(),
+            SizedBox(height: 20.h),
+            _buildDetailRow(
+              'Free Service Days',
+              freeServiceDays.toString(),
+            ),
+          ],
         ],
       ),
+
     );
   }
 
-  Widget _buildDetailRow(String title, String value) {
+  Widget _buildDetailRow(String title, dynamic value) {
     return Row(
       children: [
         Text(
