@@ -110,33 +110,31 @@ class _TopWidgetState extends State<TopWidget> {
               height: 5.0.hp,
               width: Get.width,
               child:
-//               HomeController.to.genderLoading.value?
-//                   const Text('loading'):
-//               HomeController.to.genderList.value.isEmpty ?
-//                   const Text('gender empty')
-//
-// :
+              HomeController.to.genderLoading.value?
+                  const Text('loading'):
+              HomeController.to.genderList.value.isEmpty ?
+                  const Text('gender empty')
+
+:
               ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: categoryList.length,
+                  itemCount: HomeController.to.genderList.length,
                   itemBuilder: (context, index){
-                    var data = categoryList[index];
+                    var data = HomeController.to.genderList[index];
                     return   InkWell(
                       onTap: (){
-                        // Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
-                        Get.to(()=>  const SelfCustomizationHomeScreen(catIndex: 0,id:0));
+                        Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));
+                       // Get.to(()=>  const SelfCustomizationHomeScreen(catIndex: 0,id:0));
                       },
                       child: Row(
                         children: [
                           CircleAvatar(
                             radius: 16, // Image radius
-                            backgroundImage: AssetImage(
-                                data['image']),
-                          ),
+                            backgroundImage: NetworkImage(data.imageUrl??''),),
                           Gap(2.0.wp),
-                          Text(data['text'],
+                          Text(data.catName??'',
                             style: GoogleFonts.inter(
                                 textStyle: TextStyle(
                                     fontSize: 11.00.sp,

@@ -11,8 +11,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 
-import '../app_components/order_widget.dart';
-import '../app_components/search_field.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/order_widget.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/search_field.dart';
 
 
 class CustomerDashboard extends StatefulWidget {
@@ -49,6 +49,8 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
         final newOrders = con.orderDatas.value.data?.newOrders?.data ?? [];
         final existingOrders =
             con.orderDatas.value.data?.existingOrders?.data ?? [];
+        final customerImage= con.orderDatas.value.data?.customerImage??'';
+        print("Image Comes : $customerImage");
 
         return DefaultTabController(
           length: 2,
@@ -130,6 +132,8 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                           itemBuilder: (context, index) {
                             final item = newOrders[index];
                             return OrderWidget(
+                              customerImage:customerImage,
+
 
                               orderStatus: item.orderStatus ?? "",
                               productStatus: (item.newOrdersProduct ?? [])
@@ -147,17 +151,19 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               email: "",
                               address: item.shippingAddress ?? "",
                               shopId: "",
-                              adminId:item.subadminId,
+                              adminId:item.subadmin!.id,
                                 isCompleted:item.isCompleted,
                               free:item.freeServiceDays,
-                              shopAddress:
-                              "${item.subadmin?.admin.city ?? ''}, "
-                                  "${item.subadmin?.admin.state ?? ''}, "
-                                  "${item.subadmin?.admin.country ?? ''} - "
-                                  "${item.subadmin?.admin.pincode ?? ''}, "
-                                  "${item.subadmin?.admin.areaStreet ?? ''}",
-                              adminName:item.subadmin?.admin.name??'',
-                                adminProfile:item.subadmin?.admin.profileImage??''
+                                shopAddress:
+                                "${item.subadmin?.admin.areaStreet ?? ''}, "
+                                    "${item.subadmin?.admin.city ?? ''}, "
+                                    "${item.subadmin?.admin.state ?? ''}, "
+                                    "${item.subadmin?.admin.country ?? ''} - "
+                                    "${item.subadmin?.admin.pincode ?? ''}",
+
+                                adminName:item.subadmin?.name??'',
+                                adminProfile:item.subadmin?.profileImage??''
+
 
                             );
                           },
@@ -192,7 +198,9 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                           itemBuilder: (context, index) {
                             final item = existingOrders[index];
                             return OrderWidget(
-                              orderStatus: item.orderStatus ?? "",
+                                customerImage:customerImage,
+
+                                orderStatus: item.orderStatus ?? "",
                               productStatus: (item.existingOrdersProduct ?? [])
                                   .every((e) => e.productStatus == true),
                               orderName: item.customerName ?? "",
@@ -208,17 +216,18 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               email: "",
                               address: item.shippingAddress ?? "",
                               shopId: "",
-                              adminId:item.subadminId,
+                              adminId:item.subadmin!.id,
                               isCompleted:item.isCompleted,
                               free: item.freeServiceDays,
-                              shopAddress:
-                              "${item.subadmin?.admin.city ?? ''}, "
-                                  "${item.subadmin?.admin.state ?? ''}, "
-                                  "${item.subadmin?.admin.country ?? ''} - "
-                                  "${item.subadmin?.admin.pincode ?? ''}, "
-                                  "${item.subadmin?.admin.areaStreet ?? ''}",
-                                adminName:item.subadmin?.admin.name??'',
-                                adminProfile:item.subadmin?.admin.profileImage??''
+                                shopAddress:
+                                "${item.subadmin?.admin.areaStreet ?? ''}, "
+                                    "${item.subadmin?.admin.city ?? ''}, "
+                                    "${item.subadmin?.admin.state ?? ''}, "
+                                    "${item.subadmin?.admin.country ?? ''} - "
+                                    "${item.subadmin?.admin.pincode ?? ''}",
+
+                                adminName:item.subadmin?.name??'',
+                                adminProfile:item.subadmin?.profileImage??''
 
                         );
                           },

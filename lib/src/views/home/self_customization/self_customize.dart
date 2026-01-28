@@ -104,251 +104,249 @@ class _SelfCustomizeState extends State<SelfCustomize> {
 
   @override
   Widget build(BuildContext context) {
-    return ComingSoonOverlay(
-      child: Scaffold(
-        backgroundColor: AppColors.whiteColor,
-        appBar: PreferredSize(
-          preferredSize: Size(100, 5.5.hp),
-          child: CommonAppBar(
-            title: 'Self Customize',
-            isCheck: true,
-            actionButton: CommonButton(
-              width: 80.0,
-              height: 40.0,
-              borderRadius: 12.0,
-              text: 'Finish',
-              press: () async {
-                await captureAndSavePng();
-              },
-            ),
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      appBar: PreferredSize(
+        preferredSize: Size(100, 5.5.hp),
+        child: CommonAppBar(
+          title: 'Self Customize',
+          isCheck: true,
+          actionButton: CommonButton(
+            width: 80.0,
+            height: 40.0,
+            borderRadius: 12.0,
+            text: 'Finish',
+            press: () async {
+              await captureAndSavePng();
+            },
           ),
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Display selected shirt and pant with overlays
-              Expanded(
-                child: RepaintBoundary(
-                  key: _globalKey,
-                  child: Container(
-                    color: Colors.white,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SizedBox(
-                                width: Get.width,
-                                height: Get.height * 0.67,
-                                //color: Colors.cyan,
-                              ),
-                              selectedMaterial != null
-                                  ? Positioned(
-                                    top: 35,
-                                    left: 0,
-                                    child: Container(
-                                      width: Get.width,
-                                      height: Get.height * 0.165,
-                                      color: selectedMaterial,
-                                    ),
-                                  )
-                                  : const SizedBox(),
-                              selectedTop != null
-                                  ? Positioned(
-                                    top: Get.height * 0.2,
-                                    left: 0,
-                                    child: Container(
-                                      width: Get.width,
-                                      height: Get.height * 0.16,
-                                      color: selectedTop,
-                                    ),
-                                  )
-                                  : const SizedBox(),
-                              selectedPant != null
-                                  ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      //  selectedPant != null ?
-                                      selectedPant!,
-                                      //:defaultBottom,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : Container(),
-                              selectedSleeve != null
-                                  ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      // selectedSleeve != null ?
-                                      selectedSleeve!,
-                                      // :defaultSleeve,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : Container(),
-                              selectedShirt != null
-                                  ? Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Image.asset(
-                                      // selectedShirt != null ?
-                                      selectedShirt!,
-                                      // :defaultTop,
-                                      height: 560,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : Container(),
-                            ],
-                          ),
-                        ],
-                      ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Display selected shirt and pant with overlays
+            Expanded(
+              child: RepaintBoundary(
+                key: _globalKey,
+                child: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                              width: Get.width,
+                              height: Get.height * 0.67,
+                              //color: Colors.cyan,
+                            ),
+                            selectedMaterial != null
+                                ? Positioned(
+                                  top: 35,
+                                  left: 0,
+                                  child: Container(
+                                    width: Get.width,
+                                    height: Get.height * 0.165,
+                                    color: selectedMaterial,
+                                  ),
+                                )
+                                : const SizedBox(),
+                            selectedTop != null
+                                ? Positioned(
+                                  top: Get.height * 0.2,
+                                  left: 0,
+                                  child: Container(
+                                    width: Get.width,
+                                    height: Get.height * 0.16,
+                                    color: selectedTop,
+                                  ),
+                                )
+                                : const SizedBox(),
+                            selectedPant != null
+                                ? Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    //  selectedPant != null ?
+                                    selectedPant!,
+                                    //:defaultBottom,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                                : Container(),
+                            selectedSleeve != null
+                                ? Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    // selectedSleeve != null ?
+                                    selectedSleeve!,
+                                    // :defaultSleeve,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                                : Container(),
+                            selectedShirt != null
+                                ? Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  child: Image.asset(
+                                    // selectedShirt != null ?
+                                    selectedShirt!,
+                                    // :defaultTop,
+                                    height: 560,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                                : Container(),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  height: Get.height * 0.08,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: maxList[selectedIndex]['categories'].length,
-                    itemBuilder: (context, index) {
-                      var data = maxList[selectedIndex]['categories'][index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectIndex = index;
-                              switch (selectedIndex) {
-                                case 0:
-                                  if (index == 0) {
-                                  } else if (index == 1) {
-                                    selectedMaterial = data['color'];
-                                  } else {
-                                    selectedTop = data['color'];
-                                  }
-                                case 1:
-                                  selectedPant = data['image'];
-                                case 2:
-                                  selectedShirt = data['image'];
-                                case 3:
-                                  selectedSleeve = data['image'];
-                                default:
-                                  selectedPant = data['image'];
-                              }
-                            });
-                          },
-                          onDoubleTap: () {
-                            setState(() {
-                              switch (selectedIndex) {
-                                case 0:
-                                  selectedMaterial = null;
-                                case 1:
-                                  selectedPant = null;
-                                case 2:
-                                  selectedShirt = null;
-                                case 3:
-                                  selectedSleeve = null;
-                                default:
-                                  selectedPant = null;
-                              }
-                            });
-                          },
-                          child:
-                              selectedIndex != 0
-                                  ? Container(
-                                    decoration: BoxDecoration(
-                                      //   color: Colors.blue,
-                                      border: Border.all(
-                                        color:
-                                            selectedIndex == index
-                                                ? Colors.teal
-                                                : Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                height: Get.height * 0.08,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: maxList[selectedIndex]['categories'].length,
+                  itemBuilder: (context, index) {
+                    var data = maxList[selectedIndex]['categories'][index];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectIndex = index;
+                            switch (selectedIndex) {
+                              case 0:
+                                if (index == 0) {
+                                } else if (index == 1) {
+                                  selectedMaterial = data['color'];
+                                } else {
+                                  selectedTop = data['color'];
+                                }
+                              case 1:
+                                selectedPant = data['image'];
+                              case 2:
+                                selectedShirt = data['image'];
+                              case 3:
+                                selectedSleeve = data['image'];
+                              default:
+                                selectedPant = data['image'];
+                            }
+                          });
+                        },
+                        onDoubleTap: () {
+                          setState(() {
+                            switch (selectedIndex) {
+                              case 0:
+                                selectedMaterial = null;
+                              case 1:
+                                selectedPant = null;
+                              case 2:
+                                selectedShirt = null;
+                              case 3:
+                                selectedSleeve = null;
+                              default:
+                                selectedPant = null;
+                            }
+                          });
+                        },
+                        child:
+                            selectedIndex != 0
+                                ? Container(
+                                  decoration: BoxDecoration(
+                                    //   color: Colors.blue,
+                                    border: Border.all(
+                                      color:
+                                          selectedIndex == index
+                                              ? Colors.teal
+                                              : Colors.grey,
                                     ),
-                                    child: Image.asset(
-                                      data['image'],
-                                      height: Get.height * 0.1,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      color: data['color'],
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                        ),
-                      );
-                    },
-                  ),
+                                  child: Image.asset(
+                                    data['image'],
+                                    height: Get.height * 0.1,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                                : Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: data['color'],
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  height: 50,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: maxList.length,
-                    itemBuilder: (context, index) {
-                      var data = maxList[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color:
-                                  selectedIndex == index
-                                      ? Colors.teal.shade400
-                                      : Colors.grey.shade400,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  data['name'],
-                                  style: TextStyle(
-                                    color:
-                                        selectedIndex == index
-                                            ? Colors.white
-                                            : Colors.white,
-                                    fontSize: 15,
-                                  ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: maxList.length,
+                  itemBuilder: (context, index) {
+                    var data = maxList[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:
+                                selectedIndex == index
+                                    ? Colors.teal.shade400
+                                    : Colors.grey.shade400,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                data['name'],
+                                style: TextStyle(
+                                  color:
+                                      selectedIndex == index
+                                          ? Colors.white
+                                          : Colors.white,
+                                  fontSize: 15,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

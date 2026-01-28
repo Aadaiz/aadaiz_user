@@ -1,10 +1,11 @@
-
 import 'dart:ui';
 
+import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/voice_call.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 class IncomingCallScreen extends StatelessWidget {
   final String callerName;
   final String channelName;
@@ -27,10 +28,7 @@ class IncomingCallScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-
-          const Positioned.fill(
-              child: Icon(Icons.person)
-          ),
+          const Positioned.fill(child: Icon(Icons.person)),
 
           Positioned.fill(
             child: BackdropFilter(
@@ -43,7 +41,6 @@ class IncomingCallScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 Container(
                   width: 120,
                   height: 120,
@@ -62,7 +59,7 @@ class IncomingCallScreen extends StatelessWidget {
 
                 Text(
                   callerName,
-                  style:  GoogleFonts.inter(
+                  style: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
@@ -70,24 +67,25 @@ class IncomingCallScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
 
-                 Text(
+                Text(
                   " Voice Call",
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                  style: GoogleFonts.inter(color: Colors.white70, fontSize: 16),
                 ),
                 const SizedBox(height: 100),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-
                     _buildActionButton(
                       icon: Icons.call_end,
                       backgroundColor: Colors.red,
                       iconColor: Colors.white,
-                      onPressed: () => Get.back()
+                      onPressed: () {
+                        final callCon = Get.find<CallStateController>();
+                        callCon.isCallActive(false);
+
+                        Get.back();
+                      },
                     ),
 
                     _buildActionButton(
@@ -96,7 +94,7 @@ class IncomingCallScreen extends StatelessWidget {
                       iconColor: Colors.white,
                       onPressed: () {
                         Get.off(
-                              () => VoiceCallScreen(
+                          () => VoiceCallScreen(
                             appId: appId,
                             token: token,
                             channelName: channelName,
@@ -115,7 +113,6 @@ class IncomingCallScreen extends StatelessWidget {
       ),
     );
   }
-
 
   Widget _buildActionButton({
     required IconData icon,
@@ -148,10 +145,7 @@ class IncomingCallScreen extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           icon == Icons.call_end ? "Decline" : "Accept",
-          style:  GoogleFonts.inter(
-            color: Colors.white70,
-            fontSize: 14,
-          ),
+          style: GoogleFonts.inter(color: Colors.white70, fontSize: 14),
         ),
       ],
     );

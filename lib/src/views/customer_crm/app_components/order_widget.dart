@@ -20,7 +20,8 @@ class OrderWidget extends StatefulWidget {
       phone,
       email,
       address,
-      shopId;
+      shopId,customerImage;
+  
   final bool productStatus;
   final bool isCompleted;
   final dynamic adminId;
@@ -52,7 +53,8 @@ class OrderWidget extends StatefulWidget {
     required this.free,
     required this.shopAddress,
     required this.adminName,
-    required this.adminProfile
+    required this.adminProfile,
+    required this.customerImage
   });
 
   @override
@@ -66,11 +68,12 @@ class _OrderWidgetState extends State<OrderWidget> {
   @override
   Widget build(BuildContext context) {
     final isPending = widget.orderStatus.toLowerCase() == 'pending';
-
+print('customerImage:${widget.customerImage}');
     return GestureDetector(
       onTap:
           () => Get.to(
             () => OrderDetails(
+              products:widget.products,
               status: widget.orderStatus,
               order_name: widget.orderName,
               order_no: widget.orderNo,
@@ -88,7 +91,9 @@ class _OrderWidgetState extends State<OrderWidget> {
               isCompleted: widget.isCompleted,
               free:widget.free,
                 shopAddress:widget.shopAddress,
-              adminName:widget.adminName
+              adminName:widget.adminName,
+              adminProfile:widget.adminProfile,
+              customerImage:widget.customerImage
             ),
           ),
       child: Container(
@@ -111,18 +116,39 @@ class _OrderWidgetState extends State<OrderWidget> {
             /// --- Header Row ---
             Row(
               children: [
-                Image.asset(
-                  "assets/images/appvan.png",
-                  height: 46.h,
-                  width: 46.w,
+                Container(
+                  width: Get.width * 0.15,
+                  height: Get.height * 0.07,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(Get.width * 0.025),
+                    border: Border.all(
+                      color: AppColors.blackColor.withAlpha(20),
+                    ),
+                  ),
+                  child: (widget.customerImage == null || widget.customerImage!.isEmpty)
+                      ? Icon(
+                    Icons.person,
+                    color: AppColors.orangeColor,
+                    size: Get.width * 0.06,
+                  )
+                      : ClipRRect(
+                    borderRadius: BorderRadius.circular(Get.width * 0.025),
+                    child: Image.network(
+                      widget.customerImage!,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
+
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.orderName,
+                        widget.orderName.capitalizeFirst??'',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
                           fontSize: 14.sp,
@@ -153,7 +179,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    widget.orderStatus,
+                    widget.orderStatus!.capitalizeFirst??'',
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       color: Colors.black,
@@ -161,15 +187,10 @@ class _OrderWidgetState extends State<OrderWidget> {
                   ),
                 ),
                 SizedBox(width: 16.w),
-                InkWell(
-                  onTap: () => setState(() => expand = !expand),
-                  child: Image.asset(
-                    expand
-                        ? "assets/images/up.png"
-                        : "assets/images/downarr.png",
-                    height: 14.h,
-                    width: 14.w,
-                  ),
+                Image.asset(
+                 "assets/images/arrow_right.png",
+                  height: 12.h,
+                  width: 12.w,color: AppColors.blackColor,
                 ),
               ],
             ),
@@ -192,7 +213,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               /// --- Dynamic Product List ---
               ...widget.products.map(
                 (p) => buildStatusCard(
-                  title: p.styleName,
+                  title: p.styleName!.categoryName??'',
                   status: p.productStatus.toString(),
                   quantity: p.quantity,
                   price: p.price,
@@ -295,6 +316,7 @@ Widget buildStatusCard({
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
