@@ -33,7 +33,7 @@ class AuthController extends GetxController{
   final TextEditingController age = TextEditingController();
   final TextEditingController otp = TextEditingController();
 
- Future<dynamic> signUp() async {
+  Future<dynamic> signUp() async {
     signUpLoading(true);
     final Map<String, dynamic> body = <String, dynamic>{
       "username": name.text,
@@ -47,10 +47,10 @@ class AuthController extends GetxController{
     if(res.success==true){
       otpToken.value= res.data!.otpToken;
       await Get.to(()=>const OtpScreen(isLogin: false,));
-     // Get.to(()=>const SignupOtpScreen());
+      // Get.to(()=>const SignupOtpScreen());
     }else{
       // if(res.data!.email!=null) {
-         CommonToast.show(msg: "${res.message}");
+      CommonToast.show(msg: "${res.message}");
       // }else{
       //   CommonToast.show(msg: "${res.data!.phoneNumber}");
       // }
@@ -62,7 +62,7 @@ class AuthController extends GetxController{
     verifyLoading(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var fcmToken= prefs.getString('fcm_token');
-     Map body = {
+    Map body = {
       "username": name.text,
       "mobile_number": mobile.text,
       "email": email.text,
@@ -70,7 +70,7 @@ class AuthController extends GetxController{
       "gender": genderValue.value,
       "otp_token": otpToken.value,
       "otp_code": otp.text,
-       'fcm_token':fcmToken
+      'fcm_token':fcmToken
     };
     VerifyOtpRes res = await repo.verifyOtp(body: jsonEncode(body));
     verifyLoading(false);
@@ -82,11 +82,12 @@ class AuthController extends GetxController{
 
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('token', '${res.data!.token}');
-      await prefs.setString('user_id', res.data!.id.toString()); // Notice: removed extra space
+      await prefs.setString('user_id', res.data!.id.toString());
 
-      log("User ID after save: ${prefs.getString('user_id')}"); // After saving
+      log("User ID after save: ${prefs.getString('user_id')}");
+      Get.offAll(() => Dashboard());
 
-      // Clear controllers
+
       name.clear();
       mobile.clear();
       email.clear();
@@ -95,18 +96,14 @@ class AuthController extends GetxController{
       otp.clear();
       otpToken.value = '';
 
-      await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => Dashboard(), // Navigate to home
-        ),
-      );
+
     } else {
       CommonToast.show(msg: "${res.message}");
     }
 
   }
 
-var loginLoading = false.obs;
+  var loginLoading = false.obs;
 
   Future<dynamic> login({required dynamic mobile}) async {
     loginLoading(true);
@@ -120,7 +117,7 @@ var loginLoading = false.obs;
       await Get.to(()=>const OtpScreen(isLogin: true,));
     }else{
       // if(res.data!.email!=null) {
-         CommonToast.show(msg: "${res.message}");
+      CommonToast.show(msg: "${res.message}");
       // }else{
       //   CommonToast.show(msg: "${res.data!.phoneNumber}");
       // }
@@ -128,73 +125,66 @@ var loginLoading = false.obs;
   }
 
 
-  Future<dynamic> verifyOtpLogin(context) async {
+  Future<void> verifyOtpLogin() async {
     verifyLoading(true);
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final fcmToken= prefs.getString('fcm_token');
-    Map<String, dynamic> body = {
-      "mobile_number": loginMobile.text,
+
+    final prefs = await SharedPreferences.getInstance();
+    final fcmToken = prefs.getString('fcm_token');
+
+    final Map<String, dynamic> body = {
+      "mobile_number": loginMobile.text.trim(),
       "otp_token": otpToken.value,
-      "otp_code": otp.text,
-      // Only include fcm_token if it's not null
-      if (fcmToken != null) 'fcm_token': fcmToken,
+      "otp_code": otp.text.trim(),
+      if (fcmToken != null) "fcm_token": fcmToken,
     };
 
-    VerifyOtpRes res = await repo.verifyOtpLogin(body: jsonEncode(body));
+    final VerifyOtpRes res =
+    await repo.verifyOtpLogin(body: jsonEncode(body));
+
     verifyLoading(false);
-    if(res.success==true){
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      log("User ID before save: ${res.data!.id.toString()}"); // Before saving
 
+    if (res.success == true) {
       await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('token', '${res.data!.token}');
-      await prefs.setString('user_id', res.data!.id.toString());  // Notice: removed extra space
+      await prefs.setString('token', res.data?.token ?? '');
+      await prefs.setString('user_id', res.data!.id.toString());
 
-      log("User ID after save: ${prefs.getString('user_id')}"); // After saving
+      log("User ID saved: ${prefs.getString('user_id')}");
+
+      // Clear stack & go to Dashboard
+      Get.offAll(() => Dashboard());
+
+      // Clear controllers AFTER navigation
       loginMobile.clear();
       otp.clear();
       otpToken.value = '';
-      await Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) =>
-            Dashboard(), // Navigate to home if logged in
-      ));
-
-    }else{
-      CommonToast.show(msg: "${res.message}");
-      // if(res.data!.email!=null) {
-      //   CommonToast.show(msg: "${res.data!.email}");
-      // }else{
-      //   CommonToast.show(msg: "${res.data!.mobileNumber}");
-      // }
+    } else {
+      CommonToast.show(msg: res.message ?? "Login failed");
     }
   }
+
 
 
   ///Saving logging user
-  Future<void> checkLoginStatus(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
     if (isLoggedIn) {
-      await Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) =>
-            Dashboard(), // Navigate to home if logged in
-      ));
-    } else{
-      await  Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) =>
-        const RegisterScreen(), // Navigate to login if not logged in
-      ));
+      Get.offAll(() => Dashboard());
+    } else {
+      Get.offAll(() => const RegisterScreen());
     }
   }
+
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   ///Logout
- Future<dynamic> logOut() async {
-   DashboardController.to.tabSelected.value=0;
+  Future<dynamic> logOut() async {
+    DashboardController.to.tabSelected.value=0;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
     final fCMToken = await firebaseMessaging.getToken();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-   await prefs.setString('fcm_token',fCMToken!);
+    await prefs.setString('fcm_token',fCMToken!);
 
     // await FirebaseApi().initNotifications();
     //await _signOut();
@@ -202,7 +192,7 @@ var loginLoading = false.obs;
   }
 //  final GoogleSignIn googleSignIn = GoogleSignIn();
   Future<void> _signOut() async {
-   // await googleSignIn.signOut();
+    // await googleSignIn.signOut();
     //await FirebaseAuth.instance.signOut();
   }
 }

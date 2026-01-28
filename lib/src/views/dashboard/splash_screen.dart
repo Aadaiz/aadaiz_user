@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     super.initState();
     Timer(const Duration(seconds: 2), (){
-      AuthController.to.checkLoginStatus(context);
+      AuthController.to.checkLoginStatus();
     }
     );
   }

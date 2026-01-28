@@ -38,6 +38,10 @@ Future<void> main() async {
 
   // 🔹 Only initialize FCM after Firebase is fully ready
   await FirebaseApi().initNotification();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(MyApp(navigatorKey: navigatorKey));
 }

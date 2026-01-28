@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:aadaiz_customer_crm/firebase_options.dart';
+import 'dart:developer';
 import 'package:aadaiz_customer_crm/main.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/incoming_call.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -33,29 +33,41 @@ class FirebaseNotificationHandler {
   final FlutterLocalNotificationsPlugin _local =
   FlutterLocalNotificationsPlugin();
 
-  /// Initialize local notifications & channels
+  /// Initialize local notifications
   Future<void> init() async {
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings androidInit =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const settings = InitializationSettings(android: androidInit);
+    const DarwinInitializationSettings iosInit =
+    DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const InitializationSettings settings = InitializationSettings(
+      android: androidInit,
+      iOS: iosInit,
+    );
 
     await _local.initialize(
       settings,
       onDidReceiveNotificationResponse: (resp) {
         if (resp.payload != null && resp.payload!.isNotEmpty) {
-          final data = Uri.parse(resp.payload!).queryParameters;
+          final data = _parsePayload(resp.payload!);
           _navigateToIncomingCall(data);
         }
       },
     );
 
-    // Full screen call channel
-    const callChannel = AndroidNotificationChannel(
+    const AndroidNotificationChannel callChannel =
+    AndroidNotificationChannel(
       'incoming_call_channel_id',
       'Incoming Calls',
       description: 'High priority incoming call notifications',
       importance: Importance.max,
       playSound: true,
+      sound: RawResourceAndroidNotificationSound('incoming_call'),
       enableVibration: true,
     );
 
@@ -63,52 +75,86 @@ class FirebaseNotificationHandler {
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(callChannel);
+
+    log("User App: Local notifications initialized");
   }
 
-  /// Convert string payload → Map
-  Map<String, String> _parsePayload(String payload) =>
-      Uri.parse(payload).queryParameters;
-
-  /// Handle all messages (foreground, background, terminated)
-  Future<void> handleMessage(RemoteMessage message) async {
-    final data = message.data;
-
-    if (data['type'] == 'incoming_call') {
-      await _showIncomingCallNotification(data);
-    } else {
-      await _showNormalNotification(
-        title: data['title'] ?? message.notification?.title ?? "Notification",
-        body: data['message'] ?? message.notification?.body ?? "",
-      );
+  /// Convert payload string → Map
+  Map<String, String> _parsePayload(String payload) {
+    try {
+      return Uri.parse(payload).queryParameters;
+    } catch (e) {
+      log("Payload parse error: $e");
+      return {};
     }
   }
 
-  /// Full screen incoming call notification
-  Future<void> _showIncomingCallNotification(Map<String, dynamic> data) async {
-    const android = AndroidNotificationDetails(
-      'incoming_call_channel_id',
-      'Incoming Calls',
-      channelDescription: 'Incoming call notifications',
-      importance: Importance.max,
-      priority: Priority.high,
-      fullScreenIntent: true,
-      autoCancel: false,
-      ongoing: true,
-      visibility: NotificationVisibility.public,
-      ticker: 'Incoming call',
-    );
+  /// Handle messages
+  Future<void> handleMessage(RemoteMessage message) async {
+    final data = message.data;
+    final notification = message.notification;
 
-    final payload = Uri(
-      queryParameters: data.map((k, v) => MapEntry(k, v.toString())),
-    ).toString();
+    final String type = data['type'] ?? 'normal';
 
-    await _local.show(
-      DateTime.now().millisecondsSinceEpoch % 100000,
-      'Incoming Call',
-      "${data['callerName'] ?? 'Someone'} is calling...",
-      NotificationDetails(android: android),
-      payload: payload,
-    );
+    final String title =
+        data['title'] ?? notification?.title ?? 'Notification';
+
+    final String body =
+        data['message'] ?? notification?.body ?? '';
+
+    log("User App Message Type: $type");
+
+    if (type == 'incoming_call') {
+      await _showIncomingCallNotification(data);
+    } else {
+      await _showNormalNotification(title: title, body: body);
+    }
+  }
+
+  /// Incoming call notification (full screen)
+  Future<void> _showIncomingCallNotification(
+      Map<String, dynamic> data) async {
+    try {
+      final payload = Uri(
+        queryParameters:
+        data.map((k, v) => MapEntry(k, v.toString())),
+      ).toString();
+
+      const AndroidNotificationDetails android =
+      AndroidNotificationDetails(
+        'incoming_call_channel_id',
+        'Incoming Calls',
+        channelDescription: 'Incoming call notifications',
+        importance: Importance.max,
+        priority: Priority.high,
+        fullScreenIntent: true,
+        autoCancel: false,
+        ongoing: true,
+        visibility: NotificationVisibility.public,
+        category: AndroidNotificationCategory.call,
+        timeoutAfter: 45000,
+      );
+
+      const DarwinNotificationDetails ios =
+      DarwinNotificationDetails(
+        presentAlert: true,
+        presentSound: true,
+        presentBadge: true,
+        interruptionLevel: InterruptionLevel.critical,
+      );
+
+      await _local.show(
+        DateTime.now().millisecondsSinceEpoch % 100000,
+        'Incoming Call',
+        '${data['callerName'] ?? 'Someone'} is calling...',
+        const NotificationDetails(android: android, iOS: ios),
+        payload: payload,
+      );
+
+      log("User App: Incoming call notification shown");
+    } catch (e) {
+      log("User App: Notification error $e");
+    }
   }
 
   /// Normal notifications
@@ -116,7 +162,8 @@ class FirebaseNotificationHandler {
     required String title,
     required String body,
   }) async {
-    const android = AndroidNotificationDetails(
+    const AndroidNotificationDetails android =
+    AndroidNotificationDetails(
       'default_channel_id',
       'General Notifications',
       importance: Importance.high,
@@ -131,97 +178,118 @@ class FirebaseNotificationHandler {
     );
   }
 
-  /// Navigate to IncomingCallScreen
+  /// Navigate to incoming call screen (SAFE)
   void _navigateToIncomingCall(Map<String, String> data) {
-    if (data['type'] != 'incoming_call') return;
+    try {
+      final callCon = Get.find<CallStateController>();
+      final callId = data['id'] ?? '';
 
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (_) => IncomingCallScreen(
-          callerName: data['callerName'] ?? 'Unknown',
-          callId: data['id'],
-
-
-          channelName: data['channelName'] ?? '',
-          token: data['agoraToken'] ?? '',
-          appId: "2db6113c15e748c696c5ac428edf2c0d",
-        ),
-      ),
-    );
-  }
-
-  /// Auto-navigate for foreground calls
-  void navigateDirectly(Map<String, dynamic> data) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (navigatorKey.currentState == null) {
-        Future.delayed(const Duration(milliseconds: 500), () => navigateDirectly(data));
+      if (callCon.isCallActive.value) {
+        log("User App: Call already active, ignored");
         return;
       }
-      print("🟢 Navigator ready, opening IncomingCallScreen");
-      navigatorKey.currentState!.push(
-        MaterialPageRoute(
-          builder: (_) => IncomingCallScreen(
-            callerName: data['callerName'] ?? 'Unknown',
-            callId: data['id'],
 
-            channelName: data['channelName'] ?? '',
-            token: data['agoraToken'] ?? '',
-            appId: "2db6113c15e748c696c5ac428edf2c0d",
-          ),
-        ),
-      );
-    });
+      callCon.setIncoming(callId);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (navigatorKey.currentContext != null) {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => IncomingCallScreen(
+                callerName: data['callerName'] ?? 'Unknown',
+                callId: callId,
+                channelName: data['channelName'] ?? '',
+                token: data['agoraToken'] ?? '',
+                appId: "2db6113c15e748c696c5ac428edf2c0d",
+              ),
+            ),
+          );
+          log("User App: Navigated to IncomingCallScreen");
+        } else {
+          log("User App: navigatorKey context null");
+        }
+      });
+    } catch (e) {
+      log("Navigation error: $e");
+    }
+  }
+
+  /// Direct navigation (foreground / retry safe)
+  void navigateDirectly(Map<String, dynamic> data) {
+    _navigateToIncomingCall(
+      data.map((k, v) => MapEntry(k, v.toString())),
+    );
   }
 }
 
 /// =======================
-/// FIREBASE API INTEGRATION
+/// FIREBASE API
 /// =======================
 class FirebaseApi {
-  final FirebaseNotificationHandler _handler = FirebaseNotificationHandler();
+  final FirebaseMessaging _firebaseMessaging =
+      FirebaseMessaging.instance;
+  final FirebaseNotificationHandler _handler =
+  FirebaseNotificationHandler();
 
   Future<void> initNotification() async {
-    final fcm = FirebaseMessaging.instance;
+    try {
+      log("User App: Initializing Firebase notifications");
 
-    // Request permissions
-    await fcm.requestPermission(alert: true, badge: true, sound: true);
+      await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-    // Get & save FCM token
-    final token = await fcm.getToken();
-    print("FCM TOKEN: $token");
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("fcm_token", token ?? "");
+      final token = await _firebaseMessaging.getToken();
+      log("User App FCM Token: $token");
 
-    // Init notification handler
-    await _handler.init();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("fcm_token", token ?? "");
 
-    // Background handler
-    FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
+      await _handler.init();
 
-    // Foreground handler
-    FirebaseMessaging.onMessage.listen((msg) async {
-      print("====== FOREGROUND FCM ======");
-      print(msg.data);
-      await _handler.handleMessage(msg);
+      FirebaseMessaging.onBackgroundMessage(
+        firebaseBackgroundHandler,
+      );
 
-      if (msg.data['type'] == 'incoming_call') {
-        _handler.navigateDirectly(msg.data);
+      FirebaseMessaging.onMessage.listen((msg) async {
+        log("User App: Foreground message received");
+        await _handler.handleMessage(msg);
+
+        if (msg.data['type'] == 'incoming_call') {
+          Future.delayed(Duration.zero, () {
+            _handler.navigateDirectly(msg.data);
+          });
+        }
+      });
+
+      final initialMsg =
+      await _firebaseMessaging.getInitialMessage();
+      if (initialMsg != null &&
+          initialMsg.data['type'] == 'incoming_call') {
+        log("User App: Terminated → opening call");
+        _handler.navigateDirectly(initialMsg.data);
       }
-    });
 
-    // Terminated
-    final initialMsg = await fcm.getInitialMessage();
-    if (initialMsg != null && initialMsg.data['type'] == 'incoming_call') {
-      _handler.navigateDirectly(initialMsg.data);
+      FirebaseMessaging.onMessageOpenedApp.listen((msg) {
+        if (msg.data['type'] == 'incoming_call') {
+          log("User App: Background tap → opening call");
+          _handler.navigateDirectly(msg.data);
+        }
+      });
+
+      log("User App: Firebase notifications initialized");
+    } catch (e) {
+      log("User App Firebase init error: $e");
     }
-
-    // Background → tap notification
-    FirebaseMessaging.onMessageOpenedApp.listen((msg) {
-      if (msg.data['type'] == 'incoming_call') {
-        _handler.navigateDirectly(msg.data);
-      }
-    });
   }
 }
 
