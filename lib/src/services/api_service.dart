@@ -1,4 +1,4 @@
-import 'config.dart';
+import 'package:aadaiz_customer_crm/src/services/config.dart';
 
 class Api {
   ///Registration
