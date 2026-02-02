@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart' as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'
+    as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/filter_category.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_cart_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart' as category;
+import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart'
+    as category;
 import 'package:aadaiz_customer_crm/src/views/material/model/material_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -14,12 +18,13 @@ import '../repository/material_repository.dart';
 
 class MaterialController extends GetxController {
   static MaterialController get to => Get.put(MaterialController());
-@override
+  @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     getCart();
   }
+
   var repo = MaterialRepository();
 
   final currentPage = 1.obs;
@@ -35,27 +40,49 @@ class MaterialController extends GetxController {
   var itemQuantities = <String, int>{}.obs; // Map to store itemId -> quantity
   var cartItems = <String>{}.obs; // Set to track which items are in cart
 
-  Future<dynamic> getMaterials({bool isRefresh = false, dynamic search}) async {
+  Future<dynamic> getMaterials({
+    bool isRefresh = false,
+    dynamic search,
+    dynamic color,
+    dynamic category,
+    dynamic minPrice,
+    dynamic maxPrice,
+    dynamic rating,
+  }) async {
+
     if (isRefresh) {
       currentPage.value = 1;
     } else {
       currentPage.value++;
     }
     materialLoading(true);
-    MaterialListRes res =
-    await repo.getMaterialList(page: currentPage.value, search: search,priceLowHigh:price);
+    final MaterialListRes res = await repo.getMaterialList(
+      page: currentPage.value,
+      search: search,
+      priceLowHigh: price.value,
+      color: color,
+      category: category,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      rating: rating,
+    );
     if (res.status == true) {
-
       materialLoading(false);
-      if(res.materialList!.data!.isNotEmpty){
-        peopleMostViewList.value=res.peopleMostViewlist!;
-        if(isRefresh){
-          materialList.value=res.materialList!.data!;
-          likeList.value = List.generate(materialList.value.length, (i)=>materialList.value[i].isLiked==0?false:true??false);
-        }else{
-          final newItems = res.materialList!.data!??[];
+      if (res.materialList!.data!.isNotEmpty) {
+        peopleMostViewList.value = res.peopleMostViewlist!;
+        if (isRefresh) {
+          materialList.value = res.materialList!.data!;
+          likeList.value = List.generate(
+            materialList.value.length,
+            (i) => materialList.value[i].isLiked == 0 ? false : true ?? false,
+          );
+        } else {
+          final newItems = res.materialList!.data! ?? [];
           materialList.addAll(newItems);
-          likeList.value = List.generate(materialList.value.length, (i)=>materialList.value[i].isLiked==0?false:true??false);
+          likeList.value = List.generate(
+            materialList.value.length,
+            (i) => materialList.value[i].isLiked == 0 ? false : true ?? false,
+          );
         }
       }
     } else {
@@ -64,35 +91,49 @@ class MaterialController extends GetxController {
     return true;
   }
 
-  var orderLoading=false.obs;
+  var orderLoading = false.obs;
+
   var categoryList = <category.Fabric>[].obs;
+  var filterLoading = false.obs;
+  var filterListCategories = <Category>[].obs;
+  var filterListColors = <String>[].obs;
+
+  getFilterCategory() async {
+    filterLoading(true);
+    final FilterCategory res = await repo.getFilterCategory();
+    filterLoading(false);
+
+    if (res.status == true) {
+      filterListCategories.value = res.categories ?? [];
+      filterListColors.value = res.colors ?? [];
+    } else {
+      filterListCategories.clear();
+      filterListColors.clear();
+    }
+  }
 
   getCategory() async {
     orderLoading(true);
-    MaterialCategoryListRes res = await repo.getMaterialCategory();
+    final MaterialCategoryListRes res = await repo.getMaterialCategory();
     orderLoading(false);
-    if(res.success==true){
+    if (res.success == true) {
       categoryList.value = res.fabric!;
-    }else{
+    } else {
       categoryList.clear();
     }
   }
 
-  TextEditingController length =  TextEditingController();
+  TextEditingController length = TextEditingController();
   var cartLoading = false.obs;
   var addLoading = false.obs;
 
   Future<dynamic> addToCart({id, quantity}) async {
     addLoading(true);
-    final SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    Map body = {
-      'material_id':id,
-      'quantity':quantity,
-      'token':token,
-    };
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    final Map body = {'material_id': id, 'quantity': quantity, 'token': token};
     print('Add to cart body: $body');
-    MaterialRes res = await repo.addToCart(body: jsonEncode(body));
+    final MaterialRes res = await repo.addToCart(body: jsonEncode(body));
     addLoading(false);
 
     if (res.success == true) {
@@ -101,21 +142,21 @@ class MaterialController extends GetxController {
       itemQuantities[id.toString()] = quantity ?? 1;
       CommonToast.show(msg: res.message);
     } else {
-      CommonToast.show( msg:res.message);
+      CommonToast.show(msg: res.message);
     }
 
     // Refresh cart list
     await getCart();
   }
 
-  var cartListLoading =false.obs;
+  var cartListLoading = false.obs;
   var cartList = MaterialCartListRes().data.obs;
 
-  Future<dynamic> getCart({couponCode}) async{
+  Future<dynamic> getCart({couponCode}) async {
     cartListLoading(true);
-    MaterialCartListRes res = await repo.getCart(couponCode:couponCode);
+    final MaterialCartListRes res = await repo.getCart(couponCode: couponCode);
     cartListLoading(false);
-    if(res.success==true){
+    if (res.success == true) {
       cartList.value = res.data;
 
       // Update local cart tracking from API response
@@ -125,7 +166,7 @@ class MaterialController extends GetxController {
 
         for (var item in cartList.value!.items!) {
           // Get product ID from the nested product object
-          var productId = item.product?.id?.toString();
+          final productId = item.product?.id?.toString();
           if (productId != null) {
             cartItems.add(productId);
             // Store the actual quantity from API response
@@ -134,7 +175,7 @@ class MaterialController extends GetxController {
         }
         print('Updated cart quantities from API: $itemQuantities');
       }
-    }else{
+    } else {
       // Clear cart tracking if API fails
       itemQuantities.clear();
       cartItems.clear();
@@ -158,8 +199,7 @@ class MaterialController extends GetxController {
     if (cartList.value?.items == null) return null;
 
     return cartList.value!.items!.firstWhere(
-          (item) => item.product?.id?.toString() == productId.toString(),
-
+      (item) => item.product?.id?.toString() == productId.toString(),
     );
   }
 
@@ -176,12 +216,12 @@ class MaterialController extends GetxController {
 
   // Increment quantity immediately and call API
   Future<void> incrementQuantity(dynamic itemId) async {
-    int currentQty = getItemQuantity(itemId);
+    final int currentQty = getItemQuantity(itemId);
     // Since API adds quantity, we only send 1 to increment by 1
-    int quantityToSend = 1;
+    final int quantityToSend = 1;
 
     // Update immediately in UI - add 1 locally
-    int newQty = currentQty + 1;
+    final int newQty = currentQty + 1;
     itemQuantities[itemId.toString()] = newQty;
     update(); // Notify listeners
 
@@ -191,7 +231,7 @@ class MaterialController extends GetxController {
 
   // Decrement quantity immediately and call API
   Future<void> decrementQuantity(dynamic itemId) async {
-    int currentQty = getItemQuantity(itemId);
+    final int currentQty = getItemQuantity(itemId);
     if (currentQty <= 1) {
       // Remove from cart if quantity is 1 or less
       await _removeItemFromCart(itemId);
@@ -199,10 +239,10 @@ class MaterialController extends GetxController {
     }
 
     // Since API adds quantity, we send -1 to decrement
-    int quantityToSend = -1;
+    final int quantityToSend = -1;
 
     // Update immediately in UI - subtract 1 locally
-    int newQty = currentQty - 1;
+    final int newQty = currentQty - 1;
     itemQuantities[itemId.toString()] = newQty;
     update(); // Notify listeners
 
@@ -211,13 +251,16 @@ class MaterialController extends GetxController {
   }
 
   // Private method to update quantity in backend
-  Future<void> _updateQuantityInBackend(dynamic itemId, int quantityChange) async {
+  Future<void> _updateQuantityInBackend(
+    dynamic itemId,
+    int quantityChange,
+  ) async {
     cartLoading(true);
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString("token");
+      final token = prefs.getString("token");
 
-      Map body = {
+      final Map body = {
         'material_id': itemId,
         'quantity': quantityChange, // Send only the change (+1 or -1)
         'token': token,
@@ -225,7 +268,7 @@ class MaterialController extends GetxController {
 
       print('Updating quantity change: $body');
 
-      MaterialRes res = await repo.addToCart(body: jsonEncode(body));
+      final MaterialRes res = await repo.addToCart(body: jsonEncode(body));
 
       if (res.success == true) {
         // Refresh cart to get updated totals
@@ -261,13 +304,13 @@ class MaterialController extends GetxController {
     cartLoading(true);
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      var token = prefs.getString("token");
+      final token = prefs.getString("token");
 
       // Since API adds quantity, to remove completely we need to send negative of current quantity
-      int currentQty = getItemQuantity(itemId);
-      int quantityToRemove = -currentQty;
+      final int currentQty = getItemQuantity(itemId);
+      final int quantityToRemove = -currentQty;
 
-      Map body = {
+      final Map body = {
         'material_id': itemId,
         'quantity': quantityToRemove, // Send negative of current quantity
         'token': token,
@@ -275,19 +318,20 @@ class MaterialController extends GetxController {
 
       print('Removing item: $body');
 
-      MaterialRes res = await repo.addToCart(body: jsonEncode(body));
+      final MaterialRes res = await repo.addToCart(body: jsonEncode(body));
 
       if (res.success == true) {
         CommonToast.show(msg: 'Item removed from cart');
         // Refresh cart list
         await getCart();
       } else {
-        CommonToast.show( msg:res.message);
+        CommonToast.show(msg: res.message);
         // If fails, refresh to get correct state
         await getCart();
       }
     } catch (e) {
-      CommonToast.show(msg: 'Failed to remove item');
+      CommonToast.show(msg: 'Failed to remove item ${e.toString()}');
+      log('Failed to remove item ${e.toString()}');
       // If error, refresh to get correct state
       await getCart();
     } finally {
@@ -343,26 +387,26 @@ class MaterialController extends GetxController {
   Future<dynamic> addToCartWithQuantity({id, quantity}) async {
     cartLoading(true);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
+    final token = prefs.getString("token");
 
     // Check if item is already in cart
-    bool isInCart = isItemInCart(id);
+    final bool isInCart = isItemInCart(id);
     int quantityToSend = quantity;
 
     if (isInCart) {
       // If item is already in cart, send only the additional quantity
-      int currentQty = getItemQuantity(id);
+      final int currentQty = getItemQuantity(id);
       quantityToSend = quantity - currentQty;
     }
 
-    Map body = {
+    final Map body = {
       'material_id': id,
       'quantity': quantityToSend,
       'token': token,
     };
 
     print('Add to cart with quantity body: $body');
-    MaterialRes res = await repo.addToCart(body: jsonEncode(body));
+    final MaterialRes res = await repo.addToCart(body: jsonEncode(body));
     cartLoading(false);
 
     if (res.success == true) {
@@ -374,7 +418,7 @@ class MaterialController extends GetxController {
       // Refresh cart list
       await getCart();
     } else {
-      CommonToast.show( msg:res.message);
+      CommonToast.show(msg: res.message);
     }
   }
 }

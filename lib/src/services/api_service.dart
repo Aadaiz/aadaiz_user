@@ -33,6 +33,7 @@ class Api {
   ///matrial
   static const materialList = "${AppConfig.baseUrl}material/list";
   static const materialCategory = "${AppConfig.baseUrl}material/category";
+  static const filterCategory = "${AppConfig.baseUrl}material/filter/list";
   static const materialFavorite = "${AppConfig.baseUrl}material/favourites";
   static const materialAddtocart = "${AppConfig.baseUrl}material/addtocart";
   static const materialCartList = "${AppConfig.baseUrl}material/cartlist";

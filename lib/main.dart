@@ -4,6 +4,7 @@ import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatMessageController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatSocketController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ Future<void> main() async {
   Get.put(ChatMessageController(), permanent: true);
   Get.put(ProfileController(), permanent: true);
   Get.put(CallStateController(), permanent: true);
+  Get.put(MaterialController(), permanent: true);
+
 
   // 🔹 Only initialize FCM after Firebase is fully ready
   await FirebaseApi().initNotification();

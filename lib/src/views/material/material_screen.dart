@@ -48,9 +48,13 @@ class _MaterialScreenState extends State<MaterialScreen> {
             100,
             6.0.hp,
           ),
-          child: const CommonAppBar(
+          child:  CommonAppBar(
+            leadingclick:(){
+              Get.back();
+            }
+            ,
             title: 'Material',
-            isCheck: true,
+            // isCheck: true,
             //actionButton:
             // Image.asset('assets/dashboard/fabric.png',color: AppColor.primary,
             // ),
@@ -59,7 +63,8 @@ class _MaterialScreenState extends State<MaterialScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: screenWidth * 0.05
+            horizontal: screenWidth * 0.05,
+
           ),
           child: Column(
             children: [
