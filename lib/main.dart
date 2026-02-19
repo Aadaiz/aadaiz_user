@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aadaiz_customer_crm/src/res/Firebase/firebase.dart';
 import 'package:aadaiz_customer_crm/src/utils/routes/routes.dart';
 import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
@@ -28,7 +30,7 @@ Future<void> main() async {
       );
     }
   } catch (e) {
-    print('Firebase already initialized: $e');
+    log('Firebase already initialized: $e');
   }
 
   // 🔹 Register controllers
