@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/Repository/chat_repo.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/model/chatList_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chatview/chatview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class ChatMessageController extends GetxController {
   late ChatController chatController;
@@ -38,12 +39,14 @@ class ChatMessageController extends GetxController {
       otherUsers: [ChatUser(id: customerId, name: '')],
     );
   }
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     getChatList();
   }
+
   /// Clear all messages safely
   void clearMessages() {
     debugPrint('🧹 CLEARING ALL MESSAGES');
@@ -119,14 +122,13 @@ class ChatMessageController extends GetxController {
 
     final msg = Message(
       id:
-      json["id"]?.toString() ??
+          json["id"]?.toString() ??
           DateTime.now().millisecondsSinceEpoch.toString(),
       createdAt: DateTime.tryParse(createdAt) ?? DateTime.now(),
       message: messageText,
       sentBy: finalSenderId, // Use the corrected sender ID
-      messageType: json["file_path"] != null
-          ? MessageType.image
-          : MessageType.text,
+      messageType:
+          json["file_path"] != null ? MessageType.image : MessageType.text,
     );
 
     messages.add(msg);
@@ -178,36 +180,72 @@ class ChatMessageController extends GetxController {
       );
     }
   }
-
-  var isLoading = false.obs;
-  ChatRepository repo = ChatRepository();
-  Future callOthers(
-      String myName,
-      String myId,
-
-      String orderId
-      ) async {
+  Future<Map<String, dynamic>?> callEnd(dynamic callId) async {
+    log("callEnd() called with callId: $callId");
     try {
       isLoading.value = true;
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString("token");
-      final Map<String, dynamic> request = {
-        'token':token,
-        "type": "incoming_call",
-        "callerName": myName,
-        "callerId": myId,
 
-        'order_id':orderId
-      };
-      final res = await repo.callOthers(jsonEncode(request));
-      final data = jsonDecode(res);
-      if (data['status'] == true) {   return data['data'];}else{
+      Map<String, dynamic> request = {'call_id': callId};
+
+      final res = await repo.callEnded(request);
+
+      if (res['status'] == true) {
+        // Return the full call data from API
+        return res['data'];
+      } else {
         return null;
       }
+    } catch (e) {
+      log("callOthers() Error → $e");
+      return null;
     } finally {
       isLoading.value = false;
     }
   }
+  var isLoading = false.obs;
+  ChatRepository repo = ChatRepository();
+  Future<Map<String, dynamic>?> callOthers(
+      String myName,
+      String myId,
+      String orderId,
+      ) async {
+    try {
+      isLoading.value = true;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString("token");
+
+      final Map<String, dynamic> request = {
+        'token': token,
+        "type": "incoming_call",
+        "callerName": myName,
+        "callerId": myId,
+        'order_id': orderId,
+      };
+
+      final res = await repo.callOthers(jsonEncode(request));
+
+      final data = jsonDecode(res);
+
+
+      if (data['status'] == true) {
+        return data['data'];
+      } else {
+
+        CommonToast.show(
+          msg: data['message'] ?? 'Please contact shop',
+        );
+        return null;
+      }
+    } catch (e) {
+      CommonToast.show(msg: 'Something went wrong ${e.toString()}');
+      log('Something went wrong ${e.toString()}');
+      return null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
   var chatListData = <Datum>[].obs;
   Future<void> getChatList() async {

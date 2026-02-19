@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatMessageController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/dashboard.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -593,6 +594,7 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
   Duration _callDuration = Duration.zero;
   late Timer _callTimer;
   CallStateController callCon = Get.find<CallStateController>();
+  ChatMessageController chatMessageController = Get.find<ChatMessageController>();
 
   static const Color _primaryGreen = Color(0xFF25D366);
   static const Color _darkBackground = Color(0xFF0F1B2D);
@@ -770,6 +772,12 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
     callCon.isCallActive(false);
 
     callCon.endCall();
+    // try {
+    //   await chatMessageController.callEnd(widget.callId);
+    //   log("📴 callEnded API called with callId: ${widget.callId}");
+    // } catch (e) {
+    //   log("❌ callEnded API error: $e");
+    // }
 
     try {
       await engine.leaveChannel();
@@ -1070,8 +1078,12 @@ class _VoiceCallScreenState extends State<VoiceCallScreen> {
                               shape: const CircleBorder(),
                               child: InkWell(
                                 customBorder: const CircleBorder(),
-                                onTap: _endCall,
-                                child: const Icon(
+                             onTap: ()async{
+
+                               await   chatMessageController.callEnd(widget.callId);
+                                  _endCall();
+                             }
+                                ,child: const Icon(
                                   Icons.call_end_rounded,
                                   size: 30,
                                   color: Colors.white,

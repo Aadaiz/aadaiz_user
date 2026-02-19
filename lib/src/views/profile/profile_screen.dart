@@ -1,5 +1,6 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/components/image_preview.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -62,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Obx(
             () =>
                 ProfileController.to.profileLoading.value
-                    ? const CommonLoading()
+                    ? const ProfileShimmer()
                     : Column(
                       children: [
                         Center(
@@ -74,48 +75,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .value
                                           .profileImage !=
                                       null
-                                  ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      screenWidth,
-                                    ),
+                                  ? SizedBox(
+                                width: 15.0.hp,
+                                height: 15.0.hp,
+                                child: ZoomableImageWrapper(
+                                  imageProvider: CachedNetworkImageProvider(
+                                    ProfileController.to.profileData.value.profileImage ?? '',
+                                  ),
+                                  child: ClipOval(
                                     child: CachedNetworkImage(
-                                      fit: BoxFit.cover,
-                                      height: 15.0.hp,
-                                      width: 15.0.hp,
-                                      errorWidget:
-                                          (
-                                            context,
-                                            url,
-                                            error,
-                                          ) => const CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              'assets/images/emtpy_profile.png',
-                                            ),
-                                            backgroundColor: Colors.transparent,
-                                            radius: 55,
-                                          ),
-                                      progressIndicatorBuilder:
-                                          (
-                                            context,
-                                            url,
-                                            progress,
-                                          ) => Shimmer.fromColors(
-                                            baseColor: Colors.grey[300]!,
-                                            highlightColor: Colors.grey[100]!,
-                                            child: Container(
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
                                       imageUrl:
-                                          ProfileController
-                                              .to
-                                              .profileData
-                                              .value
-                                              .profileImage,
+                                      ProfileController.to.profileData.value.profileImage ?? '',
+                                      fit: BoxFit.cover,
+
+                                      /// ✅ This guarantees circular image
+                                      imageBuilder: (context, imageProvider) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.grey.withAlpha(55)),
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      },
+
+                                      /// ✅ Circular shimmer
+                                      placeholder: (context, url) => Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+
+                                      /// ✅ Circular fallback image
+                                      errorWidget: (context, url, error) =>
+                                      const CircleAvatar(
+                                        backgroundImage:
+                                        AssetImage('assets/images/emtpy_profile.png'),
+                                        backgroundColor: Colors.transparent,
+                                      ),
                                     ),
-                                  )
+                                  ),
+                                ),
+
+                              )
+
+
                                   : const CircleAvatar(
                                     backgroundImage: AssetImage(
                                       'assets/images/emtpy_profile.png',
@@ -144,71 +156,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .capitalizeFirst!,
                           style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w400,
-                            fontSize: 18.00.sp,
+                            fontSize: 19.00.sp,
                             color: AppColor.black,
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.022),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => MyOrderScreen());
-                              },
-                              child: customWidget(
-                                Image.asset(
-                                  'assets/dashboard/orders.png',
-                                  height: screenHeight * 0.03,
-                                  color: AppColor.black,
-                                ),
-                                'My Orders',
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => Wishlist());
-                              },
-                              child: customWidget(
-                                const Icon(
-                                    Icons.favorite_border,
-                                    color: AppColor.textColor),
-                                'Wishlist',
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(() => HelpCenter());
-                              },
-                              child: customWidget(
-                                const Icon(
-                                  Icons.info,
-                                  color: AppColor.textColor,
-                                ),
-                                'Help Center',
-                              ),
-                            ),
-                            // InkWell(
-                            //   onTap: () {
-                            //    // Get.to(() => ());
-                            //   },
-                            //   child: customWidget(
-                            //     SvgPicture.asset(
-                            //       'assets/svg/meetings.svg',
-                            //       height: screenHeight * 0.03,
-                            //     ),
-                            //     'Meetings',
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.022),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => MyOrderScreen());
+                        //       },
+                        //       child: customWidget(
+                        //         Image.asset(
+                        //           'assets/dashboard/orders.png',
+                        //           height: screenHeight * 0.03,
+                        //           color: AppColor.black,
+                        //         ),
+                        //         'My Orders',
+                        //       ),
+                        //     ),
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => Wishlist());
+                        //       },
+                        //       child: customWidget(
+                        //         const Icon(
+                        //             Icons.favorite_border,
+                        //             color: AppColor.textColor),
+                        //         'Wishlist',
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(height: screenHeight * 0.01),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     InkWell(
+                        //       onTap: () {
+                        //         Get.to(() => HelpCenter());
+                        //       },
+                        //       child: customWidget(
+                        //         const Icon(
+                        //           Icons.info,
+                        //           color: AppColor.textColor,
+                        //         ),
+                        //         'Help Center',
+                        //       ),
+                        //     ),
+                        //     // InkWell(
+                        //     //   onTap: () {
+                        //     //    // Get.to(() => ());
+                        //     //   },
+                        //     //   child: customWidget(
+                        //     //     SvgPicture.asset(
+                        //     //       'assets/svg/meetings.svg',
+                        //     //       height: screenHeight * 0.03,
+                        //     //     ),
+                        //     //     'Meetings',
+                        //     //   ),
+                        //     // ),
+                        //   ],
+                        // ),
+                        SizedBox(height: screenHeight * 0.012),
                         ListTile(
                           onTap: () {
                             Navigator.push(

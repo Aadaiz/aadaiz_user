@@ -58,6 +58,7 @@ class CustomerController extends GetxController {
           } else {
             orderDatas.value.data?.newOrders?.data
                 ?.addAll(res.data!.newOrders!.data!);
+
             currentPageNew++;
           }
         } else {

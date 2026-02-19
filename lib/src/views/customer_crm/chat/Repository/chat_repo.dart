@@ -9,13 +9,17 @@ import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/model/chatList_m
 class ChatRepository{
   static final HttpHelper _http = HttpHelper();
 
-  callOthers(dynamic request)async{
+  Future callOthers(dynamic request)async{
     final res = await _http.post(Api.callOthers,request);
     return res;
 
-  } getChatList(dynamic request)async{
+  } Future<ChatList> getChatList(dynamic request)async{
     final res = await _http.get(Api.chatList,);
     return ChatList.fromMap(res);
 
+  }
+  callEnded(dynamic request) async {
+    final res = await _http.post(Api.callEnded, request);
+    return res;
   }
 }

@@ -21,6 +21,8 @@ class ChatScreen extends StatefulWidget {
   final String senderType;
   final String? name;
   final String adminName;
+  final String adminProfile;
+  final String shopName;
   const ChatScreen({
     super.key,
     required this.token,
@@ -30,6 +32,8 @@ class ChatScreen extends StatefulWidget {
     required this.senderType,
     this.name,
     required this.adminName,
+    required this.adminProfile,
+    required this.shopName
   });
 
   @override
@@ -130,9 +134,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   enableSwipeToReply: false,
                   enableReplySnackBar: false,
                 ),
-                chatBackgroundConfig: const ChatBackgroundConfiguration(
-                  backgroundImage:
-                      "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/96e750b6-3aea-4888-983a-d8f0a10ca98d/di04w97-65e15894-7da7-4bd2-be97-0d757006cb9f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi85NmU3NTBiNi0zYWVhLTQ4ODgtOTgzYS1kOGYwYTEwY2E5OGQvZGkwNHc5Ny02NWUxNTg5NC03ZGE3LTRiZDItYmU5Ny0wZDc1NzAwNmNiOWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ekeiqsRQjTV90GR4H9Wbh1cwXvAOjFbGPmoufrEG13k",
+                chatBackgroundConfig:  ChatBackgroundConfiguration(
+                  backgroundColor: AppColors.greenColor.withAlpha(20)
+                  // backgroundImage:
+                  //     "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/96e750b6-3aea-4888-983a-d8f0a10ca98d/di04w97-65e15894-7da7-4bd2-be97-0d757006cb9f.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi85NmU3NTBiNi0zYWVhLTQ4ODgtOTgzYS1kOGYwYTEwY2E5OGQvZGkwNHc5Ny02NWUxNTg5NC03ZGE3LTRiZDItYmU5Ny0wZDc1NzAwNmNiOWYucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ekeiqsRQjTV90GR4H9Wbh1cwXvAOjFbGPmoufrEG13k",
                 ),
                 chatBubbleConfig: ChatBubbleConfiguration(
                   outgoingChatBubbleConfig: const ChatBubble(
@@ -168,19 +173,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
 
-                sendMessageConfig: SendMessageConfiguration(
+                sendMessageConfig: const SendMessageConfiguration(
                   enableCameraImagePicker: false,
                   enableGalleryImagePicker: false,
                   allowRecordingVoice: false,
 
-                  textFieldBackgroundColor: Colors.grey.shade100,
-                  textFieldConfig: const TextFieldConfiguration(
+                  textFieldConfig: TextFieldConfiguration(
                     textStyle: TextStyle(color: Colors.black),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    margin: EdgeInsets.symmetric(horizontal: 0),
+                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                   ),
 
-                  sendButtonIcon: const Icon(
+                  sendButtonIcon: Icon(
                     Icons.send_rounded,
                     size: 26,
                     color: Color(0xFF0057FF),
@@ -211,15 +215,19 @@ class _ChatScreenState extends State<ChatScreen> {
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.blue.shade50,
-                          child: Text(
-                            (widget.adminName?.substring(0, 1) ?? "").toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue,
+                          child: (widget.adminProfile != null && widget.adminProfile!.isNotEmpty)
+                              ? ClipOval(
+                            child: Image.network(
+                              widget.adminProfile!,
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _adminInitial(),
                             ),
-                          ),
+                          )
+                              : _adminInitial(),
                         ),
+
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -258,6 +266,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   token:
                                       callData['agoraToken'], // use server token
                                   callId: callData['id'],
+                                  callerName: widget.shopName,
                                 ),
                               );
                             }
@@ -288,4 +297,17 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
     );
   }
+  Widget _adminInitial() {
+    return Text(
+      (widget.adminName?.isNotEmpty ?? false)
+          ? widget.adminName!.substring(0, 1).toUpperCase()
+          : "",
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.blue,
+      ),
+    );
+  }
+
 }
