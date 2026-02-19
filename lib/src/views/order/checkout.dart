@@ -402,10 +402,7 @@ class _CheckoutState extends State<Checkout> {
                     title: Row(
                       children: [
                         DottedBorder(
-                          options:const RectDottedBorderOptions(
-                          color: AppColor.dottedBorderColor,
 
-                          padding: EdgeInsets.zero,),
                           child: SizedBox(
                             width: screenWidth / 1.6,
                             height: screenHeight * 0.055,

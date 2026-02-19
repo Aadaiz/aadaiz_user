@@ -8,6 +8,7 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -32,8 +33,10 @@ class _UserProfileState extends State<UserProfile> {
     // TODO: implement initState
     super.initState();
     ProfileController.to.image.value = File('');
+    isEdit=false;
 
   }
+  bool isEdit=false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class _UserProfileState extends State<UserProfile> {
          leadingclick: ()=>Get.back(),
             isLoading: ProfileController.to.UpdateprofileLoading.value,
             title: 'Profile',
-            isCheck: ProfileController.to.image.value.path !=''? true:false,
+            isCheck: (ProfileController.to.image.value.path !=''||isEdit==true)? true:false,
             onTap: () async {
               await ProfileController.to.updateProfile();
                Get.back();
@@ -192,6 +195,11 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   child: TextFormField(
+                    onChanged: (value){
+                      setState(() {
+                        isEdit=true;
+                      });
+                    },
                     controller: ProfileController.to.profileName,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -203,12 +211,7 @@ class _UserProfileState extends State<UserProfile> {
                         color: AppColor.hintTextColor,
                         fontSize: 10.00.sp,
                       ),
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.01,
-                        ),
-                        child: SvgPicture.asset('assets/svg/ic_edit.svg'),
-                      ),
+
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -218,6 +221,12 @@ class _UserProfileState extends State<UserProfile> {
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: AppColor.textFieldLightBorderColor,
+                        ),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(
                           color: AppColor.textFieldLightBorderColor,
@@ -237,6 +246,12 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                   child: TextFormField(
+                    onChanged: (value){
+                      setState(() {
+                        isEdit=true;
+                      });
+                    },
+
                     controller: ProfileController.to.email,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
@@ -261,6 +276,12 @@ class _UserProfileState extends State<UserProfile> {
                           color: AppColor.textFieldLightBorderColor,
                         ),
                       ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: AppColor.textFieldLightBorderColor,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -276,11 +297,35 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   child: TextFormField(
                     controller: ProfileController.to.mobile,
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
+                    maxLength: 10,
+
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+
+                    onChanged: (value) {
+                      setState(() {
+                        isEdit = true;
+                      });
+                    },
+
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter mobile number";
+                      }
+                      if (value.length != 10) {
+                        return "Mobile number must be 10 digits";
+                      }
+                      return null;
+                    },
+
                     decoration: InputDecoration(
+                      counterText: "",
                       isDense: true,
-                      hintText: '+91 123 456 8970',
+                      hintText: 'Enter 10 digit mobile number',
                       hintStyle: GoogleFonts.dmSans(
                         color: AppColor.hintTextColor,
                         fontSize: 10.00.sp,
@@ -299,8 +344,15 @@ class _UserProfileState extends State<UserProfile> {
                           color: AppColor.textFieldLightBorderColor,
                         ),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(
+                          color: AppColor.textFieldLightBorderColor,
+                        ),
+                      ),
                     ),
-                  ),
+                  )
+
                 ),
               ],
             ),
