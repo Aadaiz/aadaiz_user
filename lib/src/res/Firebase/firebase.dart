@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:aadaiz_customer_crm/firebase_options.dart';
 import 'package:aadaiz_customer_crm/main.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/incoming_call.dart';
@@ -187,6 +188,21 @@ class FirebaseApi {
     // Request permissions
     await fcm.requestPermission(alert: true, badge: true, sound: true);
 
+
+ String? apnsToken;
+  if (Platform.isIOS) {
+    int retry = 0;
+    while (apnsToken == null && retry < 5) {
+      apnsToken = await fcm.getAPNSToken();
+      await Future.delayed(const Duration(seconds: 1));
+      retry++;
+    }
+
+    if (apnsToken == null) {
+      print('APNS token not available yet');
+      return;
+    }
+  }
     // Get & save FCM token
     final token = await fcm.getToken();
     print("FCM TOKEN: $token");
