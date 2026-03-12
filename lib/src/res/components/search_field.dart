@@ -19,13 +19,11 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Add padding around the search bar
-      //padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      // Use a Material design search bar
+
       height: 05.5.hp, width: 93.00.wp,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: const Color(0xffF7F7F7),
+        color: const Color(0xffffffff),
           boxShadow:  [
             BoxShadow(
               offset: Offset(2, 2),

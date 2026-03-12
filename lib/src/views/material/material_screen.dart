@@ -1,11 +1,8 @@
-import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
-import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/filter_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -169,7 +166,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
               SizedBox(
                 height: Get.height*0.8,
                 child: SmartRefresher(
-                  physics: const AlwaysScrollableScrollPhysics(),
+
                   controller: refreshController,
                   enablePullUp: true,
                   onRefresh: () async {
@@ -247,7 +244,7 @@ class _MaterialScreenState extends State<MaterialScreen> {
 
 
                                   AspectRatio(
-                                    aspectRatio: 1 / 1.15,
+                                    aspectRatio: 1 / 1,
                                     child: Stack(
                                       children: [
                                         ClipRRect(
@@ -355,12 +352,11 @@ class _MaterialScreenState extends State<MaterialScreen> {
 
                                   const SizedBox(height: 6),
 
-                                  /// RATING + REVIEW
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      children: [
-                                        RatingBarIndicator(
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                    RatingBarIndicator(
                                           rating: rating,
                                           itemSize: 14,
                                           itemBuilder: (_, __) => const Icon(
@@ -368,27 +364,28 @@ class _MaterialScreenState extends State<MaterialScreen> {
                                             color: Color(0xffFFA800),
                                           ),
                                         ),
-                                        const SizedBox(width: 6),
-                                        InkWell(
-                                          onTap: () {
-                                            Get.to(
-                                                  () => ReviewList(
-                                                id: data.id,
-                                                value: 'material_id',
-                                              ),
-                                            );
-                                          },
-                                          child: Text(
-                                            'View Review',
-                                            style: GoogleFonts.dmSans(
-                                              fontSize: 10.sp,
-                                              decoration: TextDecoration.underline,
-                                              color: AppColor.black,
+
+
+                                      InkWell(
+                                        onTap: () {
+                                          Get.to(
+                                                () => ReviewList(
+                                              id: data.id,
+                                              value: 'material_id',
                                             ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'View Review',
+
+                                          style: GoogleFonts.dmSans(
+                                            fontSize: 10.sp,
+                                            decoration: TextDecoration.underline,
+                                            color: AppColor.black,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
 
                                   const SizedBox(height: 10),

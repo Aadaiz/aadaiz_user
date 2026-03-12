@@ -85,21 +85,25 @@ class CartData {
 /// CART ITEM
 /// =======================
 class CartItem {
+  dynamic cartId;
   Product? product;
   dynamic quantity;
 
   CartItem({
+    this.cartId,
     this.product,
     this.quantity,
   });
 
   factory CartItem.fromMap(Map<String, dynamic> json) => CartItem(
+    cartId: json["cart_id"],
     product:
     json["product"] == null ? null : Product.fromMap(json["product"]),
     quantity: json["quantity"],
   );
 
   Map<String, dynamic> toMap() => {
+    "cart_id": cartId,
     "product": product?.toMap(),
     "quantity": quantity,
   };

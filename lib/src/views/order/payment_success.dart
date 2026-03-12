@@ -1,7 +1,10 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/dashboard.dart';
+import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentSuccess extends StatelessWidget {
@@ -41,25 +44,30 @@ class PaymentSuccess extends StatelessWidget {
                   )
               )
             ),
-            Container(
-              width: screenWidth / 2,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColor.primary,
-                borderRadius: BorderRadius.circular(28)
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.018,
-                horizontal: screenWidth * 0.05
-              ),
-              child: Text(
-                'Continue shopping',
-                style: GoogleFonts.dmSans(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12.00.sp,
-                  color: Colors.white
+            InkWell(
+              onTap: (){
+                Get.off(const Dashboard());
+              },
+              child: Container(
+                width: screenWidth / 2,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColor.primary,
+                  borderRadius: BorderRadius.circular(28)
+                ),
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight * 0.018,
+                  horizontal: screenWidth * 0.05
+                ),
+                child: Text(
+                  'Continue shopping',
+                  style: GoogleFonts.dmSans(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12.00.sp,
+                    color: Colors.white
+                  )
                 )
-              )
+              ),
             ),
             Image.asset(
               'assets/images/success_women.png',

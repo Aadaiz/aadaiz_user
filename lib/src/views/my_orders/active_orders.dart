@@ -18,15 +18,15 @@ class ActiveOrders extends StatefulWidget {
 }
 
 class _ActiveOrdersState extends State<ActiveOrders> {
-  final bool _isConfirmed = true;
   final RefreshController refreshController =
-      RefreshController(initialRefresh: true);
+  RefreshController(initialRefresh: false);
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(milliseconds: 500), () async {
-      //  await HomeController.to.getMyOrdersList('active');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      HomeController.to.getMyOrdersList(status: 'active',isRefresh: true);
     });
   }
 
@@ -34,62 +34,73 @@ class _ActiveOrdersState extends State<ActiveOrders> {
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     final double screenWidth = Utils.getActivityScreenWidth(context);
+
     return Container(
       width: screenWidth,
       height: screenHeight * 0.69,
       color: AppColor.white,
       child: SmartRefresher(
         controller: refreshController,
-        physics: const AlwaysScrollableScrollPhysics(),
         enablePullDown: true,
         enablePullUp: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+
         onRefresh: () async {
           final result = await HomeController.to
-              .getMyOrdersList(isRefresh: true, status: 'Active');
-          if (result) {
-            refreshController.refreshCompleted();
-          } else {
-            refreshController.refreshFailed();
-          }
+              .getMyOrdersList( status: 'active',isRefresh: true);
+
+          result
+              ? refreshController.refreshCompleted()
+              : refreshController.refreshFailed();
         },
+
         onLoading: () async {
           final result =
-              await HomeController.to.getMyOrdersList(status: 'Active');
+          await HomeController.to.getMyOrdersList(status: 'active');
+
           if (HomeController.to.orderCurrentPage.value >=
               HomeController.to.orderTotalPages.value) {
             refreshController.loadNoData();
           } else {
-            if (result) {
-              refreshController.loadComplete();
-            } else {
-              refreshController.loadFailed();
-            }
+            result
+                ? refreshController.loadComplete()
+                : refreshController.loadFailed();
           }
         },
-        child: Obx(
-          () => HomeController.to.myOrderList.isEmpty?
-          const CommonEmpty(title: 'Active Orders'):
-              ListView.builder(
-              shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.01,
-                  horizontal: screenWidth * 0.04),
-              itemCount: HomeController.to.myOrderList.value.length,
-              itemBuilder: (context, index) {
-                var data = HomeController.to.myOrderList.value[0];
-                List images = data.patternDetails!.imageUrl.split(',');
-                double rating;
-                if (data.rating is int) {
-                  rating = data.rating.toDouble();
-                } else if (data.rating is double) {
-                  rating = data.rating;
-                } else {
-                  rating = 1.0;
-                }
-                return OrderCard(data: data, image: images, rating: rating,status: 0,);
-              }),
-        ),
+
+        child: Obx(() {
+          final list = HomeController.to.myOrderList;
+
+          if (list.isEmpty) {
+            return const CommonEmpty(title: 'Active Orders');
+          }
+
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.01,
+              horizontal: screenWidth * 0.04,
+            ),
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              var data = list[index];
+              List images = data.materialImage!.split(',');
+
+              double rating = 5.0;
+              // (data.rating is num)
+              //     ? (data.rating as num).toDouble()
+              //     : 1.0;
+
+              return OrderCard(
+                data: data,
+                image: images,
+                rating: rating,
+                status: 0,
+              );
+            },
+          );
+        }),
       ),
     );
   }

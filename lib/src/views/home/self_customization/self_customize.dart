@@ -33,8 +33,22 @@ class _SelfCustomizeState extends State<SelfCustomize> {
   String defaultSleeve = 'assets/self/db.png';
   String defaultTop = 'assets/self/dp.png';
   String defaultBottom = 'assets/self/ds.png';
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    @override
+    void initState() {
+      super.initState();
 
-  final List maxList = [
+      precacheImage(const AssetImage('assets/self/t1.png'), context);
+      precacheImage(const AssetImage('assets/self/t2.png'), context);
+      precacheImage(const AssetImage('assets/self/t3.png'), context);
+      precacheImage(const AssetImage('assets/self/4.png'), context);
+      precacheImage(const AssetImage('assets/self/11.png'), context);
+    }
+  }
+  final List<Map<String, dynamic>> maxList = [
     {
       "name": "Material",
       "categories": [
@@ -198,13 +212,12 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                                   top: 0,
                                   left: 0,
                                   right: 0,
-                                  child: Image.asset(
-                                    // selectedShirt != null ?
+                                  child:Image.asset(
                                     selectedShirt!,
-                                    // :defaultTop,
                                     height: 560,
                                     fit: BoxFit.cover,
-                                  ),
+                                    cacheWidth: 800,
+                                  )
                                 )
                                 : Container(),
                           ],
@@ -232,20 +245,27 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                             selectIndex = index;
                             switch (selectedIndex) {
                               case 0:
-                                if (index == 0) {
-                                } else if (index == 1) {
+                                if (index == 1) {
                                   selectedMaterial = data['color'];
                                 } else {
                                   selectedTop = data['color'];
                                 }
+                                break;
+
                               case 1:
                                 selectedPant = data['image'];
+                                break;
+
                               case 2:
                                 selectedShirt = data['image'];
+                                break;
+
                               case 3:
                                 selectedSleeve = data['image'];
+                                break;
+
                               default:
-                                selectedPant = data['image'];
+                                break;
                             }
                           });
                         },
@@ -271,10 +291,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                                   decoration: BoxDecoration(
                                     //   color: Colors.blue,
                                     border: Border.all(
-                                      color:
-                                          selectedIndex == index
-                                              ? Colors.teal
-                                              : Colors.grey,
+                                      color: selectIndex == index ? Colors.teal : Colors.grey,
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),

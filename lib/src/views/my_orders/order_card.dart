@@ -100,11 +100,11 @@ class _OrderCardState extends State<OrderCard> {
                             decoration: BoxDecoration(
                                 color: AppColor.blackBtnColor,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.white, width: 2)),
+                                border: Border.all(color: AppColor.white, width: 2)),
                             width: screenWidth * 0.122,
                             height: screenHeight * 0.033,
                             alignment: Alignment.center,
-                            child: Text('₹${widget.data!.patternDetails!.price??''}',
+                            child: Text('₹${widget.data!.materialTotal??''}',
                                 style: GoogleFonts.dmSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 10.00.sp,
@@ -118,12 +118,12 @@ class _OrderCardState extends State<OrderCard> {
                         width: screenWidth / 1.8,
                         child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text('${widget.data!.patternDetails!.title??''}',
+                            title: Text('${widget.data!.materialTitle??''}',
                                 style: GoogleFonts.dmSans(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16.00.sp,
                                     color: AppColor.black)),
-                            subtitle: Text('${widget.data!.patternDetails!.subTitle??''}',
+                            subtitle: Text('${widget.data!.materialSubTitle??''}',
                                 style: GoogleFonts.dmSans(
                                     fontSize: 9.24.sp,
                                     fontWeight: FontWeight.w400,
@@ -131,7 +131,7 @@ class _OrderCardState extends State<OrderCard> {
                             trailing: Column(
                               children: [
                                 widget.status==0?
-                            widget.data!.cancelStatus=='0'?
+                            widget.data!.canCancel==true?
                             InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -227,7 +227,7 @@ class _OrderCardState extends State<OrderCard> {
                                 });
                               }),
                           SizedBox(width: screenWidth * 0.1),
-                          widget.data!.cancelStatus=='0'&& widget.status==0?
+                          widget.data!.canCancel==false&& widget.status==0?
                           Container(
                               alignment: Alignment.centerRight,
                               // width: screenWidth * 0.28,

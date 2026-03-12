@@ -425,7 +425,7 @@ TextEditingController country = TextEditingController();
     }
     MyOrderListRes res = await repo.myOrders(status,orderCurrentPage.value);
     if(res.status==true){
-      orderTotalPages.value = res.data!.lastPage;
+      orderTotalPages.value = res.data!.lastPage!;
       if(res.data!.data!.isNotEmpty){
         if(isRefresh){
           myOrderList.value= res.data!.data!;
@@ -447,13 +447,13 @@ TextEditingController country = TextEditingController();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
 
-    /// Collect cart item IDs as INT
+
     List<int> cartIds = [];
 
     if (MaterialController.to.cartList.value?.items != null) {
       for (var cartItem in MaterialController.to.cartList.value!.items!) {
-        if (cartItem.product?.id != null) {
-          cartIds.add(cartItem.product!.id); // ✅ int
+        if (cartItem.cartId != null) {
+          cartIds.add(cartItem.cartId);
         }
       }
     }

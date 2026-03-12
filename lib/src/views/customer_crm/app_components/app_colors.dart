@@ -8,6 +8,7 @@ class AppColors {
   static const Color textfieldbgcolor = Color(0xFFF2F2F2);
   static const Color textgrey = Color(0xFFD8D9DB);
   static const Color lightgreen = Color(0xFFDBFFE7);
+  static const Color textFieldBorderColor = Color(0xFFDBDADC);
 
 
 

@@ -140,8 +140,10 @@ class HomeRepository {
   Future<dynamic> myOrders(status, page) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
+    String formattedStatus =
+    status.isNotEmpty ? status[0].toUpperCase() + status.substring(1) : status;
     final response = await _http.get(
-      "${Api.myOrder}?status=$status&token=$token&page=$page",
+      "${Api.myOrder}?status=$formattedStatus&token=$token&page=$page",
     );
     final MyOrderListRes res = MyOrderListRes.fromMap(jsonDecode(response));
     return res;

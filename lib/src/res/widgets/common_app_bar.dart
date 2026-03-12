@@ -26,6 +26,7 @@ class CommonAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     return AppBar(
+
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
       leading: InkWell(
@@ -72,6 +73,8 @@ class CommonAppBar extends StatelessWidget {
             )
       ],
       centerTitle: true,
+      elevation: 0.2,
+
       shadowColor: AppColor.black,
       forceMaterialTransparency: false,
     );

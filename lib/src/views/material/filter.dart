@@ -33,7 +33,7 @@ bool isPriceChoosed=false;
  String? choosedCategory;
 
 
-  // For Price Range
+
   RangeValues _priceRange = const RangeValues(0, 1000);
   final double _minPrice = 0;
   final double _maxPrice = 10000;
@@ -373,7 +373,7 @@ bool isPriceChoosed=false;
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 2),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? AppColor.primary : AppColor.borderGrey,
@@ -382,8 +382,9 @@ bool isPriceChoosed=false;
           color: isSelected ? AppColor.primary.withOpacity(0.1) : Colors.white,
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Star Rating Display
+
             Row(
               children: List.generate(5, (index) {
                 return Icon(
@@ -394,17 +395,22 @@ bool isPriceChoosed=false;
               }),
             ),
 
-            const SizedBox(width: 8),
 
-            // Rating Text
-            Text(
-              rating == 5
-                  ? '5.0 & above'
-                  : '${rating.toStringAsFixed(1)} & above',
-              style: GoogleFonts.dmSans(
-                fontSize: 14.sp,
-                color: AppColor.black,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+
+
+            Flexible(
+              child: Text(
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+
+                rating == 5
+                    ? '5.0 & above'
+                    : '${rating.toStringAsFixed(1)} & above',
+                style: GoogleFonts.dmSans(
+                  fontSize: 14.sp,
+                  color: AppColor.black,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                ),
               ),
             ),
 
