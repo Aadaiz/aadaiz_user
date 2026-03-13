@@ -34,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SearchField(
-                controllers: HomeController.to.search,
+                controller: HomeController.to.search,
                 onChanged: (value) {
                   Future.delayed(const Duration(milliseconds: 100), () {
                     HomeController.to.search.text = value;
@@ -45,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
                    HomeController.to.search.text=value;
                   await HomeController.to.getProductList(isRefresh: true);
                 },
-                hinttext: 'Search By Keyword',
+                hintText: 'Search By Keyword',
               ),
             ),
             Gap(3.0.hp),

@@ -4,73 +4,80 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchField extends StatelessWidget {
-  final TextEditingController? controllers;
-  final String hinttext;
+  final TextEditingController? controller;
+  final String hintText;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
-  const SearchField({
-    Key? key,
-    this.controllers,
-    required this.hinttext,
-    this.onChanged, this.onSubmitted,
 
-  }) : super(key: key);
+
+  final Widget? suffixWidget;
+
+
+  final bool showSuffix;
+
+
+  final bool enableShadow;
+
+  const SearchField({
+    super.key,
+    this.controller,
+    required this.hintText,
+    this.onChanged,
+    this.onSubmitted,
+    this.suffixWidget,
+    this.showSuffix = false,
+    this.enableShadow = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-
-      height: 05.5.hp, width: 93.00.wp,
+      height: 55,
+      width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
         color: const Color(0xffffffff),
-          boxShadow:  [
-            BoxShadow(
-              offset: Offset(2, 2),
-              blurRadius: 20,
-              color: AppColor.unSelectColor.withOpacity(0.1),
-            )
-          ]
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: enableShadow
+            ? [
+          BoxShadow(
+            offset: const Offset(0, 4),
+            blurRadius: 20,
+            color: AppColor.unSelectColor.withAlpha(60),
+          )
+        ]
+            : [],
       ),
-
       child: TextFormField(
-        controller: controllers,
-        onChanged: (value){
-          onChanged!(value);
-        },
-        onFieldSubmitted: (value){
-          onSubmitted!(value);
-        },
+        controller: controller,
+        onChanged: onChanged,
+        onFieldSubmitted: onSubmitted,
         style: GoogleFonts.dmSans(
-            textStyle: TextStyle(
-                fontSize: 11.00.sp,
-                color: AppColor.unSelectColor.withOpacity(0.5),
-                fontWeight: FontWeight.w500)),
+          fontSize: 13,
+          color: AppColor.unSelectColor,
+          fontWeight: FontWeight.w500,
+        ),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(top: 10,left: 16),
-          hintText: hinttext,
+          hintText: hintText,
           hintStyle: GoogleFonts.dmSans(
-              textStyle: TextStyle(
-                  fontSize: 12.00.sp,
-                  color:AppColor.unSelectColor.withOpacity(0.5),
-                  fontWeight: FontWeight.w400)),
+            fontSize: 13,
+            color: AppColor.unSelectColor.withOpacity(0.5),
+          ),
           border: InputBorder.none,
 
-          // Add a search icon or button to the search bar
+          contentPadding: const EdgeInsets.symmetric(vertical: 15),
+
+
           prefixIcon: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.all(14),
             child: Image.asset(
               'assets/images/search.png',
-              //height: 01.50.hp,
-              width: 02.50.wp,
+              width: 18,
               color: AppColor.primary,
             ),
           ),
 
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(color: Color(0xffF7F7F7)),
-          ),
+
+          suffixIcon: showSuffix ? suffixWidget : null,
         ),
       ),
     );

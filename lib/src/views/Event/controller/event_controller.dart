@@ -3,44 +3,21 @@ import 'dart:io';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
-class BuyAndSellController extends GetxController {
-
-  TextEditingController productName = TextEditingController();
-
-  TextEditingController subProductName = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController sizeController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController searchController = TextEditingController();
-
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController no = TextEditingController();
-  TextEditingController st = TextEditingController();
-  TextEditingController pin = TextEditingController();
-  TextEditingController city = TextEditingController();
-  TextEditingController land = TextEditingController();
-  TextEditingController mob = TextEditingController();
-  TextEditingController acc = TextEditingController();
-  TextEditingController conacc = TextEditingController();
-  TextEditingController ifsc = TextEditingController();
-
-
-  var latitude = 0.0.obs;
-  var longitude = 0.0.obs;
-  var isPrice = false.obs;
+class EventController  extends GetxController{
   var featureSelected=true.obs;
-
-
-  Rx<File?> image1 = Rx<File?>(null);
-  Rx<File?> image2 = Rx<File?>(null);
-  Rx<File?> image3 = Rx<File?>(null);
-
+  final TextEditingController eventNameController = TextEditingController();
+  final TextEditingController startDateController = TextEditingController();
+  final TextEditingController startTimeController = TextEditingController();
+  final TextEditingController endDateController = TextEditingController();
+  final TextEditingController endTimeController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
 
   Future<void> showDialogImage(context, {required int picture}) {
@@ -144,7 +121,7 @@ class BuyAndSellController extends GetxController {
       },
     );
   }
-
+  Rx<File?> image1 = Rx<File?>(null);
   Future<void> openCamera({required bool camera, required int picture}) async {
 
     Get.back();
@@ -159,12 +136,8 @@ class BuyAndSellController extends GetxController {
 
     File file = File(pickedFile.path);
 
-    if (picture == 1) {
+
       image1.value = file;
-    } else if (picture == 2) {
-      image2.value = file;
-    } else if (picture == 3) {
-      image3.value = file;
-    }
+
   }
 }

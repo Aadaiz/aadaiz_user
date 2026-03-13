@@ -7,6 +7,7 @@ import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/controller/buyAndSellController.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/add_location.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +23,10 @@ class AddBuyAndSellScreen extends StatefulWidget {
 }
 
 class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
-
   final BuyAndSellController controller = Get.find<BuyAndSellController>();
 
   @override
   Widget build(BuildContext context) {
-
     final screenHeight = Utils.getActivityScreenHeight(context);
     final screenWidth = Utils.getActivityScreenWidth(context);
 
@@ -48,7 +47,6 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
           vertical: screenHeight * 0.03,
         ),
         children: [
-
           CommonTextFieldTwo(
             labelName: 'Product Name',
             controller: controller.productName,
@@ -71,14 +69,12 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
             readOnly: true,
             controller: controller.categoryController,
             hintName: 'Select Category',
-            suffixIcon: const Icon(Icons.keyboard_arrow_right,size: 30),
+            suffixIcon: const Icon(Icons.keyboard_arrow_right, size: 30),
             hintStyle: GoogleFonts.dmSans(
               color: AppColor.black,
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),
-
-
           ),
 
           SizedBox(height: screenHeight * 0.03),
@@ -100,13 +96,14 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
               children: [
                 Row(
                   children: [
-
                     Expanded(
                       child: GestureDetector(
-                        onTap: (){
-                          controller.showDialogImage(context,picture: 1);
+                        onTap: () {
+                          controller.showDialogImage(context, picture: 1);
                         },
-                        child: Obx(()=>_imageBox(screenWidth,controller.image1.value)),
+                        child: Obx(
+                          () => _imageBox(screenWidth, controller.image1.value),
+                        ),
                       ),
                     ),
 
@@ -114,10 +111,12 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
 
                     Expanded(
                       child: GestureDetector(
-                        onTap: (){
-                          controller.showDialogImage(context,picture: 2);
+                        onTap: () {
+                          controller.showDialogImage(context, picture: 2);
                         },
-                        child: Obx(()=>_imageBox(screenWidth,controller.image2.value)),
+                        child: Obx(
+                          () => _imageBox(screenWidth, controller.image2.value),
+                        ),
                       ),
                     ),
 
@@ -125,14 +124,14 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
 
                     Expanded(
                       child: GestureDetector(
-                        onTap: (){
-                          controller.showDialogImage(context,picture: 3);
+                        onTap: () {
+                          controller.showDialogImage(context, picture: 3);
                         },
-                        child: Obx(()=>_imageBox(screenWidth,controller.image3.value)),
+                        child: Obx(
+                          () => _imageBox(screenWidth, controller.image3.value),
+                        ),
                       ),
                     ),
-
-
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.03),
@@ -144,13 +143,11 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
                           color: AppColor.unSelectColor,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
-                        )
-                        ,
+                        ),
                         labelName: 'Enter Price',
 
                         controller: controller.priceController,
                         hintName: 'Enter Sub-Product Name',
-
                       ),
                     ),
                     SizedBox(width: screenWidth * 0.03),
@@ -183,13 +180,18 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
                               screenHeight * 0.05,
                             ),
 
-
                             items: [
                               const PopupMenuItem(value: 'S', child: Text('S')),
                               const PopupMenuItem(value: 'M', child: Text('M')),
                               const PopupMenuItem(value: 'L', child: Text('L')),
-                              const PopupMenuItem(value: 'XL', child: Text('XL')),
-                              const PopupMenuItem(value: 'XXL', child: Text('XXL')),
+                              const PopupMenuItem(
+                                value: 'XL',
+                                child: Text('XL'),
+                              ),
+                              const PopupMenuItem(
+                                value: 'XXL',
+                                child: Text('XXL'),
+                              ),
                             ],
                           );
 
@@ -198,7 +200,7 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
                           }
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -210,24 +212,26 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
             controller: controller.descriptionController,
             hintName: 'Write Description',
             maxLines: 3,
-
           ),
           SizedBox(height: screenHeight * 0.03),
           CommonTextFieldTwo(
             isBorderNeed: false,
 
-           readOnly: true,
+            readOnly: true,
             hintName: 'Add Location',
-
+            onTap: () {
+              Get.to(
+                () => const AddLocation(),
+                transition: Transition.rightToLeft,
+              );
+            },
             hintStyle: GoogleFonts.dmSans(
               color: AppColor.black,
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-
             ),
             fillColor: AppColors.textfieldbgcolor,
-            suffixIcon: const Icon(Icons.keyboard_arrow_right,size: 30),
-
+            suffixIcon: const Icon(Icons.keyboard_arrow_right, size: 30),
           ),
           SizedBox(height: screenHeight * 0.03),
           CommonTextFieldTwo(
@@ -236,15 +240,12 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
             hintName: 'Enter Phone Number',
             isRequired: true,
             keyboardType: TextInputType.phone,
-
           ),
           SizedBox(height: screenHeight * 0.06),
           Row(
             children: [
               InkWell(
-                onTap: (){
-
-                },
+                onTap: () {},
                 child: Container(
                   width: screenWidth / 2.3,
                   height: screenHeight * 0.055,
@@ -267,21 +268,19 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
                 width: screenWidth / 2.3,
                 height: screenHeight * 0.055,
                 child: CommonButton(
-                  press: (){},
+                  press: () {},
                   text: 'Post',
                   borderRadius: 0.0,
                 ),
               ),
             ],
           ),
-
         ],
       ),
     );
   }
 
   Widget _imageBox(double screenWidth, File? image) {
-
     if (image != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -295,6 +294,8 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
     }
 
     return DottedBorder(
+
+
       color: Colors.brown,
       strokeWidth: 1.5,
       dashPattern: const [8, 4],
@@ -307,7 +308,10 @@ class _AddBuyAndSellScreenState extends State<AddBuyAndSellScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.cloud_download_rounded,color: AppColors.projectcolor),
+            const Icon(
+              Icons.cloud_download_rounded,
+              color: AppColors.projectcolor,
+            ),
             Text(
               'Picture of Product',
               textAlign: TextAlign.center,

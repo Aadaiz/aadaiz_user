@@ -68,24 +68,14 @@ class _MaterialScreenState extends State<MaterialScreen> {
               SizedBox(
                 height: screenHeight * 0.05
               ),
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.black.withOpacity(0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4)
-                    )
-                  ]
-                ),
-                child: SearchField(
-                  onChanged: (value) {
-                    MaterialController.to
-                        .getMaterials(isRefresh: true,search:value);
-                  },
+              SearchField(
+                onChanged: (value) {
+                  MaterialController.to
+                      .getMaterials(isRefresh: true,search:value);
+                },
 
-                  hinttext: 'Search By Keyword'
-                )
+                hintText: 'Search By Keyword',
+
               ),
               SizedBox(
                   height: screenHeight * 0.045

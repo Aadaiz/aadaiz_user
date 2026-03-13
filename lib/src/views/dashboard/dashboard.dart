@@ -1,5 +1,6 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/Event/screens/event_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/consulting.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
@@ -82,7 +83,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'icon': 'assets/images/event_icon.png',
       'text': 'Events',
-      'screen': const CustomerDashboard(),
+      'screen': const EventScreen(),
     },
     {
       'icon': 'assets/images/job_icon.png',
@@ -118,7 +119,7 @@ class _DashboardState extends State<Dashboard> {
 
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: drawerIcon.length,
                   itemBuilder: (context, index) {
                     bool isCustomerOrders =
@@ -148,6 +149,8 @@ class _DashboardState extends State<Dashboard> {
 
                     return InkWell(
                       onTap: () {
+
+
                         Navigator.pop(context);
                         Navigator.push(
                           context,

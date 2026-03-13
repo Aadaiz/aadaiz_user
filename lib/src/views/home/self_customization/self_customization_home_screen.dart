@@ -59,7 +59,7 @@ class _SelfCustomizationHomeScreenState
                     ),
                     const Gap(32),
                     SearchField(
-                      controllers: HomeController.to.search,
+                      controller: HomeController.to.search,
                       onChanged: (value) {
                         Future.delayed(const Duration(milliseconds: 100), () {
                           HomeController.to.search.text = value;
@@ -71,7 +71,7 @@ class _SelfCustomizationHomeScreenState
                             .getProductList(isRefresh:true)
                             .then((value)=>Get.to(()=> const SearchScreen()));
                       },
-                      hinttext: 'Search By Keyword',
+                      hintText: 'Search By Keyword',
                     ),
                     const Gap(24),
                     HomeController.to.genderLoading.value
