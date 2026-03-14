@@ -68,5 +68,6 @@ class AppColor {
   static const Color textFieldLabelColor = Color(0xFF9C9C9C);
   static const Color underlineBorderColor = Color(0xFFC1C1C1);
   static const Color textFieldDividerColor = Color(0xFFF0F4F5);
+  static const Color jobDetailContainerBg = Color(0xFFF6F8FC);
 
 }

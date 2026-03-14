@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
+import 'package:aadaiz_customer_crm/src/res/components/jobs_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
@@ -8,39 +11,45 @@ import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.
 import 'package:aadaiz_customer_crm/src/views/Event/screens/create_event_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/screens/event_filter.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/screens/event_view_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EventScreen extends StatefulWidget {
-  const EventScreen({super.key});
+class JobsScreen extends StatefulWidget {
+  const JobsScreen({super.key});
 
   @override
-  State<EventScreen> createState() => _EventScreenState();
+  State<JobsScreen> createState() => _JobsScreenState();
 }
 
-class _EventScreenState extends State<EventScreen> {
-  EventController controller = Get.find<EventController>();
+class _JobsScreenState extends State<JobsScreen> {
+  JobsController controller = Get.find<JobsController>();
 
-  List<Map<String, dynamic>> eventList = [
+  List<Map<String, dynamic>> jobList = [
     {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": "https://images.unsplash.com/photo-1509631179647-0177331693ae",
+      "title": "UiUx Designer",
+      "subTitle": 'Aadaiz',
+      "jobDetails": ["Full Time", "Senior Level", "Remote"],
+      "time": "1 hours ago",
+      'isApplied':true
     },
     {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": 'https://images.unsplash.com/photo-1509631179647-0177331693ae',
+      "title": "Flutter Developer",
+      "subTitle": 'infosis',
+
+      "jobDetails": ["Full Time", "Mid Level", "Hybrid"],
+      "time": "3 hours ago",
+      'isApplied':false
     },
     {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": "https://images.unsplash.com/photo-1521336575822-6da63fb45455",
+      "title": "Backend Developer",
+      'subTitle': 'infosis',
+
+      "jobDetails": ["Part Time", "Senior Level", "Remote"],
+      "time": "5 hours ago",
+      'isApplied':true
     },
   ];
 
@@ -54,7 +63,7 @@ class _EventScreenState extends State<EventScreen> {
 
       appBar: PreferredSize(
         preferredSize: Size(100, 6.0.hp),
-        child: CommonAppBar(leadingclick: () => Get.back(), title: 'Events'),
+        child: CommonAppBar(leadingclick: () => Get.back(), title: 'Jobs'),
       ),
 
       body: Padding(
@@ -64,7 +73,7 @@ class _EventScreenState extends State<EventScreen> {
             SizedBox(height: screenHeight * 0.04),
 
             SearchField(
-              hintText: "Search Events",
+              hintText: "Search Jobs",
               showSuffix: true,
               suffixWidget: InkWell(
                 onTap: () {
@@ -82,9 +91,7 @@ class _EventScreenState extends State<EventScreen> {
                   child: const Icon(Icons.tune),
                 ),
               ),
-
             ),
-
             SizedBox(height: screenHeight * 0.03),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,7 +116,7 @@ class _EventScreenState extends State<EventScreen> {
                                     : null,
                           ),
                           child: Text(
-                            "Events",
+                            "Recent Jobs",
                             style: GoogleFonts.dmSans(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.sp,
@@ -139,7 +146,7 @@ class _EventScreenState extends State<EventScreen> {
                                     : null,
                           ),
                           child: Text(
-                            "Your Events",
+                            "Your Jobs",
                             style: GoogleFonts.dmSans(
                               fontWeight: FontWeight.w500,
                               fontSize: 14.sp,
@@ -162,33 +169,41 @@ class _EventScreenState extends State<EventScreen> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: AppColor.primary),
+                    padding: const EdgeInsets.fromLTRB(7, 2, 3, 2),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: AppColor.primary),
+                    ),
                     child: Row(
                       children: [
-                        Container(
-                          width: screenWidth * 0.04,
-                          height: screenWidth * 0.04,
-
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.white,
-                          ),
-                          child: Center(
-                            child: Icon(
-                              Icons.add,
-                              color: AppColor.primary,
-                              size: 13,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: screenWidth * 0.015),
                         Text(
-                          'Add Event',
+                          'Hire',
                           style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w500,
                             fontSize: 12.sp,
-                            color: AppColor.white,
+                            color: AppColor.primary,
+                          ),
+                        ),
+                        SizedBox(width: screenWidth * 0.015),
+                        Container(
+                          width: screenWidth * 0.06,
+                          height: screenWidth * 0.06,
+
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColor.primary,
+                          ),
+                          child: Center(
+                            child: Transform.rotate(
+                              angle: 160 * math.pi / 72,
+
+                              child: Icon(
+                                Icons.arrow_upward,
+                                color: AppColor.white,
+                                size: 13,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -198,61 +213,22 @@ class _EventScreenState extends State<EventScreen> {
               ],
             ),
             SizedBox(height: screenHeight * 0.03),
-
-            Obx(() {
-              return controller.featureSelected.value == true
-                  ? Expanded(
-                    child: ListView.builder(
-                      itemCount: eventList.length,
-                      itemBuilder: (context, index) {
-                        var data = eventList[index];
-
-                        return EventCard(
-
-
-                          title: data['title'],
-                          date: data['date'],
-                          time: data['time'],
-                          image: data['image'],
-                          onTap: () {
-                            Get.to(
-                                  () => EventViewScreen(
-                               title: data['title'],
-                               date: data['date'],
-                               time: data['time'],
-                               image:data['image'],
-                              ),transition: Transition.rightToLeft,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  )
-                  : const SizedBox.shrink();
-            }),
-
-            Obx(() {
-              return controller.featureSelected.value == false
-                  ? Flexible(
-                    child: ListView.builder(
-                      itemCount: eventList.length,
-                      itemBuilder: (context, index) {
-                        var data = eventList[index];
-
-                        return YourEventCard(
-                          title: data['title'],
-                          date: data['date'],
-                          time: data['time'],
-                          image: data['image'],
-                          status: "Pending",
-                          onEdit: () {},
-                          onDelete: () {},
-                        );
-                      },
-                    ),
-                  )
-                  : const SizedBox.shrink();
-            }),
+            if (controller.featureSelected.value == true)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: jobList.length,
+                  itemBuilder: (context, index) {
+                    final data = jobList[index];
+                    return JobsCard(
+                      title: data['title'],
+                      subTitle: data['subTitle'],
+                      time: data['time'],
+                      jobs: data['jobDetails'],
+                      isApplied: data['isApplied'],
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

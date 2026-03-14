@@ -46,7 +46,7 @@ class CommonAppBar extends StatelessWidget {
         title,
         style: GoogleFonts.dmSans(
           fontWeight: FontWeight.w400,
-          fontSize: 14.00.sp,
+          fontSize: 16.00.sp,
           color: AppColor.black,
         ),
       ),

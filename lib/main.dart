@@ -36,14 +36,9 @@ Future<void> main() async {
     log('Firebase already initialized: $e');
   }
 
-  // 🔹 Register controllers
-  Get.put(ChatSocketController(), permanent: true);
-  Get.put(ChatMessageController(), permanent: true);
-  Get.put(ProfileController(), permanent: true);
-  Get.put(CallStateController(), permanent: true);
-  Get.put(MaterialController(), permanent: true);
 
-  // 🔹 Only initialize FCM after Firebase is fully ready
+
+
   await FirebaseApi().initNotification();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

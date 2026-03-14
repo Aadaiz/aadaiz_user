@@ -5,6 +5,7 @@ import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell.
 import 'package:aadaiz_customer_crm/src/views/consulting/consulting.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_list_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
@@ -78,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'icon': 'assets/images/post_icon.png',
       'text': 'Post',
-      'screen': const CustomerDashboard(),
+      'screen': const JobsScreen(),
     },
     {
       'icon': 'assets/images/event_icon.png',
@@ -88,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'icon': 'assets/images/job_icon.png',
       'text': 'Jobs',
-      'screen': const CustomerDashboard(),
+      'screen': const JobsScreen(),
     },
   ];
   final FlutterAnimateBorderController aniController =

@@ -1,4 +1,5 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -55,29 +56,10 @@ bool isPriceChoosed=false;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        leading: Padding(
-          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.016),
-          child: InkWell(onTap: (){
-            Get.back();
-          }, child: Image.asset('assets/images/back.png')),
-        ),
-
-        title: Text(
-          'Filter',
-          style: GoogleFonts.dmSans(
-            fontWeight: FontWeight.w400,
-            fontSize: 14.sp,
-            color: AppColor.black,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 2,
-        shadowColor: AppColor.black,
+      appBar:PreferredSize(
+        preferredSize: Size(100, 6.0.hp),
+        child: CommonAppBar(leadingclick: () => Get.back(), title: 'Filter'),
       ),
-
       body: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Row(
@@ -162,6 +144,7 @@ bool isPriceChoosed=false;
               },
               child: Container(
                 width: screenWidth / 2.3,
+                height: screenHeight*0.045,
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColor.borderGrey),
                 ),
@@ -179,6 +162,7 @@ bool isPriceChoosed=false;
             const Spacer(),
             SizedBox(
               width: screenWidth / 2.3,
+              height: screenHeight*0.045,
               child: CommonButton(
                 press: _applyFilters,
                 text: 'Apply',
