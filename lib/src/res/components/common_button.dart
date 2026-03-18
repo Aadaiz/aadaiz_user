@@ -1,6 +1,7 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -47,9 +48,9 @@ class CommonButton extends StatelessWidget {
                       )
                     : Text(text,
                         style: GoogleFonts.inter(
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             color: AppColor.primary,
-                            fontWeight: FontWeight.w700)),
+                            fontWeight: FontWeight.w500)),
               ),
             )
           : Container(

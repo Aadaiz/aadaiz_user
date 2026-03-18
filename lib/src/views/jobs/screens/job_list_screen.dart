@@ -12,6 +12,9 @@ import 'package:aadaiz_customer_crm/src/views/Event/screens/create_event_screen.
 import 'package:aadaiz_customer_crm/src/views/Event/screens/event_filter.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/screens/event_view_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/create_jobs.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_detail_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -33,7 +36,7 @@ class _JobsScreenState extends State<JobsScreen> {
       "subTitle": 'Aadaiz',
       "jobDetails": ["Full Time", "Senior Level", "Remote"],
       "time": "1 hours ago",
-      'isApplied':true
+      'isApplied': true,
     },
     {
       "title": "Flutter Developer",
@@ -41,7 +44,7 @@ class _JobsScreenState extends State<JobsScreen> {
 
       "jobDetails": ["Full Time", "Mid Level", "Hybrid"],
       "time": "3 hours ago",
-      'isApplied':false
+      'isApplied': false,
     },
     {
       "title": "Backend Developer",
@@ -49,7 +52,7 @@ class _JobsScreenState extends State<JobsScreen> {
 
       "jobDetails": ["Part Time", "Senior Level", "Remote"],
       "time": "5 hours ago",
-      'isApplied':true
+      'isApplied': true,
     },
   ];
 
@@ -78,7 +81,7 @@ class _JobsScreenState extends State<JobsScreen> {
               suffixWidget: InkWell(
                 onTap: () {
                   Get.to(
-                    () => const EventFilter(),
+                    () => const JobFilter(),
                     transition: Transition.rightToLeft,
                   );
                 },
@@ -164,7 +167,7 @@ class _JobsScreenState extends State<JobsScreen> {
                 InkWell(
                   onTap: () {
                     Get.to(
-                      () => const CreateEventScreen(),
+                      () => const CreateJobScreen(),
                       transition: Transition.rightToLeft,
                     );
                   },
@@ -213,13 +216,35 @@ class _JobsScreenState extends State<JobsScreen> {
               ],
             ),
             SizedBox(height: screenHeight * 0.03),
-            if (controller.featureSelected.value == true)
-              Expanded(
+
+              Obx(() {
+                return controller.featureSelected.value == true? Expanded(
+                  child: ListView.builder(
+                    itemCount: jobList.length,
+                    itemBuilder: (context, index) {
+                      final data = jobList[index];
+                      return JobsCard(
+                        onTap: (){
+                          Get.to(()=>const JobDetailScreen(),transition: Transition.rightToLeft,);
+
+                        },
+                        title: data['title'],
+                        subTitle: data['subTitle'],
+                        time: data['time'],
+                        jobs: data['jobDetails'],
+                        isApplied: data['isApplied'],
+                      );
+                    },
+                  ),
+                ):const SizedBox.shrink();
+              }),
+            Obx(() {
+              return controller.featureSelected.value == false? Expanded(
                 child: ListView.builder(
                   itemCount: jobList.length,
                   itemBuilder: (context, index) {
                     final data = jobList[index];
-                    return JobsCard(
+                    return YourJobCard(
                       title: data['title'],
                       subTitle: data['subTitle'],
                       time: data['time'],
@@ -228,7 +253,8 @@ class _JobsScreenState extends State<JobsScreen> {
                     );
                   },
                 ),
-              ),
+              ):const SizedBox.shrink();
+            }),
           ],
         ),
       ),

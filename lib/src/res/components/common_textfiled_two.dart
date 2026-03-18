@@ -24,6 +24,7 @@ class CommonTextFieldTwo extends StatelessWidget {
   final TextStyle? lableStyle;
   final Function()? onTap;
   final bool? isBorderNeed;
+  final int? maxLength;
 
 
 
@@ -46,6 +47,7 @@ class CommonTextFieldTwo extends StatelessWidget {
     this.lableStyle,
     this.onTap,
     this.isBorderNeed=true,
+    this.maxLength
   });
 
   @override
@@ -85,7 +87,7 @@ class CommonTextFieldTwo extends StatelessWidget {
 
 
           SizedBox(
-            height: maxLines == 1 ? screenHeight * 0.063 : null,
+            height: maxLines == 1 ? screenHeight * 0.067 : null,
             child: TextFormField(
               onTap: onTap,
 
@@ -95,7 +97,7 @@ class CommonTextFieldTwo extends StatelessWidget {
               textInputAction: textInputAction,
               maxLines: maxLines,
               readOnly: readOnly,
-
+maxLength: maxLength,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hintName,

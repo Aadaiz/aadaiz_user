@@ -10,6 +10,7 @@ import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/post_list.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate_border/flutter_animate_border.dart';
@@ -79,7 +80,7 @@ class _DashboardState extends State<Dashboard> {
     {
       'icon': 'assets/images/post_icon.png',
       'text': 'Post',
-      'screen': const JobsScreen(),
+      'screen': const PostList(),
     },
     {
       'icon': 'assets/images/event_icon.png',
