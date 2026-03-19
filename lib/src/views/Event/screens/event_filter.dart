@@ -1,15 +1,17 @@
-
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+
 class EventFilter extends StatefulWidget {
   const EventFilter({super.key});
 
@@ -18,31 +20,19 @@ class EventFilter extends StatefulWidget {
 }
 
 class _EventFilterState extends State<EventFilter> {
-  final MaterialController controller = Get.find<MaterialController>();
+  final EventController controller = Get.find<EventController>();
 
-  final List<String> _categories = [
-    'Date & Time',
-    'Location',
-
-  ];
-  List<String> locations = [
-    "Chennai",
-    "Coimbatore",
-  ];
+  final List<String> _categories = ['Date & Time', 'Location'];
+  List<String> locations = ["Chennai", "Coimbatore"];
 
   List<String> selectedLocations = [];
   int _selectedCategory = 0;
   DateTime? fromDate;
   DateTime? toDate;
 
-
-
-
-
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -52,7 +42,7 @@ class _EventFilterState extends State<EventFilter> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar:  PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size(100, 6.0.hp),
         child: CommonAppBar(leadingclick: () => Get.back(), title: 'Filter'),
       ),
@@ -62,7 +52,6 @@ class _EventFilterState extends State<EventFilter> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Container(
               decoration: BoxDecoration(
                 border: Border(
@@ -89,18 +78,18 @@ class _EventFilterState extends State<EventFilter> {
                       ),
                       decoration: BoxDecoration(
                         color:
-                        _selectedCategory == index
-                            ? AppColor.primary.withOpacity(0.1)
-                            : Colors.white,
+                            _selectedCategory == index
+                                ? AppColor.primary.withOpacity(0.1)
+                                : Colors.white,
                         border: Border(
                           bottom: BorderSide(
                             color: AppColor.black.withOpacity(0.05),
                           ),
                           left: BorderSide(
                             color:
-                            _selectedCategory == index
-                                ? AppColor.primary
-                                : Colors.transparent,
+                                _selectedCategory == index
+                                    ? AppColor.primary
+                                    : Colors.transparent,
                             width: 4,
                           ),
                         ),
@@ -110,13 +99,13 @@ class _EventFilterState extends State<EventFilter> {
                         style: GoogleFonts.dmSans(
                           fontSize: 12.sp,
                           color:
-                          _selectedCategory == index
-                              ? AppColor.primary
-                              : AppColor.black,
+                              _selectedCategory == index
+                                  ? AppColor.primary
+                                  : AppColor.black,
                           fontWeight:
-                          _selectedCategory == index
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                              _selectedCategory == index
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                         ),
                       ),
                     ),
@@ -136,12 +125,12 @@ class _EventFilterState extends State<EventFilter> {
         child: Row(
           children: [
             InkWell(
-              onTap: (){
+              onTap: () {
                 _resetAllFilters();
               },
               child: Container(
                 width: screenWidth / 2.3,
-                height: screenHeight*0.045,
+                height: screenHeight * 0.045,
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColor.borderGrey),
                 ),
@@ -159,7 +148,7 @@ class _EventFilterState extends State<EventFilter> {
             const Spacer(),
             SizedBox(
               width: screenWidth / 2.3,
-              height: screenHeight*0.045,
+              height: screenHeight * 0.045,
               child: CommonButton(
                 press: _applyFilters,
                 text: 'Apply',
@@ -186,7 +175,6 @@ class _EventFilterState extends State<EventFilter> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
               const Icon(Icons.date_range, size: 18),
@@ -205,8 +193,6 @@ class _EventFilterState extends State<EventFilter> {
 
           Row(
             children: [
-
-
               Expanded(
                 child: InkWell(
                   onTap: () => _pickFromDate(),
@@ -230,7 +216,7 @@ class _EventFilterState extends State<EventFilter> {
                             style: GoogleFonts.dmSans(fontSize: 12.sp),
                           ),
                         ),
-                        const Icon(Icons.keyboard_arrow_down, size: 18)
+                        const Icon(Icons.keyboard_arrow_down, size: 18),
                       ],
                     ),
                   ),
@@ -238,7 +224,6 @@ class _EventFilterState extends State<EventFilter> {
               ),
 
               const SizedBox(width: 10),
-
 
               Expanded(
                 child: InkWell(
@@ -263,7 +248,7 @@ class _EventFilterState extends State<EventFilter> {
                             style: GoogleFonts.dmSans(fontSize: 12.sp),
                           ),
                         ),
-                        const Icon(Icons.keyboard_arrow_down, size: 18)
+                        const Icon(Icons.keyboard_arrow_down, size: 18),
                       ],
                     ),
                   ),
@@ -275,6 +260,7 @@ class _EventFilterState extends State<EventFilter> {
       ),
     );
   }
+
   Future<void> _pickFromDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -285,13 +271,9 @@ class _EventFilterState extends State<EventFilter> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColor.primary,
-            ),
+            colorScheme: ColorScheme.light(primary: AppColor.primary),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: AppColor.primary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: AppColor.primary),
             ),
           ),
           child: child!,
@@ -309,6 +291,7 @@ class _EventFilterState extends State<EventFilter> {
       });
     }
   }
+
   Future<void> _pickToDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -319,13 +302,9 @@ class _EventFilterState extends State<EventFilter> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColor.primary,
-            ),
+            colorScheme: ColorScheme.light(primary: AppColor.primary),
             textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: AppColor.primary,
-              ),
+              style: TextButton.styleFrom(foregroundColor: AppColor.primary),
             ),
           ),
           child: child!,
@@ -339,22 +318,20 @@ class _EventFilterState extends State<EventFilter> {
       });
     }
   }
+
   Widget _buildLocationFilter() {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: List.generate(locations.length, (index) {
-
           final String city = locations[index];
 
-          return CheckboxListTile(checkColor: AppColor.white,
+          return CheckboxListTile(
+            checkColor: AppColor.white,
             hoverColor: AppColor.orangeColor,
             activeColor: AppColor.minusColor,
             value: selectedLocations.contains(city),
-            title: Text(
-              city,
-              style: GoogleFonts.dmSans(fontSize: 13.sp),
-            ),
+            title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
             controlAffinity: ListTileControlAffinity.leading,
             onChanged: (value) {
               setState(() {
@@ -370,19 +347,33 @@ class _EventFilterState extends State<EventFilter> {
       ),
     );
   }
+
   void _resetAllFilters() {
     setState(() {
       _selectedCategory = 0;
-
-
+      fromDate = null;
+      toDate = null;
+      selectedLocations.clear();
     });
   }
 
   void _applyFilters() {
+    if (fromDate != null && toDate != null && toDate!.isBefore(fromDate!)) {
+      CommonToast.show( msg: "End date must be after start date");
+      return;
+    }
 
+    final String? startDate =
+        fromDate != null ? DateFormat('yyyy-MM-dd').format(fromDate!) : null;
 
+    final String? endDate =
+        toDate != null ? DateFormat('yyyy-MM-dd').format(toDate!) : null;
+
+    final String? location =
+        selectedLocations.isNotEmpty ? selectedLocations.join(',') : null;
+
+    controller.getEventData(true, startDate: startDate, endDate: endDate, location: location,);
+
+    Get.back();
   }
-
 }
-
-

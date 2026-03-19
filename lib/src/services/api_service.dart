@@ -41,7 +41,7 @@ class Api {
   ///profile
   static const profile = "${AppConfig.baseUrl}selfcustomize/profile";
   static const supportLists = "${AppConfig.baseUrl}selfcustomize/supportLists";
-  static const  support = "${AppConfig.baseUrl}selfcustomize/support";
+  static const support = "${AppConfig.baseUrl}selfcustomize/support";
   static const uploadImage = "${AppConfig.baseUrl}upload-image";
 
   ///consulting
@@ -61,9 +61,13 @@ class Api {
   static const crmOrders = "${AppConfig.baseUrl}crm/customerOrders";
   static const ratings = "${AppConfig.baseUrl}crm/ratings";
   static const notification = "${AppConfig.baseUrl}selfcustomize/notification";
-  static const callOthers ="${AppConfig.baseUrl}crm/callData";
-  static const callEnded ="${AppConfig.baseUrl}messages/callEnded";
-  static const superAdminAttendanceExport ="${AppConfig.baseUrl}crm/invoice";
-  static const String chatList = 'http://52.2.234.121/aadaiz-crm-new/public/index.php/api/chatList';
+  static const callOthers = "${AppConfig.baseUrl}crm/callData";
+  static const callEnded = "${AppConfig.baseUrl}messages/callEnded";
+  static const superAdminAttendanceExport = "${AppConfig.baseUrl}crm/invoice";
+  static const String chatList =
+      'http://52.2.234.121/aadaiz-crm-new/public/index.php/api/chatList';
 
+  // Event
+  static const createEvent = '${AppConfig.baseUrl}event/addEvent';
+  static const getEventData = '${AppConfig.baseUrl}event/editEvent';
 }

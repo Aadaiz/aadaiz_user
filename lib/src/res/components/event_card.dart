@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EventCard extends StatelessWidget {
@@ -192,6 +193,8 @@ class YourEventCard extends StatelessWidget {
   final String status;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback ontap;
+
 
   const YourEventCard({
     super.key,
@@ -202,6 +205,7 @@ class YourEventCard extends StatelessWidget {
     required this.status,
     required this.onEdit,
     required this.onDelete,
+    required this.ontap,
   });
 
   @override
@@ -209,161 +213,165 @@ class YourEventCard extends StatelessWidget {
     final screenWidth = Utils.getActivityScreenWidth(context);
     final screenHeight = Utils.getActivityScreenHeight(context);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: screenHeight * 0.025),
-      padding: const EdgeInsets.all(12),
+    return InkWell(
+      onTap: ontap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: screenHeight * 0.025),
+        padding: const EdgeInsets.all(12),
 
-      decoration: BoxDecoration(
-        color:Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withAlpha(30),
-            blurRadius: 10,
-            spreadRadius: 1,
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        decoration: BoxDecoration(
+          color:Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: AppColor.black.withAlpha(30),
+              blurRadius: 10,
+              spreadRadius: 1,
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child:CachedNetworkImage(
-                imageUrl:   image,
-                  width: double.infinity,
-                  height: screenHeight * 0.18,
-                  fit: BoxFit.cover,
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child:CachedNetworkImage(
+                  imageUrl:   image,
+                    width: double.infinity,
+                    height: screenHeight * 0.18,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
 
 
-              Positioned(
-                left: 10,
-                bottom: 10,
-                child: ClipRRect(
+                Positioned(
+                  left: 10,
+                  bottom: 10,
+                  child: ClipRRect(
 
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 10,
-                      sigmaY: 10,
-                    ),
-                    child: Container(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColor.white.withAlpha(30),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: Colors.white.withAlpha(70)),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 10,
+                        sigmaY: 10,
                       ),
-                      child: Row(
-                        children: [
-                          Text(
-                            status,
-                            style: GoogleFonts.dmSans(
-                              color: Colors.white,
-                              fontSize: 11.sp,
+                      child: Container(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColor.white.withAlpha(30),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: Colors.white.withAlpha(70)),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              status.capitalizeFirst!,
+                              style: GoogleFonts.dmSans(
+                                color: Colors.white,
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          const CircleAvatar(
-                            radius: 3,
-                            backgroundColor: Colors.red,
-                          )
-                        ],
+                            const SizedBox(width: 4),
+                            CircleAvatar(
+                              radius: 3,
+                              backgroundColor:status=='approved'?Colors.green: Colors.red,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
-
-          SizedBox(height: screenHeight * 0.015),
-
-
-          Text(
-            title,
-            style: GoogleFonts.dmSans(
-              fontWeight: FontWeight.w600,
-              fontSize: 16.sp,
+                )
+              ],
             ),
-          ),
 
-          SizedBox(height: screenHeight * 0.008),
+            SizedBox(height: screenHeight * 0.015),
 
 
-          Row(
-            children: [
-              const Icon(Icons.calendar_today, size: 16),
-              const SizedBox(width: 6),
-              Text(
-                date,
-                style: GoogleFonts.dmSans(fontSize: 12.sp),
+            Text(
+              title,
+              style: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.sp,
               ),
-              const SizedBox(width: 18),
-              const Icon(Icons.access_time, size: 16),
-              const SizedBox(width: 6),
-              Text(
-                time,
-                style: GoogleFonts.dmSans(fontSize: 12.sp),
-              ),
-            ],
-          ),
+            ),
 
-          SizedBox(height: screenHeight * 0.018),
+            SizedBox(height: screenHeight * 0.008),
 
 
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: onEdit,
-                  child: Container(
-                    height: screenHeight*0.04,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      "Edit",
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w500,
+            Row(
+              children: [
+                const Icon(Icons.calendar_today, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  date,
+                  style: GoogleFonts.dmSans(fontSize: 12.sp),
+                ),
+                const SizedBox(width: 18),
+                const Icon(Icons.access_time, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  time,
+                  style: GoogleFonts.dmSans(fontSize: 12.sp),
+                ),
+              ],
+            ),
+
+            SizedBox(height: screenHeight * 0.018),
+
+
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: onEdit,
+                    child: Container(
+                      height: screenHeight*0.04,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        "Edit",
+                        style: GoogleFonts.dmSans(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(width: screenWidth * 0.03),
+                SizedBox(width: screenWidth * 0.03),
 
-              Expanded(
-                child: InkWell(
-                  onTap: onDelete,
-                  child: Container(
-                    height: screenHeight*0.04,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: AppColor.primary,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      "Delete Event",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                Expanded(
+                  child: InkWell(
+                    onTap: onDelete,
+                    child: Container(
+                      height: screenHeight*0.04,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColor.primary,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        "Delete Event",
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

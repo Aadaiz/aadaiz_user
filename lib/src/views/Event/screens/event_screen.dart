@@ -1,3 +1,4 @@
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
@@ -12,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:intl/intl.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({super.key});
@@ -23,26 +26,10 @@ class EventScreen extends StatefulWidget {
 class _EventScreenState extends State<EventScreen> {
   EventController controller = Get.find<EventController>();
 
-  List<Map<String, dynamic>> eventList = [
-    {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": "https://images.unsplash.com/photo-1509631179647-0177331693ae",
-    },
-    {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": 'https://images.unsplash.com/photo-1509631179647-0177331693ae',
-    },
-    {
-      "title": "International Fashion Show",
-      "date": "Mar 24, 2024",
-      "time": "11:00 AM",
-      "image": "https://images.unsplash.com/photo-1521336575822-6da63fb45455",
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,21 +38,21 @@ class _EventScreenState extends State<EventScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: PreferredSize(
         preferredSize: Size(100, 6.0.hp),
         child: CommonAppBar(leadingclick: () => Get.back(), title: 'Events'),
       ),
-
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
         child: Column(
           children: [
             SizedBox(height: screenHeight * 0.04),
-
             SearchField(
               hintText: "Search Events",
               showSuffix: true,
+              onChanged: (val) {
+                controller.getEventData(true, search: val);
+              },
               suffixWidget: InkWell(
                 onTap: () {
                   Get.to(
@@ -82,9 +69,7 @@ class _EventScreenState extends State<EventScreen> {
                   child: const Icon(Icons.tune),
                 ),
               ),
-
             ),
-
             SizedBox(height: screenHeight * 0.03),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -95,6 +80,7 @@ class _EventScreenState extends State<EventScreen> {
                       InkWell(
                         onTap: () {
                           controller.featureSelected.value = true;
+                          controller.getEventData(true);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -104,7 +90,7 @@ class _EventScreenState extends State<EventScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             border:
-                                controller.featureSelected.value == true
+                                controller.featureSelected.value
                                     ? Border.all(color: AppColor.primary)
                                     : null,
                           ),
@@ -125,6 +111,7 @@ class _EventScreenState extends State<EventScreen> {
                       InkWell(
                         onTap: () {
                           controller.featureSelected.value = false;
+                          controller.getEventData(true);
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -134,7 +121,7 @@ class _EventScreenState extends State<EventScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             border:
-                                controller.featureSelected.value == false
+                                !controller.featureSelected.value
                                     ? Border.all(color: AppColor.primary)
                                     : null,
                           ),
@@ -144,7 +131,7 @@ class _EventScreenState extends State<EventScreen> {
                               fontWeight: FontWeight.w500,
                               fontSize: 14.sp,
                               color:
-                                  controller.featureSelected.value == false
+                                  !controller.featureSelected.value
                                       ? AppColor.black
                                       : AppColor.textFieldLabelColor,
                             ),
@@ -169,7 +156,6 @@ class _EventScreenState extends State<EventScreen> {
                         Container(
                           width: screenWidth * 0.04,
                           height: screenWidth * 0.04,
-
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColor.white,
@@ -198,60 +184,111 @@ class _EventScreenState extends State<EventScreen> {
               ],
             ),
             SizedBox(height: screenHeight * 0.03),
-
             Obx(() {
-              return controller.featureSelected.value == true
-                  ? Expanded(
-                    child: ListView.builder(
-                      itemCount: eventList.length,
-                      itemBuilder: (context, index) {
-                        var data = eventList[index];
+              if (controller.getEventDataLoading.value) {
+                return const Expanded(child: ShimmerList());
+              }
 
+              if (controller.eventData.isEmpty) {
+                return const Expanded(
+                  child: Center(child: Text('No Data Found')),
+                );
+              }
+
+              final isEventTab = controller.featureSelected.value;
+
+              return Expanded(
+                child: SmartRefresher(
+                  controller: controller.refreshController,
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  onRefresh: () {
+                    controller.getEventData(true);
+                  },
+                  onLoading: () {
+                    controller.getEventData(false);
+                  },
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: controller.eventData.length,
+                    itemBuilder: (context, index) {
+                      final data = controller.eventData[index];
+
+                      if (isEventTab) {
                         return EventCard(
-
-
-                          title: data['title'],
-                          date: data['date'],
-                          time: data['time'],
-                          image: data['image'],
+                          title: data.eventName ?? '',
+                          date:
+                              data.startDate != null
+                                  ? DateFormat(
+                                    'dd MMM yyyy',
+                                  ).format(data.startDate!)
+                                  : '',
+                          time: data.startTime ?? '',
+                          image: data.eventImage ?? '',
                           onTap: () {
                             Get.to(
-                                  () => EventViewScreen(
-                               title: data['title'],
-                               date: data['date'],
-                               time: data['time'],
-                               image:data['image'],
-                              ),transition: Transition.rightToLeft,
+                              () => EventViewScreen(
+                                title: data.eventName ?? '',
+                                date:
+                                    data.startDate != null
+                                        ? DateFormat(
+                                          'dd MMM yyyy',
+                                        ).format(data.startDate!)
+                                        : '',
+                                time: data.startTime ?? '',
+                                image: data.eventImage ?? '',
+                                city: data.eventCity ?? '',
+                                area: data.eventArea ?? '',
+                                description: data.aboutEvent ?? '',
+                              ),
+                              transition: Transition.rightToLeft,
                             );
                           },
                         );
-                      },
-                    ),
-                  )
-                  : const SizedBox.shrink();
-            }),
-
-            Obx(() {
-              return controller.featureSelected.value == false
-                  ? Flexible(
-                    child: ListView.builder(
-                      itemCount: eventList.length,
-                      itemBuilder: (context, index) {
-                        var data = eventList[index];
-
+                      } else {
                         return YourEventCard(
-                          title: data['title'],
-                          date: data['date'],
-                          time: data['time'],
-                          image: data['image'],
-                          status: "Pending",
-                          onEdit: () {},
+                          title: data.eventName ?? '',
+                          date:
+                              data.startDate != null
+                                  ? DateFormat(
+                                    'dd MMM yyyy',
+                                  ).format(data.startDate!)
+                                  : '',
+                          time: data.startTime ?? '',
+                          image: data.eventImage ?? '',
+                          status: data.eventStatus ?? '',
+                          onEdit: () {
+                            Get.to(
+                              () =>  CreateEventScreen(isEdit: true,data: data),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                           onDelete: () {},
+                          ontap: () {
+                            Get.to(
+                              () => EventViewScreen(
+                                title: data.eventName ?? '',
+                                date:
+                                    data.startDate != null
+                                        ? DateFormat(
+                                          'dd MMM yyyy',
+                                        ).format(data.startDate!)
+                                        : '',
+                                time: data.startTime ?? '',
+                                image: data.eventImage ?? '',
+                                city: data.eventCity ?? '',
+                                area: data.eventArea ?? '',
+                                description: data.aboutEvent ?? '',
+                              ),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                         );
-                      },
-                    ),
-                  )
-                  : const SizedBox.shrink();
+                      }
+                    },
+                  ),
+                ),
+              );
             }),
           ],
         ),

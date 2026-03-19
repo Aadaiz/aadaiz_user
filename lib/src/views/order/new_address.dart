@@ -115,82 +115,90 @@ class _NewAddressState extends State<NewAddress> {
               InkWell(
                 onTap: () {
                   showDialog(
+
                     context: context,
                     builder: (context) {
                       return Dialog(
+                        backgroundColor: AppColor.white,
+
                         insetPadding: const EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 16,
                         child: SizedBox(
                           height: Get.width * 0.85,
                           width: Get.width * 0.6,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Country',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.greyTitleColor,
-                                    fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Country',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColor.greyTitleColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Gap(16),
-                              SizedBox(
-                                height: Get.width * 0.68,
-                                child:
-                                    countries.isEmpty
-                                        ? const Text('No countries found')
-                                        : ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          itemCount: countries.length,
-                                          itemBuilder: (context, index) {
-                                            var data = countries[index];
-                                            return InkWell(
-                                              onTap: () async {
-                                                Get.back();
-                                                HomeController.to.country.text =
-                                                    data.name ?? '';
-                                                countryCode = data.isoCode;
-                                                states = await csc
-                                                    .getStatesOfCountry(
-                                                      data.isoCode,
-                                                    );
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 16,
-                                                  bottom: 8,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        '${data.name}',
-                                                        style: GoogleFonts.poppins(
-                                                          textStyle: TextStyle(
-                                                            fontSize: 16,
-                                                            color:
-                                                                AppColor.black,
-                                                            fontWeight:
-                                                                FontWeight.w400,
+                                const Gap(16),
+                                SizedBox(
+                                  height: Get.width * 0.68,
+                                  child:
+                                      countries.isEmpty
+                                          ? const Text('No countries found')
+                                          : ListView.separated(
+                                        separatorBuilder: (context, index) =>
+                                            const Divider(),
+                                            shrinkWrap: true,
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            itemCount: countries.length,
+                                            itemBuilder: (context, index) {
+                                              var data = countries[index];
+                                              return InkWell(
+                                                onTap: () async {
+                                                  Get.back();
+                                                  HomeController.to.country.text =
+                                                      data.name ?? '';
+                                                  countryCode = data.isoCode;
+                                                  states = await csc
+                                                      .getStatesOfCountry(
+                                                        data.isoCode,
+                                                      );
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(
+                                                    left: 16,
+                                                    bottom: 8,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          '${data.name}',
+                                                          style: GoogleFonts.poppins(
+                                                            textStyle: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  AppColor.black,
+                                                              fontWeight:
+                                                                  FontWeight.w400,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                              ),
-                            ],
+                                              );
+                                            },
+                                          ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -210,79 +218,86 @@ class _NewAddressState extends State<NewAddress> {
                     context: context,
                     builder: (context) {
                       return Dialog(
+                        backgroundColor: AppColor.white,
+
                         insetPadding: const EdgeInsets.all(0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 16,
                         child: SizedBox(
                           height: Get.width * 0.85,
                           width: Get.width * 0.6,
-                          child: Column(
-                            children: [
-                              Text(
-                                'States',
-                                style: GoogleFonts.poppins(
-                                  textStyle: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.greyTitleColor,
-                                    fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'States',
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColor.greyTitleColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Gap(16),
-                              SizedBox(
-                                height: Get.width * 0.68,
-                                child:
-                                    states.isEmpty
-                                        ? const Text('No cities found')
-                                        : ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          itemCount: states.length,
-                                          itemBuilder: (context, index) {
-                                            var data = states[index];
-                                            return InkWell(
-                                              onTap: () async {
-                                                Get.back();
-                                                HomeController.to.state.text =
-                                                    data.name ?? '';
-                                                cities = await csc
-                                                    .getStateCities(
-                                                      countryCode,
-                                                      data.isoCode,
-                                                    );
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  left: 16,
-                                                  bottom: 8,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        '${data.name}',
-                                                        style: GoogleFonts.poppins(
-                                                          textStyle: TextStyle(
-                                                            fontSize: 16,
-                                                            color:
-                                                                AppColor.black,
-                                                            fontWeight:
-                                                                FontWeight.w400,
+                                const Gap(16),
+                                SizedBox(
+                                  height: Get.width * 0.68,
+                                  child:
+                                      states.isEmpty
+                                          ? const Text('No cities found')
+                                          : ListView.separated(
+                                            separatorBuilder: (context, index) =>
+                                            const Divider(),
+                                            shrinkWrap: true,
+                                            physics:
+                                                const AlwaysScrollableScrollPhysics(),
+                                            itemCount: states.length,
+                                            itemBuilder: (context, index) {
+                                              var data = states[index];
+                                              return InkWell(
+                                                onTap: () async {
+                                                  Get.back();
+                                                  HomeController.to.state.text =
+                                                      data.name ?? '';
+                                                  cities = await csc
+                                                      .getStateCities(
+                                                        countryCode,
+                                                        data.isoCode,
+                                                      );
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.only(
+                                                    left: 16,
+                                                    bottom: 8,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          '${data.name}',
+                                                          style: GoogleFonts.poppins(
+                                                            textStyle: TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  AppColor.black,
+                                                              fontWeight:
+                                                                  FontWeight.w400,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                              ),
-                            ],
+                                              );
+                                            },
+                                          ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -305,79 +320,86 @@ class _NewAddressState extends State<NewAddress> {
                         context: context,
                         builder: (context) {
                           return Dialog(
+                            backgroundColor: AppColor.white,
+
                             insetPadding: const EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             elevation: 16,
                             child: SizedBox(
                               height: Get.width * 0.85,
                               width: Get.width * 0.6,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'States',
-                                    style: GoogleFonts.poppins(
-                                      textStyle: TextStyle(
-                                        fontSize: 16,
-                                        color: AppColor.greyTitleColor,
-                                        fontWeight: FontWeight.w500,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'States',
+                                      style: GoogleFonts.poppins(
+                                        textStyle: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColor.greyTitleColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const Gap(16),
-                                  SizedBox(
-                                    height: Get.width * 0.68,
-                                    child:
-                                        cities.isEmpty
-                                            ? const Text('No cities found')
-                                            : ListView.builder(
-                                              shrinkWrap: true,
-                                              physics:
-                                                  const AlwaysScrollableScrollPhysics(),
-                                              itemCount: cities.length,
-                                              itemBuilder: (context, index) {
-                                                var data = cities[index];
-                                                return InkWell(
-                                                  onTap: () async {
-                                                    Get.back();
-                                                    HomeController
-                                                        .to
-                                                        .city
-                                                        .text = data.name ?? '';
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          left: 16,
-                                                          bottom: 8,
-                                                        ),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Text(
-                                                            '${data.name}',
-                                                            style: GoogleFonts.poppins(
-                                                              textStyle: TextStyle(
-                                                                fontSize: 16,
-                                                                color:
-                                                                    AppColor
-                                                                        .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                    const Gap(16),
+                                    SizedBox(
+                                      height: Get.width * 0.68,
+                                      child:
+                                          cities.isEmpty
+                                              ? const Text('No cities found')
+                                              : ListView.separated(
+                                                separatorBuilder: (context, index) =>
+                                                const Divider(),
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const AlwaysScrollableScrollPhysics(),
+                                                itemCount: cities.length,
+                                                itemBuilder: (context, index) {
+                                                  var data = cities[index];
+                                                  return InkWell(
+                                                    onTap: () async {
+                                                      Get.back();
+                                                      HomeController
+                                                          .to
+                                                          .city
+                                                          .text = data.name ?? '';
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                            left: 16,
+                                                            bottom: 8,
+                                                          ),
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Text(
+                                                              '${data.name}',
+                                                              style: GoogleFonts.poppins(
+                                                                textStyle: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color:
+                                                                      AppColor
+                                                                          .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                  ),
-                                ],
+                                                  );
+                                                },
+                                              ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

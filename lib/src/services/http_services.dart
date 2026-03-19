@@ -30,7 +30,7 @@ class HttpHelper {
     dynamic responseJson;
     try {
       final response = await http.post(Uri.parse(url), body:body,headers: hd);
-      debugPrint("Api URL:$url body: $body response:${response.body}");
+      log("Api URL:$url body: $body response:${response.body}");
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection',500);
@@ -45,7 +45,7 @@ class HttpHelper {
     dynamic responseJson;
     try {
       final response = await http.put(Uri.parse(url), body:body,headers: hd);
-      debugPrint("Api URL:$url body: $body response:${response.body}");
+      log("Api URL:$url body: $body response:${response.body}");
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection',500);
@@ -60,7 +60,7 @@ class HttpHelper {
     dynamic responseJson;
     try{
       final response = await http.delete(Uri.parse(url), body: body, headers: hd);
-      //debugPrint("Api URL:$url body: $body response:${response.body}");
+      //log("Api URL:$url body: $body response:${response.body}");
       responseJson = _returnResponse(response);
     }on SocketException{
       throw FetchDataException("No Internet Connection", 500);
@@ -129,14 +129,14 @@ class HttpHelper {
   //     {bool auth = false, bool contentType = false}) async {
   //   Map<String, String> hd = await getHeaders(auth, contentType: contentType);
   //
-  //   debugPrint('Api Post, url $url body : $body header :$hd');
+  //   log('Api Post, url $url body : $body header :$hd');
   //   dynamic responseJson;
   //   try {
   //     final response = await http.put(Uri.parse(url), body: body,headers: hd);
-  //     debugPrint("api response before decode  ${"${response.statusCode}${response.body}"}");
+  //     log("api response before decode  ${"${response.statusCode}${response.body}"}");
   //
   //     responseJson = _returnResponse(response);
-  //     debugPrint("api response ${"$responseJson"}");
+  //     log("api response ${"$responseJson"}");
   //     // Utility.log(responseJson);
   //   } on SocketException {
   //     // Utility.log('No net');
@@ -167,7 +167,7 @@ class HttpHelper {
       });
     }
     // var token=prefs.getString("token");
-    // debugPrint("saved token $token");
+    // log("saved token $token");
     // if(token!=null && token.isNotEmpty){
     //   headers.addAll({
     //     HttpHeaders.authorizationHeader: "Bearer $token",
@@ -202,7 +202,7 @@ dynamic _returnResponse(http.Response response) async {
     //  var message = "";
      // throw BadRequestException(message.toString(), response.statusCode);
   // var responseJson = response.body;
-  // debugPrint("404error$responseJson");
+  // log("404error$responseJson");
   // return responseJson;
     case 401:
     case 403:

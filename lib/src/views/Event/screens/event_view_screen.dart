@@ -9,12 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:intl/intl.dart';
 class EventViewScreen extends StatelessWidget {
   final String title;
   final String date;
   final String time;
   final String image;
+  final String city;
+  final String area;
+final String description;
 
   const EventViewScreen({
     super.key,
@@ -22,6 +25,9 @@ class EventViewScreen extends StatelessWidget {
     required this.date,
     required this.time,
     required this.image,
+    required this.city,
+    required this.area,
+    required this.description,
   });
 
   @override
@@ -115,7 +121,7 @@ class EventViewScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "Tuesday, $time - 9:00PM",
+                      formatTime(time),
                         style: GoogleFonts.dmSans(
                           fontSize: 12.sp,
                           color: Colors.grey,
@@ -147,7 +153,7 @@ class EventViewScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Chennai Vivira Mall",
+                          city,
                           style: GoogleFonts.dmSans(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -155,7 +161,7 @@ class EventViewScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "123 , vj street, chennai",
+                          area,
                           style: GoogleFonts.dmSans(
                             fontSize: 12.sp,
                             color: Colors.grey,
@@ -196,7 +202,7 @@ class EventViewScreen extends StatelessWidget {
               SizedBox(height: screenHeight * 0.01),
 
               Text(
-                "Chennai, known for its rich cultural heritage and vibrant contemporary lifestyle, sets the stage for an exquisite fusion of tradition and modernity in the realm of fashion.",
+             description,
                 style: GoogleFonts.dmSans(
                   fontSize: 13.sp,
                   color: Colors.grey.shade700,
@@ -210,5 +216,10 @@ class EventViewScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  String formatTime(String? time) {
+    if (time == null || time.isEmpty) return '';
+    return DateFormat('hh:mm a')
+        .format(DateFormat('HH:mm:ss').parse(time));
   }
 }
