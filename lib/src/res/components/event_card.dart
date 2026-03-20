@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class EventCard extends StatelessWidget {
   final String title;
@@ -194,6 +195,7 @@ class YourEventCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback ontap;
+  final bool editLoading;
 
 
   const YourEventCard({
@@ -206,6 +208,7 @@ class YourEventCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.ontap,
+    required this.editLoading,
   });
 
   @override
@@ -336,7 +339,7 @@ class YourEventCard extends StatelessWidget {
                         border: Border.all(color: Colors.grey.shade400),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
+                      child:Text(
                         "Edit",
                         style: GoogleFonts.dmSans(
                           fontWeight: FontWeight.w500,
@@ -358,7 +361,15 @@ class YourEventCard extends StatelessWidget {
                         color: AppColor.primary,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
+                      child:editLoading? SizedBox(
+                        height: 03.00.hp,
+                        width: 5.00.hp,
+                        child: LoadingAnimationWidget.horizontalRotatingDots(
+                          color: AppColor.primary,
+                          size: 5.00.hp,
+                        ),
+                      )
+                          : Text(
                         "Delete Event",
                         style: GoogleFonts.dmSans(
                           color: Colors.white,

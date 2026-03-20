@@ -181,19 +181,26 @@ class JobsCard extends StatelessWidget {
 }
 
 class YourJobCard extends StatelessWidget {
+ final bool? isLoading;
   final String title;
   final String subTitle;
   final String time;
   final List<String> jobs;
-  final bool isApplied;
+  final String? isApplied;
+  final Function()? editOnTap;
+  final Function()? deleteOnTap;
+
 
   const YourJobCard({
     super.key,
+     this.isLoading,
     required this.title,
     required this.subTitle,
     required this.time,
     required this.jobs,
-    required this.isApplied,
+     this.isApplied,
+    this.editOnTap,
+    this.deleteOnTap,
   });
 
   @override
@@ -271,7 +278,7 @@ class YourJobCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (isApplied == true)
+                    if (isApplied == 'approved')
                       Container(
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
@@ -283,9 +290,9 @@ class YourJobCard extends StatelessWidget {
                           color: Colors.green,
                         ),
                       ),
-                    if (isApplied == true) SizedBox(width: screenWidth * 0.01),
+                    if (isApplied == 'approved') SizedBox(width: screenWidth * 0.01),
                     Text(
-                      isApplied == true ? 'Approved' : 'Pending',
+                      isApplied == 'approved' ? 'Approved' : 'Pending',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.dmSans(
                         fontSize: 12,
@@ -347,7 +354,7 @@ class YourJobCard extends StatelessWidget {
           Row(
             children: [
               InkWell(
-                onTap: () {},
+                onTap: editOnTap,
                 child: Container(
                   width: screenWidth / 2.5,
                   height: screenHeight * 0.045,
@@ -370,13 +377,320 @@ class YourJobCard extends StatelessWidget {
                 width: screenWidth / 2.5,
                 height: screenHeight * 0.045,
                 child: CommonButton(
-                  press: () {},
+                  loading: isLoading,
+                  press: (){
+                    deleteOnTap!();
+                  },
                   text: 'Delete Post',
                   borderRadius: 0.0,
                 ),
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+class AppliedJobCard extends StatelessWidget {
+  final String title;
+  final String company;
+  final String time;
+  final List<String> jobs;
+  final String status; // applied / rejected / shortlisted
+  final VoidCallback? onTap;
+
+  const AppliedJobCard({
+    super.key,
+    required this.title,
+    required this.company,
+    required this.time,
+    required this.jobs,
+    required this.status,
+    this.onTap,
+  });
+
+  Color getStatusColor() {
+    switch (status) {
+      case 'shortlisted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
+  }
+
+  String getStatusText() {
+    switch (status) {
+      case 'shortlisted':
+        return 'Shortlisted';
+      case 'rejected':
+        return 'Rejected';
+      default:
+        return 'Applied';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = Utils.getActivityScreenHeight(context);
+    final screenWidth = Utils.getActivityScreenWidth(context);
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 4,
+              offset: const Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            /// HEADER
+            Row(
+              children: [
+                Container(
+                  width: screenWidth * 0.12,
+                  height: screenHeight * 0.06,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColor.primary.withAlpha(30),
+                  ),
+                  child: const Icon(Icons.work),
+                ),
+
+                SizedBox(width: screenWidth * 0.02),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: GoogleFonts.dmSans(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600)),
+                      Text(company,
+                          style: GoogleFonts.dmSans(
+                              fontSize: 13.sp,
+                              color: AppColor.textFieldLabelColor)),
+                    ],
+                  ),
+                ),
+
+                /// STATUS BADGE
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: getStatusColor(),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    getStatusText(),
+                    style: GoogleFonts.dmSans(
+                      fontSize: 11.sp,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              ],
+            ),
+
+            SizedBox(height: screenHeight * 0.01),
+
+            /// JOB TAGS
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: jobs.map((e) {
+                return Container(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColor.jobDetailContainerBg,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(e,
+                      style: GoogleFonts.dmSans(fontSize: 12.sp)),
+                );
+              }).toList(),
+            ),
+
+            SizedBox(height: screenHeight * 0.015),
+
+            /// FOOTER
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(time,
+                    style: GoogleFonts.dmSans(
+                        fontSize: 11.sp, color: Colors.grey)),
+
+                /// Optional withdraw
+                if (status == 'applied')
+                  InkWell(
+                    onTap: () {},
+                    child: Text(
+                      "Withdraw",
+                      style: GoogleFonts.dmSans(
+                        fontSize: 12.sp,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class ApplicantCard extends StatelessWidget {
+  final String name;
+  final String role;
+  final String time;
+  final List<String> skills;
+  final VoidCallback? onAccept;
+  final VoidCallback? onReject;
+
+  const ApplicantCard({
+    super.key,
+    required this.name,
+    required this.role,
+    required this.time,
+    required this.skills,
+    this.onAccept,
+    this.onReject,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = Utils.getActivityScreenHeight(context);
+    final screenWidth = Utils.getActivityScreenWidth(context);
+
+    return Container(
+      margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(2, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          /// HEADER
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: AppColor.primary.withAlpha(30),
+                child: const Icon(Icons.person),
+              ),
+
+              SizedBox(width: screenWidth * 0.02),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name,
+                        style: GoogleFonts.dmSans(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600)),
+                    Text(role,
+                        style: GoogleFonts.dmSans(
+                            fontSize: 13.sp,
+                            color: AppColor.textFieldLabelColor)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: screenHeight * 0.01),
+
+          /// SKILLS
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: skills.map((e) {
+              return Container(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColor.jobDetailContainerBg,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(e,
+                    style: GoogleFonts.dmSans(fontSize: 12.sp)),
+              );
+            }).toList(),
+          ),
+
+          SizedBox(height: screenHeight * 0.015),
+
+          /// TIME
+          Text(time,
+              style: GoogleFonts.dmSans(
+                  fontSize: 11.sp, color: Colors.grey)),
+
+          SizedBox(height: screenHeight * 0.015),
+
+          /// ACTIONS
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: onReject,
+                  child: Container(
+                    height: screenHeight * 0.045,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.red),
+                    ),
+                    child: Text(
+                      "Reject",
+                      style: GoogleFonts.dmSans(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(width: screenWidth * 0.03),
+
+              Expanded(
+                child: CommonButton(
+                  press: (){
+                    onAccept!();
+                  },
+                  text: "Accept",
+                  borderRadius: 0,
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

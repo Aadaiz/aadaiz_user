@@ -1,14 +1,19 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_textfiled_two.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_type_model.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/last_step_create_jobs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:country_state_city/country_state_city.dart' as csc;
 
 class CreateJobScreen extends StatefulWidget {
   const CreateJobScreen({super.key});
@@ -18,50 +23,40 @@ class CreateJobScreen extends StatefulWidget {
 }
 
 class _CreateJobScreenState extends State<CreateJobScreen> {
-  final TextEditingController jobTitleController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
-  final TextEditingController openingsController = TextEditingController(
-    text: "1",
-  );
+
+
   final TextEditingController localityController = TextEditingController();
+  JobsController controller = Get.find();
 
   int genderIndex = -1;
   int qualificationIndex = -1;
+  List<Subjob> selectedSubJobs = [];
+  int selectedJobIndex = -1;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    selectedValues = List.generate(jobTypes.length, (index) => false);
+    Future.delayed(const Duration(milliseconds: 500), () async {
+      countries = await csc.getAllCountries();
+    });
+    selectedValues = List.generate(
+      controller.jobTypes.length,
+      (index) => false,
+    );
+    controller.clearAllFields();
   }
 
-  List<String> genders = ["Any", "Male", "Female"];
-
-  List<String> qualifications = [
-    "Any",
-    "10th Pass",
-    "12th Pass",
-    "Diploma",
-    "Graduate",
-    "Post Graduate",
-  ];
-  List<String> jobTypes = ['Full Time', 'Part Time', 'Internship', 'Remote'];
-  List<String> jobTitles = [
-    "UI UX Designer",
-    "Flutter Developer",
-    "Backend Developer",
-    'UI UX Designer',
-    'Flutter Developer',
-    'Backend Developer'
-        'UI UX Designer',
-    'Flutter Developer',
-    'Backend Developer',
-  ];
   List<String> jobLocalities = ['Chennai', "Coimbatore"];
   bool isJobTitleSelected = false;
   bool isJobCategorySelected = false;
   bool isJobLocalitySelected = false;
+  String countryCode = '';
+  List<csc.Country> countries = [];
+  List<csc.State> states = [];
+  List<csc.City> cities = [];
 
   List<bool> selectedValues = [];
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = Utils.getActivityScreenWidth(context);
@@ -97,20 +92,25 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             CommonTextFieldTwo(
               labelName: "Job Title",
               hintName: "UI UX Designer",
-              controller: jobTitleController,
+              controller:controller.jobTitleController,
               suffixIcon:
-                  jobTitleController.text.isNotEmpty
+              controller.jobTitleController.text.isNotEmpty
                       ? InkWell(
                         onTap: () {
                           setState(() {
-                            jobTitleController.text = '';
+                            controller.jobTitleController.clear();
+                            controller.categoryController.clear();
+                            selectedSubJobs.clear();
+                            selectedJobIndex = -1;
+
+                            isJobTitleSelected = false;
+                            isJobCategorySelected = false;
                           });
                         },
                         child: Container(
-                          margin: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-
                             border: Border.all(color: AppColor.red, width: 2),
                           ),
                           child: Icon(
@@ -125,61 +125,72 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
               onTap: () {
                 setState(() {
                   isJobTitleSelected = !isJobTitleSelected;
+                  isJobCategorySelected = false;
                 });
               },
             ),
-            if (isJobTitleSelected)
-              Column(
-                children: [
-                  Container(
-                    width: screenWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: AppColor.textFieldBorderColor),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
 
-                      separatorBuilder:
-                          (context, index) => const Divider(height: 0),
-                      itemCount: jobTitles.length,
-                      itemBuilder: (context, index) {
-                        final jobTitle = jobTitles[index];
-                        return ListTile(
-                          title: Text(jobTitle),
-                          onTap: () {
-                            jobTitleController.text = jobTitle;
-                            setState(() {
-                              isJobTitleSelected = false;
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
+            if (isJobTitleSelected)
+              Container(
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: AppColor.textFieldBorderColor),
+                ),
+                child: Obx(() {
+                  if (controller.jobListLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    separatorBuilder:
+                        (context, index) => const Divider(height: 0),
+                    itemCount: controller.jobData.length,
+                    itemBuilder: (context, index) {
+                      final job = controller.jobData[index];
+
+                      return ListTile(
+                        title: Text(job.jobTitle ?? ''),
+                        onTap: () {
+                          setState(() {
+                            selectedJobIndex = index;
+                            selectedSubJobs = List.from(job.subjobs ?? []);
+
+                            controller.jobTitleController.text = job.jobTitle ?? '';
+
+                            controller.categoryController.clear();
+
+                            isJobTitleSelected = false;
+                            isJobCategorySelected = false;
+                          });
+                        },
+                      );
+                    },
+                  );
+                }),
               ),
 
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.015),
 
             CommonTextFieldTwo(
               labelName: "Job Category",
               hintName: "Selected Option",
-              controller: categoryController,
+              controller: controller.categoryController,
               suffixIcon:
-                  categoryController.text.isNotEmpty
+              controller.categoryController.text.isNotEmpty
                       ? InkWell(
                         onTap: () {
                           setState(() {
-                            categoryController.text = '';
+                            controller.categoryController.clear();
+                            isJobCategorySelected = false;
                           });
                         },
                         child: Container(
-                          margin: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-
                             border: Border.all(color: AppColor.red, width: 2),
                           ),
                           child: Icon(
@@ -192,42 +203,49 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                       : const Icon(Icons.keyboard_arrow_down),
               readOnly: true,
               onTap: () {
+                if (selectedJobIndex == -1) {
+                  CommonToast.show(msg: "Please select job title first");
+                  return;
+                }
+
                 setState(() {
+                  selectedSubJobs = List.from(
+                    controller.jobData[selectedJobIndex].subjobs ?? [],
+                  );
+
                   isJobCategorySelected = !isJobCategorySelected;
+                  isJobTitleSelected = false;
                 });
               },
             ),
-            if (isJobCategorySelected)
-              Column(
-                children: [
-                  Container(
-                    width: screenWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: AppColor.textFieldBorderColor),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
 
-                      separatorBuilder:
-                          (context, index) => const Divider(height: 0),
-                      itemCount: jobTitles.length,
-                      itemBuilder: (context, index) {
-                        final jobTitle = jobTitles[index];
-                        return ListTile(
-                          title: Text(jobTitle),
-                          onTap: () {
-                            categoryController.text = jobTitle;
-                            setState(() {
-                              isJobCategorySelected = false;
-                            });
-                          },
-                        );
+            if (isJobCategorySelected)
+              Container(
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(color: AppColor.textFieldBorderColor),
+                ),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  separatorBuilder:
+                      (context, index) => const Divider(height: 0),
+                  itemCount: selectedSubJobs.length,
+                  itemBuilder: (context, index) {
+                    final subJob = selectedSubJobs[index];
+
+                    return ListTile(
+                      title: Text(subJob.jobCategory ?? ''),
+                      onTap: () {
+                        setState(() {
+                          controller.categoryController.text = subJob.jobCategory ?? '';
+                          isJobCategorySelected = false;
+                        });
                       },
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
 
             SizedBox(height: screenHeight * 0.01),
@@ -245,12 +263,12 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             SizedBox(
               width: screenWidth * 0.15,
               child: CommonTextFieldTwo(
-                controller: openingsController,
+                controller: controller.openingsController,
                 keyboardType: TextInputType.number,
               ),
             ),
 
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.015),
 
             Text(
               "Job Type",
@@ -264,19 +282,22 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
             Column(
               children: [
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: jobTypes.length,
-                  itemBuilder: (context, index) {
-                    final jobType = jobTypes[index];
+                Obx(
+                  () => ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.jobTypes.length,
+                    itemBuilder: (context, index) {
+                      final jobType = controller.jobTypes[index];
 
-                    return _jobTypeItem(jobType, selectedValues[index], () {
-                      setState(() {
-                        selectedValues[index] = !selectedValues[index];
+                      return _jobTypeItem(jobType, selectedValues[index], () {
+                        setState(() {
+                          selectedValues[index] = !selectedValues[index];
+                          controller.selectedJobType.value = jobType;
+                        });
                       });
-                    });
-                  },
+                    },
+                  ),
                 ),
               ],
             ),
@@ -284,72 +305,336 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             SizedBox(height: screenHeight * 0.01),
 
             CommonTextFieldTwo(
-              labelName: "Job Locality",
-              hintName: "Locality",
-              controller: localityController,
-              suffixIcon:
-                  localityController.text.isNotEmpty
-                      ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            localityController.text = '';
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+              labelName: 'Job Location',
+              readOnly: true,
+              hintName: "Choose Country",
+              controller: controller.countryController,
+              keyboardType: TextInputType.emailAddress,
+              suffixIcon: const Icon(Icons.location_on),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: AppColor.white,
 
-                            border: Border.all(color: AppColor.red, width: 2),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: AppColor.red,
-                            size: 12,
+                      insetPadding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 16,
+                      child: SizedBox(
+                        height: Get.width * 0.85,
+                        width: Get.width * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Country',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColor.greyTitleColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const Gap(16),
+                              SizedBox(
+                                height: Get.width * 0.68,
+                                child:
+                                    countries.isEmpty
+                                        ? const Text('No countries found')
+                                        : Expanded(
+                                          child: ListView.separated(
+                                            itemCount: countries.length,
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const Divider(),
+                                            itemBuilder: (context, index) {
+                                              final data = countries[index];
+
+                                              return InkWell(
+                                                onTap: () async {
+                                                  Get.back();
+                                                  controller
+                                                      .countryController
+                                                      .text = data.name ?? '';
+                                                  countryCode = data.isoCode;
+
+                                                  states.clear();
+                                                  cities.clear();
+                                                  controller.stateController
+                                                      .clear();
+                                                  controller.cityController
+                                                      .clear();
+
+                                                  states = await csc
+                                                      .getStatesOfCountry(
+                                                        data.isoCode,
+                                                      );
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                        left: 16,
+                                                        bottom: 8,
+                                                      ),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          '${data.name}',
+                                                          style:
+                                                              GoogleFonts.poppins(
+                                                                fontSize: 16,
+                                                                color:
+                                                                    AppColor
+                                                                        .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                              ),
+                            ],
                           ),
                         ),
-                      )
-                      : const Icon(Icons.keyboard_arrow_down),
-              readOnly: true,
-              onTap: () {
-                setState(() {
-                  isJobLocalitySelected = !isJobLocalitySelected;
-                });
+                      ),
+                    );
+                  },
+                );
               },
             ),
-            if (isJobLocalitySelected)
-              Column(
-                children: [
-                  Container(
-                    width: screenWidth,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: AppColor.textFieldBorderColor),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-
-                      separatorBuilder:
-                          (context, index) => const Divider(height: 0),
-                      itemCount: jobLocalities.length,
-                      itemBuilder: (context, index) {
-                        final jobLocalitiesData = jobLocalities[index];
-                        return ListTile(
-                          title: Text(jobLocalitiesData),
-                          onTap: () {
-                            localityController.text = jobLocalitiesData;
-                            setState(() {
-                              isJobLocalitySelected = false;
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
             SizedBox(height: screenHeight * 0.01),
+            CommonTextFieldTwo(
+              readOnly: true,
+              hintName: "Choose State",
+              controller: controller.stateController,
+              keyboardType: TextInputType.emailAddress,
+              suffixIcon: const Icon(Icons.location_on),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: AppColor.white,
+
+                      insetPadding: const EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 16,
+                      child: SizedBox(
+                        height: Get.width * 0.85,
+                        width: Get.width * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                'States',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColor.greyTitleColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const Gap(16),
+                              SizedBox(
+                                height: Get.width * 0.68,
+                                child:
+                                    states.isEmpty
+                                        ? const Text('No cities found')
+                                        : ListView.separated(
+                                          separatorBuilder:
+                                              (context, index) =>
+                                                  const Divider(),
+                                          shrinkWrap: true,
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          itemCount: states.length,
+                                          itemBuilder: (context, index) {
+                                            final data = states[index];
+
+                                            return InkWell(
+                                              onTap: () async {
+                                                debugPrint(
+                                                  'State code :${data.isoCode}',
+                                                );
+                                                Get.back();
+                                                controller
+                                                    .stateController
+                                                    .text = data.name ?? '';
+                                                cities.clear();
+                                                controller.cityController
+                                                    .clear();
+
+                                                cities = await csc
+                                                    .getStateCities(
+                                                      countryCode,
+                                                      data.isoCode,
+                                                    );
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  bottom: 8,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '${data.name}',
+                                                        style: GoogleFonts.poppins(
+                                                          textStyle: TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                AppColor.black,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            CommonTextFieldTwo(
+              hintName: "Choose City",
+              controller: controller.cityController,
+              keyboardType: TextInputType.emailAddress,
+              suffixIcon: const Icon(Icons.location_on),
+              readOnly: true,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      backgroundColor: AppColor.white,
+
+                      insetPadding: const EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 16,
+                      child: SizedBox(
+                        height: Get.width * 0.85,
+                        width: Get.width * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                'States',
+                                style: GoogleFonts.poppins(
+                                  textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColor.greyTitleColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              const Gap(16),
+                              SizedBox(
+                                height: Get.width * 0.68,
+                                child:
+                                    cities.isEmpty
+                                        ? const Text('No cities found')
+                                        : ListView.separated(
+                                          separatorBuilder:
+                                              (context, index) =>
+                                                  const Divider(),
+                                          shrinkWrap: true,
+                                          physics:
+                                              const AlwaysScrollableScrollPhysics(),
+                                          itemCount: cities.length,
+                                          itemBuilder: (context, index) {
+                                            final data = cities[index];
+                                            return InkWell(
+                                              onTap: () async {
+                                                Get.back();
+                                                controller.cityController.text =
+                                                    data.name ?? '';
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 16,
+                                                  bottom: 8,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        data.name,
+                                                        style: GoogleFonts.poppins(
+                                                          textStyle: TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                AppColor.black,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            SizedBox(height: screenHeight * 0.02),
+
+            CommonTextFieldTwo(
+              hintName: "Enter Area",
+              controller: controller.areaController,
+              keyboardType: TextInputType.text,
+            ),
+            SizedBox(height: screenHeight * 0.02),
+
+            CommonTextFieldTwo(
+              hintName: "Enter Pincode ",
+              controller: controller.pincodeController,
+              keyboardType: TextInputType.number,
+              maxLength: 6,
+            ),
+            SizedBox(height: screenHeight * 0.02),
 
             Text(
               "Gender",
@@ -361,19 +646,25 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
             SizedBox(height: screenHeight * 0.015),
 
-            Wrap(
-              spacing: 8,
-              children: List.generate(
-                genders.length,
-                (index) => _selectionChip(
-                  'gender',
-                  genders[index],
-                  genderIndex == index,
-                  () {
-                    setState(() {
-                      genderIndex = index;
-                    });
-                  },
+            Obx(
+              () => Wrap(
+                spacing: 8,
+                children: List.generate(
+                  controller.genders.length,
+                  (index) => _selectionChip(
+                    'gender',
+                    controller.genders[index],
+                    genderIndex == index,
+                    () {
+                      setState(() {
+                        genderIndex = index;
+                        controller.selectedGender.value =
+                            controller.genders[index];
+
+
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
@@ -390,20 +681,25 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
             SizedBox(height: screenHeight * 0.015),
 
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List.generate(
-                qualifications.length,
-                (index) => _selectionChip(
-                  'qualification',
-                  qualifications[index],
-                  qualificationIndex == index,
-                  () {
-                    setState(() {
-                      qualificationIndex = index;
-                    });
-                  },
+            Obx(
+              () => Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: List.generate(
+                  controller.qualifications.length,
+                  (index) => _selectionChip(
+                    'qualification',
+                    controller.qualifications[index],
+                    qualificationIndex == index,
+                    () {
+                      setState(() {
+                        qualificationIndex = index;
+                        controller.selectedQualification.value =
+                            controller.qualifications[index];
+
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
@@ -412,8 +708,56 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
             CommonButton(
               press: () {
+                FocusScope.of(context).unfocus();
+                if ( controller.jobTitleController.text.isEmpty) {
+                  CommonToast.show(msg: "Please select job title");
+                  return;
+                }
+                if ( controller.categoryController.text.isEmpty) {
+                  CommonToast.show(msg: "Please select job category");
+                  return;
+                }
+                if (controller.openingsController.text.isEmpty) {
+                  CommonToast.show(msg: "Please enter openings");
+                  return;
+                }
+                if (controller.selectedJobType.value == '') {
+                  CommonToast.show(msg: "Please select job type");
+                  return;
+                }
+                if (controller.countryController.text.isEmpty) {
+                  CommonToast.show(msg: "Please select country");
+                  return;
+                }
+                if (controller.stateController.text.isEmpty) {
+                  CommonToast.show(msg: "Please select state");
+                  return;
+                }
+                if (controller.cityController.text.isEmpty) {
+                  CommonToast.show(msg: "Please select city");
+                  return;
+                }
+                if (controller.areaController.text.isEmpty) {
+                  CommonToast.show(msg: "Please enter area");
+                  return;
+                }
+                if (controller.pincodeController.text.isEmpty) {
+                  CommonToast.show(msg: "Please enter pincode");
+                  return;
+                }
+                if (genderIndex == -1) {
+                  CommonToast.show(msg: "Please select gender");
+                  return;
+                }
+                if (qualificationIndex == -1) {
+                  CommonToast.show(msg: "Please select qualification");
+                  return;
+                }
 
-                Get.to(()=>LastStepCreateJob(),transition: Transition.rightToLeft);
+                Get.to(
+                  () => LastStepCreateJob(),
+                  transition: Transition.rightToLeft,
+                );
               },
               text: "Next",
               borderRadius: 0.0,
@@ -472,7 +816,9 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
               InkWell(
                 onTap: () {
                   setState(() {
-                  type=='gender'?genderIndex=-1:qualificationIndex=-1;
+                    type == 'gender'
+                        ? genderIndex = -1
+                        : qualificationIndex = -1;
                   });
                 },
                 child: Container(

@@ -3,6 +3,7 @@ import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,13 +19,10 @@ class JobFilter extends StatefulWidget {
 }
 
 class _JobFilterState extends State<JobFilter> {
-  final MaterialController controller = Get.find<MaterialController>();
+  final JobsController controller = Get.find<JobsController>();
 
   final List<String> _categories = ['Salary', 'Type','Category'];
-  List<String> salary = ["5k-10k", "10k-20k"];
 
-  List<String> type = ["Full Time", "Part Time"];
-  List<String> jobCategory = ['FrontEnd', 'Backend', 'FullStack'];
   List<String> selectedJocCategory = [];
 
 
@@ -185,95 +183,111 @@ class _JobFilterState extends State<JobFilter> {
 
 
   Widget _buildJobType() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: List.generate(type.length, (index) {
-          final String city = type[index];
+    return Obx(() {
+      final typeList = controller.jobFilterData.value?.type ?? [];
 
-          return CheckboxListTile(
-            checkColor: AppColor.white,
-            hoverColor: AppColor.orangeColor,
-            activeColor: AppColor.minusColor,
-            value: selectedType.contains(city),
-            title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (value) {
-              setState(() {
-                if (value!) {
-                  selectedType.add(city);
-                } else {
-                  selectedType.remove(city);
-                }
-              });
-            },
-          );
-        }),
-      ),
-    );
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: List.generate(typeList.length, (index) {
+            final String item = typeList[index];
+
+            return CheckboxListTile(
+              checkColor: AppColor.white,
+              activeColor: AppColor.minusColor,
+              value: selectedType.contains(item),
+              title: Text(item, style: GoogleFonts.dmSans(fontSize: 13.sp)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (value) {
+                setState(() {
+                  value! ? selectedType.add(item) : selectedType.remove(item);
+                });
+              },
+            );
+          }),
+        ),
+      );
+    });
   }
   Widget _buildSalaryType() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: List.generate(salary.length, (index) {
-          final String city = salary[index];
+    return Obx(() {
+      if (controller.jobFilterListLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          return CheckboxListTile(
-            checkColor: AppColor.white,
-            hoverColor: AppColor.orangeColor,
-            activeColor: AppColor.minusColor,
-            value: selectedSalary.contains(city),
-            title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (value) {
-              setState(() {
-                if (value!) {
-                  selectedSalary.add(city);
-                } else {
-                  selectedSalary.remove(city);
-                }
-              });
-            },
-          );
-        }),
-      ),
-    );
+      final salaryList = controller.jobFilterData.value?.salary ?? [];
+
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: List.generate(salaryList.length, (index) {
+            final String item = salaryList[index];
+
+            return CheckboxListTile(
+              checkColor: AppColor.white,
+              activeColor: AppColor.minusColor,
+              value: selectedSalary.contains(item),
+              title: Text(item, style: GoogleFonts.dmSans(fontSize: 13.sp)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (value) {
+                setState(() {
+                  value! ? selectedSalary.add(item) : selectedSalary.remove(item);
+                });
+              },
+            );
+          }),
+        ),
+      );
+    });
   }
-Widget _buildJobCategory() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: List.generate(jobCategory.length, (index) {
-          final String city = jobCategory[index];
+  Widget _buildJobCategory() {
+    return Obx(() {
+      final categoryList = controller.jobFilterData.value?.category ?? [];
 
-          return CheckboxListTile(
-            checkColor: AppColor.white,
-            hoverColor: AppColor.orangeColor,
-            activeColor: AppColor.minusColor,
-            value: selectedJocCategory.contains(city),
-            title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (value) {
-              setState(() {
-                if (value!) {
-                  selectedJocCategory.add(city);
-                } else {
-                  selectedJocCategory.remove(city);
-                }
-              });
-            },
-          );
-        }),
-      ),
-    );
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: List.generate(categoryList.length, (index) {
+            final item = categoryList[index].jobCategory ?? '';
+
+            return CheckboxListTile(
+              checkColor: AppColor.white,
+              activeColor: AppColor.minusColor,
+              value: selectedJocCategory.contains(item),
+              title: Text(item, style: GoogleFonts.dmSans(fontSize: 13.sp)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (value) {
+                setState(() {
+                  value!
+                      ? selectedJocCategory.add(item)
+                      : selectedJocCategory.remove(item);
+                });
+              },
+            );
+          }),
+        ),
+      );
+    });
   }
 
   void _resetAllFilters() {
     setState(() {
+      selectedSalary.clear();
+      selectedType.clear();
+      selectedJocCategory.clear();
       _selectedCategory = 0;
     });
   }
+  void _applyFilters() {
+    Get.back();
 
-  void _applyFilters() {}
+    controller.getJobData(
+      true,
+      jobType: selectedType.isNotEmpty ? selectedType.first : null,
+      jobCategory: selectedJocCategory.isNotEmpty
+          ? selectedJocCategory.first
+          : null,
+      salary: selectedSalary.isNotEmpty ? selectedSalary.first : null,
+    );
+  }
 }

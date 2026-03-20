@@ -69,5 +69,19 @@ class Api {
 
   // Event
   static const createEvent = '${AppConfig.baseUrl}event/addEvent';
+  static const updateEvent = '${AppConfig.baseUrl}event/updateEvent';
+  static const deleteEvent = '${AppConfig.baseUrl}event/deleteEvent';
+
   static const getEventData = '${AppConfig.baseUrl}event/editEvent';
+  static const eventCity = '${AppConfig.baseUrl}event/eventCity';
+
+  // Job
+  static const jobList = '${AppConfig.baseUrl}job/jobList';
+  static const jobFilterList = '${AppConfig.baseUrl}job/jobFilterList';
+  static const createJob = '${AppConfig.baseUrl}job/createJob';
+  static const jobListData = '${AppConfig.baseUrl}job/userJobList';
+  static const deleteJob = '${AppConfig.baseUrl}job/deleteJob';
+
+
+
 }

@@ -25,10 +25,8 @@ class _EventFilterState extends State<EventFilter> {
   final List<String> _categories = ['Date & Time', 'Location'];
   List<String> locations = ["Chennai", "Coimbatore"];
 
-  List<String> selectedLocations = [];
+
   int _selectedCategory = 0;
-  DateTime? fromDate;
-  DateTime? toDate;
 
   @override
   void initState() {
@@ -210,9 +208,9 @@ class _EventFilterState extends State<EventFilter> {
                       children: [
                         Expanded(
                           child: Text(
-                            fromDate == null
-                                ? "May 25, 2024"
-                                : DateFormat('MMM dd, yyyy').format(fromDate!),
+                            controller.fromDate.value == null
+                                ? "Start Date"
+                                : DateFormat('MMM dd, yyyy').format( controller.fromDate.value!),
                             style: GoogleFonts.dmSans(fontSize: 12.sp),
                           ),
                         ),
@@ -242,9 +240,9 @@ class _EventFilterState extends State<EventFilter> {
                       children: [
                         Expanded(
                           child: Text(
-                            toDate == null
-                                ? "May 26, 2024"
-                                : DateFormat('MMM dd, yyyy').format(toDate!),
+                            controller.toDate.value == null
+                                ? "End Date"
+                                : DateFormat('MMM dd, yyyy').format( controller.toDate.value!),
                             style: GoogleFonts.dmSans(fontSize: 12.sp),
                           ),
                         ),
@@ -264,7 +262,7 @@ class _EventFilterState extends State<EventFilter> {
   Future<void> _pickFromDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: fromDate ?? DateTime.now(),
+      initialDate: controller.fromDate.value ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
 
@@ -283,10 +281,10 @@ class _EventFilterState extends State<EventFilter> {
 
     if (picked != null) {
       setState(() {
-        fromDate = picked;
+        controller.fromDate.value = picked;
 
-        if (toDate != null && toDate!.isBefore(picked)) {
-          toDate = null;
+        if (controller.toDate.value != null && controller.toDate.value!.isBefore(picked)) {
+          controller.toDate.value = null;
         }
       });
     }
@@ -295,8 +293,8 @@ class _EventFilterState extends State<EventFilter> {
   Future<void> _pickToDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: toDate ?? fromDate ?? DateTime.now(),
-      firstDate: fromDate ?? DateTime.now(),
+      initialDate: controller.toDate.value ?? controller.fromDate.value ?? DateTime.now(),
+      firstDate: controller.fromDate.value ?? DateTime.now(),
       lastDate: DateTime(2100),
 
       builder: (context, child) {
@@ -314,7 +312,7 @@ class _EventFilterState extends State<EventFilter> {
 
     if (picked != null) {
       setState(() {
-        toDate = picked;
+        controller.toDate.value = picked;
       });
     }
   }
@@ -322,28 +320,33 @@ class _EventFilterState extends State<EventFilter> {
   Widget _buildLocationFilter() {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        children: List.generate(locations.length, (index) {
-          final String city = locations[index];
+      child: Obx((){
+        if(controller.cityLoading.value){
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Column(
+          children: List.generate(controller.cityData.length, (index) {
+            final String city = controller.cityData[index];
 
-          return CheckboxListTile(
-            checkColor: AppColor.white,
-            hoverColor: AppColor.orangeColor,
-            activeColor: AppColor.minusColor,
-            value: selectedLocations.contains(city),
-            title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
-            controlAffinity: ListTileControlAffinity.leading,
-            onChanged: (value) {
-              setState(() {
-                if (value!) {
-                  selectedLocations.add(city);
-                } else {
-                  selectedLocations.remove(city);
-                }
-              });
-            },
-          );
-        }),
+            return CheckboxListTile(
+              checkColor: AppColor.white,
+              hoverColor: AppColor.orangeColor,
+              activeColor: AppColor.minusColor,
+              value: controller.selectedLocations.value.contains(city),
+              title: Text(city, style: GoogleFonts.dmSans(fontSize: 13.sp)),
+              controlAffinity: ListTileControlAffinity.leading,
+              onChanged: (value) {
+                setState(() {
+                  if (value!) {
+                    controller.selectedLocations.value.add(city);
+                  } else {
+                    controller.selectedLocations.value.remove(city);
+                  }
+                });
+              },
+            );
+          }),
+        );}
       ),
     );
   }
@@ -351,26 +354,26 @@ class _EventFilterState extends State<EventFilter> {
   void _resetAllFilters() {
     setState(() {
       _selectedCategory = 0;
-      fromDate = null;
-      toDate = null;
-      selectedLocations.clear();
+      controller.fromDate.value = null;
+      controller.toDate.value = null;
+      controller.selectedLocations.clear();
     });
   }
 
   void _applyFilters() {
-    if (fromDate != null && toDate != null && toDate!.isBefore(fromDate!)) {
+    if (controller.fromDate.value != null && controller.toDate.value != null && controller.toDate.value!.isBefore(controller.fromDate.value!)) {
       CommonToast.show( msg: "End date must be after start date");
       return;
     }
 
     final String? startDate =
-        fromDate != null ? DateFormat('yyyy-MM-dd').format(fromDate!) : null;
+        controller.fromDate.value != null ? DateFormat('yyyy-MM-dd').format(controller.fromDate.value!) : null;
 
     final String? endDate =
-        toDate != null ? DateFormat('yyyy-MM-dd').format(toDate!) : null;
+        controller.toDate.value != null ? DateFormat('yyyy-MM-dd').format(controller.toDate.value!) : null;
 
     final String? location =
-        selectedLocations.isNotEmpty ? selectedLocations.join(',') : null;
+        controller.selectedLocations.isNotEmpty ? controller.selectedLocations.join(',') : null;
 
     controller.getEventData(true, startDate: startDate, endDate: endDate, location: location,);
 

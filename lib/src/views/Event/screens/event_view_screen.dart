@@ -10,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 class EventViewScreen extends StatelessWidget {
   final String title;
   final String date;
@@ -17,7 +19,9 @@ class EventViewScreen extends StatelessWidget {
   final String image;
   final String city;
   final String area;
-final String description;
+  final String description;
+  final String mobile;
+  final String email;
 
   const EventViewScreen({
     super.key,
@@ -28,7 +32,35 @@ final String description;
     required this.city,
     required this.area,
     required this.description,
+    required this.mobile,
+    required this.email,
   });
+  Future<void> openMap(String city, String area) async {
+    final query = Uri.encodeComponent('$area, $city');
+    final url = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$query',
+    );
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> makeCall(String phone) async {
+    final url = Uri.parse('tel:$phone');
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
+  }
+
+  Future<void> sendEmail(String email) async {
+    final url = Uri.parse('mailto:$email');
+
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +153,7 @@ final String description;
                       ),
                       const SizedBox(height: 4),
                       Text(
-                      formatTime(time),
+                        formatTime(time),
                         style: GoogleFonts.dmSans(
                           fontSize: 12.sp,
                           color: Colors.grey,
@@ -171,18 +203,23 @@ final String description;
                     ),
                   ),
 
-                  Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColor.primary,
-                    ),
-                    child: Transform.rotate(
-                      angle: 160 * math.pi / 72,
-                      child: const Icon(
-                        Icons.navigation_rounded,
-                        color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      openMap(city, area);
+                    },
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColor.primary,
+                      ),
+                      child: Transform.rotate(
+                        angle: 160 * math.pi / 72,
+                        child: const Icon(
+                          Icons.navigation_rounded,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -202,12 +239,65 @@ final String description;
               SizedBox(height: screenHeight * 0.01),
 
               Text(
-             description,
+                description,
                 style: GoogleFonts.dmSans(
                   fontSize: 13.sp,
                   color: Colors.grey.shade700,
                   height: 1.5,
                 ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+
+              Text(
+                "Contact Details",
+                style: GoogleFonts.dmSans(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              SizedBox(height: screenHeight * 0.01),
+
+              Column(
+                spacing: 8,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      sendEmail(email);
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.mail),
+                        const SizedBox(width: 12),
+                        Text(
+                          email,
+                          style: GoogleFonts.dmSans(
+                            fontSize: 13.sp,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      makeCall(mobile);
+                    },
+                    child: Row(
+                      children: [
+                        const Icon(Icons.phone),
+                        const SizedBox(width: 12),
+                        Text(
+                          mobile,
+                          style: GoogleFonts.dmSans(
+                            fontSize: 13.sp,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
 
               SizedBox(height: screenHeight * 0.04),
@@ -217,9 +307,9 @@ final String description;
       ),
     );
   }
+
   String formatTime(String? time) {
     if (time == null || time.isEmpty) return '';
-    return DateFormat('hh:mm a')
-        .format(DateFormat('HH:mm:ss').parse(time));
+    return DateFormat('hh:mm a').format(DateFormat('HH:mm:ss').parse(time));
   }
 }

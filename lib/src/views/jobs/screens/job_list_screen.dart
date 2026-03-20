@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/jobs_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
@@ -29,32 +31,6 @@ class JobsScreen extends StatefulWidget {
 
 class _JobsScreenState extends State<JobsScreen> {
   JobsController controller = Get.find<JobsController>();
-
-  List<Map<String, dynamic>> jobList = [
-    {
-      "title": "UiUx Designer",
-      "subTitle": 'Aadaiz',
-      "jobDetails": ["Full Time", "Senior Level", "Remote"],
-      "time": "1 hours ago",
-      'isApplied': true,
-    },
-    {
-      "title": "Flutter Developer",
-      "subTitle": 'infosis',
-
-      "jobDetails": ["Full Time", "Mid Level", "Hybrid"],
-      "time": "3 hours ago",
-      'isApplied': false,
-    },
-    {
-      "title": "Backend Developer",
-      'subTitle': 'infosis',
-
-      "jobDetails": ["Part Time", "Senior Level", "Remote"],
-      "time": "5 hours ago",
-      'isApplied': true,
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +54,9 @@ class _JobsScreenState extends State<JobsScreen> {
             SearchField(
               hintText: "Search Jobs",
               showSuffix: true,
+              onChanged: (val) {
+                controller.getJobData(false, search: val);
+              },
               suffixWidget: InkWell(
                 onTap: () {
                   Get.to(
@@ -96,166 +75,228 @@ class _JobsScreenState extends State<JobsScreen> {
               ),
             ),
             SizedBox(height: screenHeight * 0.03),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(
-                  () => Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          controller.featureSelected.value = true;
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border:
-                                controller.featureSelected.value == true
-                                    ? Border.all(color: AppColor.primary)
-                                    : null,
-                          ),
-                          child: Text(
-                            "Recent Jobs",
-                            style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
-                              color:
-                                  controller.featureSelected.value
-                                      ? AppColor.black
-                                      : AppColor.textFieldLabelColor,
-                            ),
-                          ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                spacing: 5,
+
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Obx(
+                    () => SizedBox(
+                      width: screenWidth * 0.7,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _buildTab("Recent Jobs", "recent_jobs"),
+
+                            const SizedBox(width: 12),
+                            _buildTab("Our Jobs", "our_jobs"),
+                            const SizedBox(width: 12),
+                            _buildTab("Applied Jobs", "applied_jobs"),
+                            const SizedBox(width: 12),
+                            _buildTab("My Applicants", "my_job_applicants"),
+                          ],
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.07),
-                      InkWell(
-                        onTap: () {
-                          controller.featureSelected.value = false;
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border:
-                                controller.featureSelected.value == false
-                                    ? Border.all(color: AppColor.primary)
-                                    : null,
-                          ),
-                          child: Text(
-                            "Your Jobs",
-                            style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp,
-                              color:
-                                  controller.featureSelected.value == false
-                                      ? AppColor.black
-                                      : AppColor.textFieldLabelColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Get.to(
-                      () => const CreateJobScreen(),
-                      transition: Transition.rightToLeft,
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(7, 2, 3, 2),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: AppColor.primary),
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Hire',
-                          style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.sp,
-                            color: AppColor.primary,
-                          ),
-                        ),
-                        SizedBox(width: screenWidth * 0.015),
-                        Container(
-                          width: screenWidth * 0.06,
-                          height: screenWidth * 0.06,
+                  ),
 
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColor.primary,
+                  InkWell(
+                    onTap: () {
+                      Get.to(
+                        () => const CreateJobScreen(),
+                        transition: Transition.rightToLeft,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(7, 2, 3, 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: AppColor.primary),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Hire',
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.sp,
+                              color: AppColor.primary,
+                            ),
                           ),
-                          child: Center(
-                            child: Transform.rotate(
-                              angle: 160 * math.pi / 72,
+                          SizedBox(width: screenWidth * 0.015),
+                          Container(
+                            width: screenWidth * 0.06,
+                            height: screenWidth * 0.06,
 
-                              child: Icon(
-                                Icons.arrow_upward,
-                                color: AppColor.white,
-                                size: 13,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColor.primary,
+                            ),
+                            child: Center(
+                              child: Transform.rotate(
+                                angle: 160 * math.pi / 72,
+
+                                child: Icon(
+                                  Icons.arrow_upward,
+                                  color: AppColor.white,
+                                  size: 13,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(height: screenHeight * 0.03),
 
-              Obx(() {
-                return controller.featureSelected.value == true? Expanded(
-                  child: ListView.builder(
-                    itemCount: jobList.length,
-                    itemBuilder: (context, index) {
-                      final data = jobList[index];
-                      return JobsCard(
-                        onTap: (){
-                          Get.to(()=>const JobDetailScreen(),transition: Transition.rightToLeft,);
+            Obx(() {
+              if (controller.getJobListDataLoading.value) {
+                return const Expanded(child: ShimmerList());
+              }
 
-                        },
-                        title: data['title'],
-                        subTitle: data['subTitle'],
-                        time: data['time'],
-                        jobs: data['jobDetails'],
-                        isApplied: data['isApplied'],
-                      );
+              if (controller.jobListData.isEmpty) {
+                return const Expanded(
+                  child: Center(child: Text('No Data Found')),
+                );
+              }
+
+              return Expanded(
+                child: SmartRefresher(
+                  controller: controller.refreshController,
+                  enablePullDown: true,
+                  enablePullUp: true,
+                  onRefresh: () => controller.getJobData(true),
+                  onLoading: () => controller.getJobData(false),
+                  child: ListView.builder(
+                    itemCount: controller.jobListData.length,
+                    itemBuilder: (context, index) {
+                      final data = controller.jobListData[index];
+
+                      if (controller.selectedJobType.value == 'our_jobs') {
+                        return YourJobCard(
+                          title: data.jobTitle ?? '',
+                          subTitle: '',
+                          time: '',
+                          jobs: [
+                            _getJobType(data.jobType),
+                            data.qualification ?? '',
+                          ],
+                          isApplied: data.jobStatus ?? '',
+                          deleteOnTap: () {
+                            controller.deleteJob(data.id);
+                          },
+                          isLoading: controller.jobDeleteLoading.value,
+                        );
+                      } else if (controller.selectedJobType.value ==
+                          'recent_jobs') {
+                        return JobsCard(
+                          onTap: () {
+                            Get.to(
+                              () => const JobDetailScreen(),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          title: data.jobTitle ?? '',
+                          subTitle: '',
+                          time: '',
+                          jobs: [
+                            _getJobType(data.jobType),
+                            data.qualification ?? '',
+                          ],
+                          isApplied: false,
+                        );
+                      } else if (controller.selectedJobType.value ==
+                          'applied_jobs') {
+                        return AppliedJobCard(
+                          title: data.jobTitle ?? '',
+                          company: data.user?.username ?? '',
+                          time: '',
+                          jobs: [
+                            _getJobType(data.jobType),
+                            data.qualification ?? '',
+                          ],
+                          status: data.jobStatus ?? 'applied',
+                          onTap: () {
+                            Get.to(
+                              () => const JobDetailScreen(),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                        );
+                      } else if (controller.selectedJobType.value ==
+                          'my_job_applicants') {
+                        return ApplicantCard(
+                          name: data.user?.username ?? 'User',
+                          role: data.jobTitle ?? '',
+                          time: '',
+                          skills: [...?data.jobSkill?.map((e) => e.name ?? '')],
+                          onAccept: () {},
+                          onReject: () {},
+                        );
+                      }
+
+                      return const SizedBox.shrink();
                     },
                   ),
-                ):const SizedBox.shrink();
-              }),
-            Obx(() {
-              return controller.featureSelected.value == false? Expanded(
-                child: ListView.builder(
-                  itemCount: jobList.length,
-                  itemBuilder: (context, index) {
-                    final data = jobList[index];
-                    return YourJobCard(
-                      title: data['title'],
-                      subTitle: data['subTitle'],
-                      time: data['time'],
-                      jobs: data['jobDetails'],
-                      isApplied: data['isApplied'],
-                    );
-                  },
                 ),
-              ):const SizedBox.shrink();
+              );
             }),
           ],
+        ),
+      ),
+    );
+  }
+
+  String _getJobType(String? type) {
+    switch (type) {
+      case 'full_time':
+        return 'Full Time';
+      case 'part_time':
+        return 'Part Time';
+      case 'internship':
+        return 'Internship';
+      case 'remote':
+        return 'Remote';
+      default:
+        return '';
+    }
+  }
+
+  Widget _buildTab(String title, String value) {
+    return InkWell(
+      onTap: () {
+        controller.selectedJobType.value = value;
+        controller.getJobData(true);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border:
+              controller.selectedJobType.value == value
+                  ? Border.all(color: AppColor.primary)
+                  : null,
+        ),
+        child: Text(
+          title,
+          style: GoogleFonts.dmSans(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.sp,
+            color:
+                controller.selectedJobType.value == value
+                    ? AppColor.black
+                    : AppColor.textFieldLabelColor,
+          ),
         ),
       ),
     );

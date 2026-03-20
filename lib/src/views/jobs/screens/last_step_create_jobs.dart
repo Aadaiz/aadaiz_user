@@ -11,8 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-class LastStepCreateJob extends StatefulWidget {
 
+class LastStepCreateJob extends StatefulWidget {
   LastStepCreateJob({super.key});
 
   @override
@@ -51,8 +51,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .02),
             Obx(
-                  () => CheckboxListTile(
-                    activeColor: AppColor.minusColor,
+              () => CheckboxListTile(
+                activeColor: AppColor.minusColor,
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: EdgeInsets.zero,
                 value: controller.onlyFreshers.value,
@@ -65,7 +65,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .02),
             Obx(
-                  () => AbsorbPointer(
+              () => AbsorbPointer(
                 absorbing: controller.onlyFreshers.value,
                 child: Opacity(
                   opacity: controller.onlyFreshers.value ? 0.3 : 1.0,
@@ -78,7 +78,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .01),
             Obx(
-                  () => AbsorbPointer(
+              () => AbsorbPointer(
                 absorbing: controller.onlyFreshers.value,
                 child: Opacity(
                   opacity: controller.onlyFreshers.value ? 0.3 : 1.0,
@@ -86,6 +86,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     children: [
                       Expanded(
                         child: CommonTextFieldTwo(
+                          keyboardType: TextInputType.number,
                           hintName: "Min Exp",
                           controller: controller.minExpController,
                         ),
@@ -93,6 +94,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: CommonTextFieldTwo(
+                          keyboardType: TextInputType.number,
                           hintName: "Max Exp",
                           controller: controller.maxExpController,
                         ),
@@ -114,6 +116,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   child: CommonTextFieldTwo(
                     hintName: "₹10,000",
                     controller: controller.minSalaryController,
+                    keyboardType: TextInputType.number,
                   ),
                 ),
                 const Padding(
@@ -124,6 +127,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   child: CommonTextFieldTwo(
                     hintName: "₹15,000",
                     controller: controller.maxSalaryController,
+                    keyboardType: TextInputType.number,
+
                   ),
                 ),
               ],
@@ -135,61 +140,75 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .018),
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: List.generate(
                   controller.benefits.length,
-                      (index) => _chip(
+                  (index) => _chip(
                     controller.benefits[index],
                     controller.benefitSelected[index],
-                        () => controller.toggleBenefit(index),
+                    () {
+                      controller.toggleBenefit(index);
+                      controller.selectedJobBenefits.value =
+                          controller.benefits
+                              .where(
+                                (element) =>
+                                    controller.benefitSelected[controller
+                                        .benefits
+                                        .indexOf(element)],
+                              )
+                              .toList();
+                    },
                   ),
                 ),
               ),
             ),
-            if(controller.benefits.isNotEmpty)
-            SizedBox(height: height * .01),
+            if (controller.benefits.isNotEmpty) SizedBox(height: height * .01),
             InkWell(
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                    backgroundColor: Colors.white,
-                    content: SizedBox(
-                      height: height * .15,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CommonTextFieldTwo(
-                            hintName: "Add Other Benefits That You Expect",
-                            controller: controller.benefitsController,
+                  builder:
+                      (context) => AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        backgroundColor: Colors.white,
+                        content: SizedBox(
+                          height: height * .15,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CommonTextFieldTwo(
+                                hintName: "Add Other Benefits That You Expect",
+                                controller: controller.benefitsController,
+                              ),
+                              SizedBox(height: height * .01),
+                              CommonButton(
+                                press: () {
+                                  if (controller
+                                      .benefitsController
+                                      .text
+                                      .isEmpty) {
+                                    CommonToast.show(msg: 'Add Something');
+                                    return;
+                                  }
+                                  controller.benefits.add(
+                                    controller.benefitsController.text,
+                                  );
+                                  controller.benefitSelected.add(false);
+                                  controller.benefitsController.clear();
+                                  Get.back();
+                                },
+                                text: "Click to Add",
+                                borderRadius: 0.0,
+                                height: height * .045,
+                              ),
+                            ],
                           ),
-                          SizedBox(height: height * .01),
-                          CommonButton(
-                            press: () {
-                              if (controller.benefitsController.text.isEmpty) {
-                                CommonToast.show(msg: 'Add Something');
-                                return;
-                              }
-                              controller.benefits.add(
-                                controller.benefitsController.text,
-                              );
-                              controller.benefitSelected.add(false);
-                              controller.benefitsController.clear();
-                              Get.back();
-                            },
-                            text: "Click to Add",
-                            borderRadius: 0.0,
-                            height: height * .045,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                 );
               },
               child: Container(
@@ -215,65 +234,77 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .018),
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: List.generate(
                   controller.skills.length,
-                      (index) => _chip(
+                  (index) => _chip(
                     controller.skills[index],
                     controller.skillSelected[index],
-                        () {
+                    () {
                       controller.skillSelected[index] =
-                      !controller.skillSelected[index];
+                          !controller.skillSelected[index];
+
                       controller.skillSelected.refresh();
+                      controller.selectedJobSkills.value =
+                          controller.skills
+                              .where(
+                                (element) =>
+                                    controller.skillSelected[controller.skills
+                                        .indexOf(element)],
+                              )
+                              .toList();
                     },
                   ),
                 ),
               ),
             ),
-            if(controller.skills.isNotEmpty)
-            SizedBox(height: height * .01),
+            if (controller.skills.isNotEmpty) SizedBox(height: height * .01),
             InkWell(
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                    backgroundColor: Colors.white,
-                    content: SizedBox(
-                      height: height * .15,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CommonTextFieldTwo(
-                            hintName: "Add Other Job Skill That You Expect",
-                            controller: controller.skillsController,
+                  builder:
+                      (context) => AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        backgroundColor: Colors.white,
+                        content: SizedBox(
+                          height: height * .15,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CommonTextFieldTwo(
+                                hintName: "Add Other Job Skill That You Expect",
+                                controller: controller.skillsController,
+                              ),
+                              SizedBox(height: height * .01),
+                              CommonButton(
+                                press: () {
+                                  if (controller
+                                      .skillsController
+                                      .text
+                                      .isEmpty) {
+                                    CommonToast.show(msg: 'Add Something');
+                                    return;
+                                  }
+                                  controller.skills.add(
+                                    controller.skillsController.text,
+                                  );
+                                  controller.skillSelected.add(false);
+                                  controller.skillsController.clear();
+                                  Get.back();
+                                },
+                                text: "Click to Add",
+                                borderRadius: 0.0,
+                                height: height * .045,
+                              ),
+                            ],
                           ),
-                          SizedBox(height: height * .01),
-                          CommonButton(
-                            press: () {
-                              if (controller.skillsController.text.isEmpty) {
-                                CommonToast.show(msg: 'Add Something');
-                                return;
-                              }
-                              controller.skills.add(
-                                controller.skillsController.text,
-                              );
-                              controller.skillSelected.add(false);
-                              controller.skillsController.clear();
-                              Get.back();
-                            },
-                            text: "Click to Add",
-                            borderRadius: 0.0,
-                            height: height * .045,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                 );
               },
               child: Container(
@@ -299,8 +330,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
 
             Obx(
-                  () => ListView.builder(
-                    padding: EdgeInsets.only(top: 0),
+              () => ListView.builder(
+                padding: EdgeInsets.only(top: 0),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.otherRequirement.length,
@@ -325,6 +356,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
               controller: controller.requirementController,
               suffixIcon: InkWell(
                 onTap: () {
+                  FocusScope.of(context).unfocus();
+
                   if (controller.requirementController.text.isNotEmpty) {
                     controller.otherRequirement.add(
                       controller.requirementController.text,
@@ -387,15 +420,26 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .01),
             Obx(
-                  () => Wrap(
+              () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: List.generate(
                   controller.workingDays.length,
-                      (index) => _chip(
+                  (index) => _chip(
                     controller.workingDays[index],
                     controller.workingDayIndex.value == index,
-                        () => controller.setWorkingDay(index),
+                    () {
+                      controller.setWorkingDay(index);
+                      controller.selectedWorkingDays.value =
+                          controller.workingDays
+                              .where(
+                                (element) =>
+                                    controller.workingDaySelected[controller
+                                        .workingDays
+                                        .indexOf(element)],
+                              )
+                              .toList();
+                    },
                   ),
                 ),
               ),
@@ -405,42 +449,46 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    ),
-                    backgroundColor: Colors.white,
-                    content: SizedBox(
-                      height: height * .15,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CommonTextFieldTwo(
-                            hintName: "Add Other Working Days",
-                            controller: controller.workingDaysController,
+                  builder:
+                      (context) => AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        ),
+                        backgroundColor: Colors.white,
+                        content: SizedBox(
+                          height: height * .15,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CommonTextFieldTwo(
+                                hintName: "Add Other Working Days",
+                                controller: controller.workingDaysController,
+                              ),
+                              SizedBox(height: height * .01),
+                              CommonButton(
+                                press: () {
+                                  if (controller
+                                      .workingDaysController
+                                      .text
+                                      .isEmpty) {
+                                    CommonToast.show(msg: 'Add Something');
+                                    return;
+                                  }
+                                  controller.workingDays.add(
+                                    controller.workingDaysController.text,
+                                  );
+                                  controller.workingDaySelected.add(false);
+                                  controller.workingDaysController.clear();
+                                  Get.back();
+                                },
+                                text: "Click to Add",
+                                borderRadius: 0.0,
+                                height: height * .045,
+                              ),
+                            ],
                           ),
-                          SizedBox(height: height * .01),
-                          CommonButton(
-                            press: () {
-                              if (controller.workingDaysController.text.isEmpty) {
-                                CommonToast.show(msg: 'Add Something');
-                                return;
-                              }
-                              controller.workingDays.add(
-                                controller.workingDaysController.text,
-                              );
-                              controller.workingDaySelected.add(false);
-                              controller.workingDaysController.clear();
-                              Get.back();
-                            },
-                            text: "Click to Add",
-                            borderRadius: 0.0,
-                            height: height * .045,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                 );
               },
               child: Container(
@@ -461,7 +509,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
             ),
             SizedBox(height: height * .02),
             Obx(
-                  () => Row(
+              () => Row(
                 children: [
                   Checkbox(
                     activeColor: AppColor.minusColor,
@@ -472,7 +520,9 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        controller.hrNumber.text.isEmpty
+                        (controller.hrNumber.text.isEmpty &&
+                                controller.contactFrom.text.isEmpty &&
+                                controller.contactTo.text.isEmpty)
                             ? "Allow Candidates To Call Between\n10:00 AM – 7:00 PM on +91 0123456789"
                             : "Allow Candidates To Call Between\n${controller.contactFrom.text} – ${controller.contactTo.text} on ${controller.hrNumber.text}",
                         style: GoogleFonts.dmSans(fontSize: 12.sp),
@@ -494,11 +544,70 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
               ),
             ),
             SizedBox(height: height * .03),
-            CommonButton(
-              press: () {},
-              text: "Post This Job",
-              borderRadius: 0.0,
-              height: height * .045,
+            Obx(()=>
+              CommonButton(
+                loading: controller.createJobLoading.value,
+                press: () {
+                  if (!controller.onlyFreshers.value) {
+                    if (controller.minExpController.text.isEmpty ||
+                        controller.maxExpController.text.isEmpty) {
+                      CommonToast.show(msg: 'Add Experience');
+                      return;
+                    }
+
+                    final minExp = int.tryParse(controller.minExpController.text) ?? 0;
+                    final maxExp = int.tryParse(controller.maxExpController.text) ?? 0;
+
+                    if (minExp > maxExp) {
+                      CommonToast.show(msg: 'Min Exp should be less than Max Exp');
+                      return;
+                    }
+                  }
+
+                  if (controller.minSalaryController.text.isEmpty ||
+                      controller.maxSalaryController.text.isEmpty) {
+                    CommonToast.show(msg: 'Add Salary');
+                    return;
+                  }
+
+                  final minSalary = int.tryParse(controller.minSalaryController.text) ?? 0;
+                  final maxSalary = int.tryParse(controller.maxSalaryController.text) ?? 0;
+
+                  if (minSalary > maxSalary) {
+                    CommonToast.show(msg: 'Min Salary should be less than Max Salary');
+                    return;
+                  }
+                  if (controller.selectedJobBenefits.isEmpty) {
+                    CommonToast.show(msg: 'Add Benefits');
+                    return;   }
+                  if (controller.selectedJobSkills.isEmpty) {
+                    CommonToast.show(msg: 'Add Skills');
+                    return;
+                  }
+                  if(controller.otherRequirement.isEmpty) {
+                    CommonToast.show(msg: 'Add Requirements');
+                    return;
+                  }
+                  if (controller.from.text.isEmpty ||
+                      controller.to.text.isEmpty) {
+                    CommonToast.show(msg: 'Add Time');
+                    return;
+                  }
+
+                  if (controller.workingDayIndex.value == -1) {
+                    CommonToast.show(msg: 'Add Working Days');
+                    return;
+                  }
+                  if (controller.communicationPref.value == false) {
+                    CommonToast.show(msg: 'Check Communication Pref');
+                    return;
+                  }
+                  controller.createJob();
+                },
+                text: "Post This Job",
+                borderRadius: 0.0,
+                height: height * .045,
+              ),
             ),
             SizedBox(height: height * .04),
           ],
@@ -555,7 +664,10 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
   Future<void> _pickToTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: controller.toTime.value ?? controller.fromTime.value ?? TimeOfDay.now(),
+      initialTime:
+          controller.toTime.value ??
+          controller.fromTime.value ??
+          TimeOfDay.now(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -601,79 +713,77 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
   void _showContactDialog(BuildContext context, double height) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        ),
-        backgroundColor: Colors.white,
-        content: SizedBox(
-          height: height * .32,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Call Between Timings",
-                style: GoogleFonts.dmSans(fontWeight: FontWeight.w500),
-              ),
-              SizedBox(height: height * .01),
-              Row(
+      builder:
+          (context) => AlertDialog(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            ),
+            backgroundColor: Colors.white,
+            content: SizedBox(
+              height: height * .32,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: CommonTextFieldTwo(
-                      readOnly: true,
-                      controller: controller.contactFrom,
-                      hintName: "09:00 AM",
-                      onTap: () => _contactPickFromTime(context),
-                    ),
+                  Text(
+                    "Call Between Timings",
+                    style: GoogleFonts.dmSans(fontWeight: FontWeight.w500),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("To"),
+                  SizedBox(height: height * .01),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldTwo(
+                          readOnly: true,
+                          controller: controller.contactFrom,
+                          hintName: "09:00 AM",
+                          onTap: () => _contactPickFromTime(context),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text("To"),
+                      ),
+                      Expanded(
+                        child: CommonTextFieldTwo(
+                          readOnly: true,
+                          controller: controller.contactTo,
+                          hintName: "06:00 PM",
+                          onTap: () => _contactPickToTime(context),
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: CommonTextFieldTwo(
-                      readOnly: true,
-                      controller: controller.contactTo,
-                      hintName: "06:00 PM",
-                      onTap: () => _contactPickToTime(context),
-                    ),
+                  SizedBox(height: height * .01),
+                  CommonTextFieldTwo(
+                    hintName: "Enter Contact Number",
+                    controller: controller.hrNumber,
+                    keyboardType: TextInputType.phone,
+                    maxLength: 10,
+                  ),
+                  SizedBox(height: height * .015),
+                  CommonButton(
+                    press: () {
+                      if (controller.hrNumber.text.isEmpty) {
+                        CommonToast.show(msg: 'Add Number');
+                        return;
+                      }
+                      if (controller.contactFrom.text.isEmpty ||
+                          controller.contactTo.text.isEmpty) {
+                        CommonToast.show(msg: 'Add Time');
+                        return;
+                      }
+                      setState(() {});
+                      Get.back();
+                    },
+                    text: "Click to Add",
+                    borderRadius: 0.0,
+                    height: height * .045,
                   ),
                 ],
               ),
-              SizedBox(height: height * .01),
-              CommonTextFieldTwo(
-                hintName: "Enter Contact Number",
-                controller: controller.hrNumber,
-                keyboardType: TextInputType.phone,
-                maxLength: 10,
-
-              ),
-              SizedBox(height: height * .015),
-              CommonButton(
-                press: () {
-                  if (controller.hrNumber.text.isEmpty) {
-                    CommonToast.show(msg: 'Add Number');
-                    return;
-                  }
-                  if (controller.contactFrom.text.isEmpty ||
-                      controller.contactTo.text.isEmpty) {
-                    CommonToast.show(msg: 'Add Time');
-                    return;
-                  }
-                  setState(() {
-
-                  });
-                  Get.back();
-                },
-                text: "Click to Add",
-                borderRadius: 0.0,
-                height: height * .045,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -725,7 +835,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
   Future<void> _contactPickToTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: controller.contactToTime.value ??
+      initialTime:
+          controller.contactToTime.value ??
           controller.contactFromTime.value ??
           TimeOfDay.now(),
       builder: (context, child) {

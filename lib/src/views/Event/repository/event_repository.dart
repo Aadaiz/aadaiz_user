@@ -8,14 +8,13 @@ class EventRepository {
   static final HttpHelper _http = HttpHelper();
 
   Future<EventRes> getEventData(
-      String token,
-      int page, {
-        String? startDate,
-        String? endDate,
-        String? location,
-        String? search,
-      }) async {
-
+    String token,
+    int page, {
+    String? startDate,
+    String? endDate,
+    String? location,
+    String? search,
+  }) async {
     final Map<String, String> queryParams = {
       "token": token,
       "page": page.toString(),
@@ -34,12 +33,22 @@ class EventRepository {
       queryParams["event_name"] = search.toLowerCase();
     }
 
-    final uri = Uri.parse(Api.getEventData).replace(queryParameters: queryParams);
+    final uri = Uri.parse(
+      Api.getEventData,
+    ).replace(queryParameters: queryParams);
 
     final res = await _http.get(uri.toString());
 
     final EventRes response = EventRes.fromJson(res);
     return response;
   }
-}
 
+  Future<Map<String, dynamic>> getCities(String token) async {
+    final res = await _http.get("${Api.eventCity}?token=$token");
+    return jsonDecode(res);
+  }
+  Future<Map<String, dynamic>> deleteEvent(String token,int id) async {
+    final res = await _http.post("${Api.deleteEvent}/$id?token=$token", null);
+    return jsonDecode(res);
+  }
+}

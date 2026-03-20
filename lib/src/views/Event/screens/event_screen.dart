@@ -240,49 +240,58 @@ class _EventScreenState extends State<EventScreen> {
                                 city: data.eventCity ?? '',
                                 area: data.eventArea ?? '',
                                 description: data.aboutEvent ?? '',
+                                mobile: data.eventMobileNumber ?? '',
+                                email: data.eventEmail ?? '',
                               ),
                               transition: Transition.rightToLeft,
                             );
                           },
                         );
                       } else {
-                        return YourEventCard(
-                          title: data.eventName ?? '',
-                          date:
-                              data.startDate != null
-                                  ? DateFormat(
-                                    'dd MMM yyyy',
-                                  ).format(data.startDate!)
-                                  : '',
-                          time: data.startTime ?? '',
-                          image: data.eventImage ?? '',
-                          status: data.eventStatus ?? '',
-                          onEdit: () {
-                            Get.to(
-                              () =>  CreateEventScreen(isEdit: true,data: data),
-                              transition: Transition.rightToLeft,
-                            );
-                          },
-                          onDelete: () {},
-                          ontap: () {
-                            Get.to(
-                              () => EventViewScreen(
-                                title: data.eventName ?? '',
-                                date:
-                                    data.startDate != null
-                                        ? DateFormat(
-                                          'dd MMM yyyy',
-                                        ).format(data.startDate!)
-                                        : '',
-                                time: data.startTime ?? '',
-                                image: data.eventImage ?? '',
-                                city: data.eventCity ?? '',
-                                area: data.eventArea ?? '',
-                                description: data.aboutEvent ?? '',
-                              ),
-                              transition: Transition.rightToLeft,
-                            );
-                          },
+                        return Obx((){
+                       return YourEventCard(
+                         editLoading: controller.eventDeleteLoading.value,
+                            title: data.eventName ?? '',
+                            date:
+                                data.startDate != null
+                                    ? DateFormat(
+                                      'dd MMM yyyy',
+                                    ).format(data.startDate!)
+                                    : '',
+                            time: data.startTime ?? '',
+                            image: data.eventImage ?? '',
+                            status: data.eventStatus ?? '',
+                            onEdit: () {
+                              Get.to(
+                                () =>  CreateEventScreen(isEdit: true,data: data),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                            onDelete: () {
+                              controller.deleteEvent(data.id!);
+                            },
+                            ontap: () {
+                              Get.to(
+                                () => EventViewScreen(
+                                  title: data.eventName ?? '',
+                                  date:
+                                      data.startDate != null
+                                          ? DateFormat(
+                                            'dd MMM yyyy',
+                                          ).format(data.startDate!)
+                                          : '',
+                                  time: data.startTime ?? '',
+                                  image: data.eventImage ?? '',
+                                  city: data.eventCity ?? '',
+                                  area: data.eventArea ?? '',
+                                  description: data.aboutEvent ?? '',
+                                  mobile: data.eventMobileNumber ?? '',
+                                  email: data.eventEmail ?? '',
+                                ),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                          );}
                         );
                       }
                     },

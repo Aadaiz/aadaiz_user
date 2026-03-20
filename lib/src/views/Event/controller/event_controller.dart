@@ -38,11 +38,16 @@ class EventController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   Rx<TimeOfDay?> fromTime = Rx<TimeOfDay?>(null);
   Rx<TimeOfDay?> toTime = Rx<TimeOfDay?>(null);
+  Rx<DateTime?> fromDate = Rx<DateTime?>(null);
+  Rx<DateTime?> toDate = Rx<DateTime?>(null);
+  RxList<dynamic> selectedLocations = [].obs;
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
     getEventData(true);
+    getCities();
   }
 
   Future<void> showDialogImage(context, {required int picture}) {
@@ -156,6 +161,26 @@ class EventController extends GetxController {
     );
   }
 
+  var cityLoading = false.obs;
+  var cityData = [].obs;
+
+  Future<void> getCities() async {
+    try {
+      cityLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final res = await _repository.getCities(token!);
+      if (res['status'] == true) {
+        cityData.value = res['data'];
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+    } finally {
+      cityLoading.value = false;
+    }
+  }
+
   Rx<File?> image1 = Rx<File?>(null);
   Future<void> openCamera({required bool camera, required int picture}) async {
     Get.back();
@@ -174,7 +199,7 @@ class EventController extends GetxController {
   }
 
   var createEventLoading = false.obs;
-  Future<void> createEvent() async {
+  Future<void> createEvent(bool? isEdit, dynamic id) async {
     try {
       createEventLoading.value = true;
 
@@ -191,7 +216,9 @@ class EventController extends GetxController {
 
       final endTime = DateFormat('hh:mm a').parse(endTimeController.text);
 
-      final uri = Uri.parse(Api.createEvent);
+      final uri = Uri.parse(
+        isEdit == true ? "${Api.updateEvent}/$id" : Api.createEvent,
+      );
 
       final request = http.MultipartRequest('POST', uri);
 
@@ -245,12 +272,12 @@ class EventController extends GetxController {
   RefreshController refreshController = RefreshController();
   var eventData = <Datum>[].obs;
   Future<void> getEventData(
-      bool? isRefresh,
-  { String? startDate,
-      String? endDate,
-      String? location,
-      String? search,}
-      ) async {
+    bool? isRefresh, {
+    String? startDate,
+    String? endDate,
+    String? location,
+    String? search,
+  }) async {
     try {
       if (isRefresh == true) {
         currentPage.value = 1;
@@ -309,6 +336,25 @@ class EventController extends GetxController {
         getEventDataLoading.value = false;
       }
       refreshController.refreshCompleted();
+    }
+  }
+
+  var eventDeleteLoading = false.obs;
+  Future<void> deleteEvent(dynamic id) async {
+    try {
+      eventDeleteLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final res = await _repository.deleteEvent(token!, id);
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+        await getEventData(false);
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+    } finally {
+      eventDeleteLoading.value = false;
     }
   }
 

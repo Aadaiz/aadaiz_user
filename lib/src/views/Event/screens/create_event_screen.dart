@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_textfiled_two.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
@@ -10,6 +11,7 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/model/event_model.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -43,41 +45,54 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     Future.delayed(const Duration(milliseconds: 500), () async {
       countries = await csc.getAllCountries();
     });
+
     if (widget.isEdit == true) {
       controller.eventNameController.text = widget.data!.eventName ?? '';
       controller.eventDescriptionController.text =
           widget.data!.aboutEvent ?? '';
-      controller.startDateController.text = widget.data!.startDate != null
-          ? DateFormat(
-            'MMM dd, yyyy',
-          ).format(widget.data!.startDate!)
-          : '';
-      controller.endDateController.text = widget.data!.endDate != null
-          ? DateFormat(
-            'MMM dd, yyyy').format(widget.data!.endDate!)
-          : '';
-      controller.startTimeController.text = widget.data!.startTime ?? '';
-      controller.endTimeController.text = widget.data!.endTime ?? '';
+      controller.startDateController.text =
+          widget.data!.startDate != null
+              ? DateFormat('MMM dd, yyyy').format(widget.data!.startDate!)
+              : '';
+      controller.endDateController.text =
+          widget.data!.endDate != null
+              ? DateFormat('MMM dd, yyyy').format(widget.data!.endDate!)
+              : '';
+      controller.startTimeController.text =
+          widget.data!.startTime != null
+              ? DateFormat(
+                'hh:mm a',
+              ).format(DateFormat('HH:mm:ss').parse(widget.data!.startTime!))
+              : '';
+
+      controller.endTimeController.text =
+          widget.data!.endTime != null
+              ? DateFormat(
+                'hh:mm a',
+              ).format(DateFormat('HH:mm:ss').parse(widget.data!.endTime!))
+              : '';
+
       controller.countryController.text = widget.data!.eventCountry ?? '';
       controller.stateController.text = widget.data!.eventState ?? '';
       controller.cityController.text = widget.data!.eventCity ?? '';
       controller.areaController.text = widget.data!.eventArea ?? '';
-      controller.pincodeController.text = widget.data!.eventPincode??'';
+      controller.pincodeController.text = widget.data!.eventPincode ?? '';
       controller.emailController.text = widget.data!.eventEmail ?? '';
       controller.mobileController.text = widget.data!.eventMobileNumber ?? '';
       // controller.image1.value = widget.data!.eventImage;
-
-
-
     } else {
       controller.clearAllFields();
     }
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = Utils.getActivityScreenWidth(context);
     final screenHeight = Utils.getActivityScreenHeight(context);
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -245,69 +260,50 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 const Gap(16),
                                 SizedBox(
                                   height: Get.width * 0.68,
-                                  child:
-                                      countries.isEmpty
-                                          ? const Text('No countries found')
-                                          : ListView.separated(
-                                            separatorBuilder:
-                                                (context, index) =>
-                                                    const Divider(),
-                                            shrinkWrap: true,
-                                            physics:
-                                                const AlwaysScrollableScrollPhysics(),
-                                            itemCount: countries.length,
-                                            itemBuilder: (context, index) {
-                                              final data = countries[index];
-                                              return InkWell(
-                                                onTap: () async {
-                                                  Get.back();
-                                                  controller
-                                                      .countryController
-                                                      .text = data.name ?? '';
-                                                  countryCode = data.isoCode;
-                                                  states.clear();
-                                                  cities.clear();
-                                                  controller.stateController
-                                                      .clear();
-                                                  controller.cityController
-                                                      .clear();
+                                  child: countries.isEmpty
+                                      ? const Text('No countries found')
+                                      : Expanded(
+                                        child: ListView.separated(
+                                          itemCount: countries.length,
+                                          separatorBuilder: (context, index) => const Divider(),
+                                          itemBuilder: (context, index) {
+                                            final data = countries[index];
 
-                                                  states = await csc
-                                                      .getStatesOfCountry(
-                                                        data.isoCode,
-                                                      );
-                                                },
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                        left: 16,
-                                                        bottom: 8,
-                                                      ),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          '${data.name}',
-                                                          style: GoogleFonts.poppins(
-                                                            textStyle: TextStyle(
-                                                              fontSize: 16,
-                                                              color:
-                                                                  AppColor
-                                                                      .black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                            ),
-                                                          ),
+                                            return InkWell(
+                                              onTap: () async {
+                                                Get.back();
+                                                controller.countryController.text = data.name ?? '';
+                                                countryCode = data.isoCode;
+
+                                                states.clear();
+                                                cities.clear();
+                                                controller.stateController.clear();
+                                                controller.cityController.clear();
+
+                                                states = await csc.getStatesOfCountry(data.isoCode);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(left: 16, bottom: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '${data.name}',
+                                                        style: GoogleFonts.poppins(
+                                                          fontSize: 16,
+                                                          color: AppColor.black,
+                                                          fontWeight: FontWeight.w400,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              );
-                                            },
-                                          ),
-                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                )
                               ],
                             ),
                           ),
@@ -585,6 +581,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   children: [
                     GestureDetector(
                       onTap: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
+
+                        await Future.delayed(const Duration(milliseconds: 100));
+
                         await controller.showDialogImage(context, picture: 1);
 
                         if (controller.image1.value != null) {
@@ -604,7 +604,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          "Select Files",
+                          widget.isEdit ? 'Change File' : "Select File",
                           style: TextStyle(
                             color: AppColor.black,
                             fontSize: 14,
@@ -614,6 +614,42 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.01),
+
+                    Obx(() {
+                      return (controller.image1.value == null && widget.isEdit)
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              height: screenHeight * 0.2,
+                              width: screenWidth,
+                              fit: BoxFit.cover,
+                              errorWidget:
+                                  (context, url, error) => Container(
+                                    width: screenWidth,
+                                    color: Colors.black,
+                                  ),
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => Container(
+                                    height: screenHeight * 0.2,
+                                    color: Colors.black,
+                                    width: screenWidth,
+                                    child: Center(
+                                      child: Transform.scale(
+                                        scale: 0.5,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.grey,
+                                          strokeWidth: 2,
+                                          value: progress.progress,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              imageUrl: widget.data!.eventImage.toString(),
+                            ),
+                          )
+                          : const SizedBox.shrink();
+                    }),
+
                     if (controller.image1.value != null)
                       Divider(color: Colors.grey.withAlpha(76)),
                     Obx(() {
@@ -662,7 +698,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   press: () {
                     validateFields();
                   },
-                  text: 'Create Event',
+                  text: widget.isEdit ? 'Update Event' : 'Create Event',
                   borderRadius: 0.0,
                   height: screenHeight * 0.045,
                 ),
@@ -703,9 +739,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     } else if (controller.mobileController.text.isEmpty) {
       CommonToast.show(msg: 'Please enter mobile number');
     } else if (controller.image1.value == null) {
-      CommonToast.show(msg: 'Please select attachment');
+      if (widget.isEdit == false) {
+        CommonToast.show(msg: 'Please select attachment');
+      } else {
+        controller.createEvent(widget.isEdit, widget.data!.id);
+      }
     } else {
-      controller.createEvent();
+      controller.createEvent(widget.isEdit, widget.data!.id);
     }
   }
 

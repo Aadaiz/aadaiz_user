@@ -89,7 +89,10 @@ class CommonTextFieldTwo extends StatelessWidget {
           SizedBox(
             height: maxLines == 1 ? screenHeight * 0.067 : null,
             child: TextFormField(
-              onTap: onTap,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                if (onTap != null) onTap!();
+              },
 
               controller: controller,
               focusNode: focusNode,
