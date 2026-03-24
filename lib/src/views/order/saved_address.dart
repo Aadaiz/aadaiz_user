@@ -1,17 +1,15 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/checkout.dart';
 import 'package:aadaiz_customer_crm/src/views/order/new_address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../res/widgets/common_app_bar.dart';
-import '../home/controller/home_controller.dart';
 
 class SavedAddress extends StatefulWidget {
   const SavedAddress({super.key});
@@ -52,7 +50,7 @@ class _SavedAddressState extends State<SavedAddress> {
                 : ListView.builder(
                   itemCount: HomeController.to.addressList.length,
                   itemBuilder: (context, index) {
-                    var data = HomeController.to.addressList[index];
+                    final data = HomeController.to.addressList[index];
                     return InkWell(
                       onTap: () {
                         Navigator.push(
@@ -135,11 +133,10 @@ class _SavedAddressState extends State<SavedAddress> {
                                   child: Checkbox(
                                     //checkColor: appcolor,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(3.0),
+                                      borderRadius: BorderRadius.circular(3),
                                     ),
-                                    side: MaterialStateBorderSide.resolveWith(
+                                    side: WidgetStateBorderSide.resolveWith(
                                       (states) => const BorderSide(
-                                        width: 1,
                                         color: Color(0xffBCB5B5),
                                       ),
                                     ),

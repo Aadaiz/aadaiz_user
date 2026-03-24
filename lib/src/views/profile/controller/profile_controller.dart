@@ -2,20 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/model/profile_model.dart' as profile;
+import 'package:aadaiz_customer_crm/src/views/profile/model/profile_model.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart'as support;
-import 'package:flutter/cupertino.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/repository/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../utils/colors.dart';
-import '../model/profile_model.dart';
-
-import '../model/profile_model.dart' as profile;
-import '../repository/profile_repository.dart';
 class ProfileController extends GetxController{
   static ProfileController get to => Get.put(ProfileController());
   var repo = ProfileRepository();
@@ -29,9 +27,9 @@ class ProfileController extends GetxController{
   var profileLoading = false.obs;
   var profileData= profile.User().obs;
 var UpdateprofileLoading=false.obs;
-  getProfile() async {
+  Future<void> getProfile() async {
     profileLoading(true);
-    ProfileRes res = await repo.profile();
+    final ProfileRes res = await repo.profile();
     if(res.status==true){
       profileLoading(false);
       profileData.value=res.user!;
@@ -45,8 +43,8 @@ var UpdateprofileLoading=false.obs;
 
   Future<dynamic> updateProfile() async {
     UpdateprofileLoading(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
 
     try {
       // Check if there are selected images to upload
@@ -55,14 +53,14 @@ var UpdateprofileLoading=false.obs;
       }
 
       // Prepare the body for the profile update
-      Map body = {
+      final Map body = {
         'token': token,
         'username': profileName.text,
         'profile_image': uploadImages.value, // Use the uploaded image URL
       };
       print('Update Profile Body: $body'); // Debug log to verify body
 
-      ProfileRes res = await repo.updateProfile(jsonEncode(body));
+      final ProfileRes res = await repo.updateProfile(jsonEncode(body));
       if (res.status == true) {
         getProfile();
 
@@ -87,12 +85,12 @@ var UpdateprofileLoading=false.obs;
   var uploadImages = ''.obs;
   var selectedImages = <File>[];
   Future<dynamic> uploadImage() async {
-    List upload = [];
+    final List upload = [];
     uploadImages.value = '';
 
     try {
       for (var i = 0; i < selectedImages.length; i++) {
-        var response = await repo.uploadImage(image: selectedImages[i].path);
+        final response = await repo.uploadImage(image: selectedImages[i].path);
         if (response != null) {
           upload.add(response.url);
         }
@@ -112,14 +110,14 @@ var UpdateprofileLoading=false.obs;
   TextEditingController mobile = TextEditingController();
 
   var addSupportLoading=false.obs;
-  addSupport(title,description)async{
+  Future<void> addSupport(title,description)async{
     addSupportLoading(true);
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    Map body ={
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final Map body ={
       'title': title,
       'description': description,
-      'attachment': '${uploadImages.value}',
+      'attachment': uploadImages.value,
       'token': token,
     };
     final res = await repo.addSupport(jsonEncode(body));
@@ -130,9 +128,9 @@ var UpdateprofileLoading=false.obs;
   var supportListLoading=false.obs;
   var supportList=<support.Datum>[].obs;
 
-  getSupportList() async{
+  Future<void> getSupportList() async{
     supportListLoading(true);
-    SupportListRes res = await repo.supportLists();
+    final SupportListRes res = await repo.supportLists();
     supportListLoading(false);
     if(res.success==true){
       supportList.value = res.data!;
@@ -173,7 +171,7 @@ var UpdateprofileLoading=false.obs;
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 10.0, top: 10),
+                                    left: 10, top: 10),
                                 child: Row(
                                   children: [
                                     Text(
@@ -195,7 +193,7 @@ var UpdateprofileLoading=false.obs;
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.only(
-                                      left: 10.0, top: 10, right: 0),
+                                      left: 10, top: 10),
                                   child: Align(
                                       alignment: Alignment.topRight,
                                       child: Icon(Icons.cancel,size: 25,color: Colors.blueAccent,)),
@@ -314,7 +312,7 @@ var UpdateprofileLoading=false.obs;
   }
   final ImagePicker _picker = ImagePicker();
   Rx<File> image = File('').obs;
-  openCamera({dynamic camera, dynamic profile=true}) async {
+  Future<void> openCamera({dynamic camera, dynamic profile=true}) async {
     selectedImages=[];
     //refreshUpload=true;
     Get.back();

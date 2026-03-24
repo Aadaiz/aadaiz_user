@@ -32,7 +32,7 @@ class IncomingCallScreen extends StatelessWidget {
 
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(color: Colors.black.withOpacity(0.3)),
             ),
           ),

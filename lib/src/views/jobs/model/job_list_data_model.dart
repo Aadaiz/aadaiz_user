@@ -5,13 +5,10 @@ class JobListResponse {
   Data? data;
   String? message;
 
-  JobListResponse({
-    this.status,
-    this.data,
-    this.message,
-  });
+  JobListResponse({this.status, this.data, this.message});
 
-  factory JobListResponse.fromJson(String str) => JobListResponse.fromMap(json.decode(str));
+  factory JobListResponse.fromJson(String str) =>
+      JobListResponse.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -34,22 +31,27 @@ class Data {
   AppliedJobs? appliedJobs;
   AppliedJobs? myJobApplicants;
 
-  Data({
-    this.ourJobs,
-    this.recentJobs,
-    this.appliedJobs,
-    this.myJobApplicants,
-  });
+  Data({this.ourJobs, this.recentJobs, this.appliedJobs, this.myJobApplicants});
 
   factory Data.fromJson(String str) => Data.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    ourJobs: json["our_jobs"] == null ? null : AppliedJobs.fromMap(json["our_jobs"]),
-    recentJobs: json["recent_jobs"] == null ? null : AppliedJobs.fromMap(json["recent_jobs"]),
-    appliedJobs: json["applied_jobs"] == null ? null : AppliedJobs.fromMap(json["applied_jobs"]),
-    myJobApplicants: json["my_job_applicants"] == null ? null : AppliedJobs.fromMap(json["my_job_applicants"]),
+    ourJobs:
+        json["our_jobs"] == null ? null : AppliedJobs.fromMap(json["our_jobs"]),
+    recentJobs:
+        json["recent_jobs"] == null
+            ? null
+            : AppliedJobs.fromMap(json["recent_jobs"]),
+    appliedJobs:
+        json["applied_jobs"] == null
+            ? null
+            : AppliedJobs.fromMap(json["applied_jobs"]),
+    myJobApplicants:
+        json["my_job_applicants"] == null
+            ? null
+            : AppliedJobs.fromMap(json["my_job_applicants"]),
   );
 
   Map<String, dynamic> toMap() => {
@@ -91,18 +93,25 @@ class AppliedJobs {
     this.total,
   });
 
-  factory AppliedJobs.fromJson(String str) => AppliedJobs.fromMap(json.decode(str));
+  factory AppliedJobs.fromJson(String str) =>
+      AppliedJobs.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
   factory AppliedJobs.fromMap(Map<String, dynamic> json) => AppliedJobs(
     currentPage: json["current_page"],
-    data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromMap(x))),
+    data:
+        json["data"] == null
+            ? []
+            : List<Datum>.from(json["data"]!.map((x) => Datum.fromMap(x))),
     firstPageUrl: json["first_page_url"],
     from: json["from"],
     lastPage: json["last_page"],
     lastPageUrl: json["last_page_url"],
-    links: json["links"] == null ? [] : List<Link>.from(json["links"]!.map((x) => Link.fromMap(x))),
+    links:
+        json["links"] == null
+            ? []
+            : List<Link>.from(json["links"]!.map((x) => Link.fromMap(x))),
     nextPageUrl: json["next_page_url"],
     path: json["path"],
     perPage: json["per_page"],
@@ -118,7 +127,8 @@ class AppliedJobs {
     "from": from,
     "last_page": lastPage,
     "last_page_url": lastPageUrl,
-    "links": links == null ? [] : List<dynamic>.from(links!.map((x) => x.toMap())),
+    "links":
+        links == null ? [] : List<dynamic>.from(links!.map((x) => x.toMap())),
     "next_page_url": nextPageUrl,
     "path": path,
     "per_page": perPage,
@@ -140,6 +150,12 @@ class Datum {
   String? jobState;
   String? jobCountry;
   String? jobPincode;
+  String? companyName;
+  dynamic startTime;
+  dynamic endTime;
+  dynamic workingDays;
+  String? communication;
+  String? jobMode;
   String? gender;
   String? qualification;
   String? isFresher;
@@ -151,7 +167,8 @@ class Datum {
   String? jobStatus;
   DateTime? createdAt;
   DateTime? updatedAt;
-  bool?applyNow;
+  bool? applyNow;
+  dynamic timeNow;
   User? user;
   dynamic adminJob;
   dynamic adminJobCategory;
@@ -171,6 +188,12 @@ class Datum {
     this.jobState,
     this.jobCountry,
     this.jobPincode,
+    this.companyName,
+    this.startTime,
+    this.endTime,
+    this.workingDays,
+    this.communication,
+    this.jobMode,
     this.gender,
     this.qualification,
     this.isFresher,
@@ -183,6 +206,7 @@ class Datum {
     this.createdAt,
     this.updatedAt,
     this.applyNow,
+    this.timeNow,
     this.user,
     this.adminJob,
     this.adminJobCategory,
@@ -207,6 +231,13 @@ class Datum {
     jobState: json["job_state"],
     jobCountry: json["job_country"],
     jobPincode: json["job_pincode"],
+    companyName: json["company_name"],
+    startTime: json["start_time"],
+    endTime: json["end_time"],
+    workingDays: json["working_days"],
+    communication: json["communication"],
+    jobMode: json["job_mode"],
+
     gender: json["gender"],
     qualification: json["qualification"],
     isFresher: json["is_fresher"],
@@ -217,14 +248,28 @@ class Datum {
     jobDescription: json["job_description"],
     jobStatus: json["job_status"],
     applyNow: json["apply_now"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    timeNow: json["time_ago"],
+    createdAt:
+        json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt:
+        json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     user: json["user"] == null ? null : User.fromMap(json["user"]),
     adminJob: json["admin_job"],
     adminJobCategory: json["admin_job_category"],
-    jobBenefit: json["job_benefit"] == null ? [] : List<Job>.from(json["job_benefit"]!.map((x) => Job.fromMap(x))),
-    jobSkill: json["job_skill"] == null ? [] : List<Job>.from(json["job_skill"]!.map((x) => Job.fromMap(x))),
-    jobRequirement: json["job_requirement"] == null ? [] : List<Job>.from(json["job_requirement"]!.map((x) => Job.fromMap(x))),
+    jobBenefit:
+        json["job_benefit"] == null
+            ? []
+            : List<Job>.from(json["job_benefit"]!.map((x) => Job.fromMap(x))),
+    jobSkill:
+        json["job_skill"] == null
+            ? []
+            : List<Job>.from(json["job_skill"]!.map((x) => Job.fromMap(x))),
+    jobRequirement:
+        json["job_requirement"] == null
+            ? []
+            : List<Job>.from(
+              json["job_requirement"]!.map((x) => Job.fromMap(x)),
+            ),
   );
 
   Map<String, dynamic> toMap() => {
@@ -239,6 +284,13 @@ class Datum {
     "job_state": jobState,
     "job_country": jobCountry,
     "job_pincode": jobPincode,
+    'company_name': companyName,
+    'start_time': startTime,
+    'end_time': endTime,
+    'working_days': workingDays,
+    'communication': communication,
+    'job_mode': jobMode,
+
     "gender": gender,
     "qualification": qualification,
     "is_fresher": isFresher,
@@ -251,12 +303,22 @@ class Datum {
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
     "apply_now": applyNow,
+    "time_ago": timeNow,
     "user": user?.toMap(),
     "admin_job": adminJob,
     "admin_job_category": adminJobCategory,
-    "job_benefit": jobBenefit == null ? [] : List<dynamic>.from(jobBenefit!.map((x) => x.toMap())),
-    "job_skill": jobSkill == null ? [] : List<dynamic>.from(jobSkill!.map((x) => x.toMap())),
-    "job_requirement": jobRequirement == null ? [] : List<dynamic>.from(jobRequirement!.map((x) => x.toMap())),
+    "job_benefit":
+        jobBenefit == null
+            ? []
+            : List<dynamic>.from(jobBenefit!.map((x) => x.toMap())),
+    "job_skill":
+        jobSkill == null
+            ? []
+            : List<dynamic>.from(jobSkill!.map((x) => x.toMap())),
+    "job_requirement":
+        jobRequirement == null
+            ? []
+            : List<dynamic>.from(jobRequirement!.map((x) => x.toMap())),
   };
 }
 
@@ -285,8 +347,10 @@ class Job {
     id: json["id"],
     jobId: json["job_id"],
     name: json["name"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt:
+        json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt:
+        json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     requirements: json["requirements"],
   );
 
@@ -356,8 +420,10 @@ class User {
     userWallet: json["user_wallet"],
     token: json["token"],
     deleted: json["deleted"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    createdAt:
+        json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt:
+        json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toMap() => {
@@ -385,21 +451,14 @@ class Link {
   String? label;
   bool? active;
 
-  Link({
-    this.url,
-    this.label,
-    this.active,
-  });
+  Link({this.url, this.label, this.active});
 
   factory Link.fromJson(String str) => Link.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory Link.fromMap(Map<String, dynamic> json) => Link(
-    url: json["url"],
-    label: json["label"],
-    active: json["active"],
-  );
+  factory Link.fromMap(Map<String, dynamic> json) =>
+      Link(url: json["url"], label: json["label"], active: json["active"]);
 
   Map<String, dynamic> toMap() => {
     "url": url,

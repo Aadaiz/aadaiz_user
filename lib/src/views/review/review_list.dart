@@ -1,16 +1,14 @@
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../../utils/utils.dart';
-import '../home/controller/home_controller.dart';
-import '../home/self_customization/order/product_customization.dart';
 
 class ReviewList extends StatefulWidget {
   const ReviewList({super.key, required this.id, required this.value});
@@ -22,7 +20,7 @@ class ReviewList extends StatefulWidget {
 
 class _ReviewListState extends State<ReviewList> {
   final RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+      RefreshController();
   @override
   void initState() {
     // TODO: implement initState
@@ -67,7 +65,7 @@ class _ReviewListState extends State<ReviewList> {
                 enablePullUp: true,
                 onRefresh: () async {
                   final result = await HomeController.to.getReviewList(
-                      isRefresh: true, value: '${widget.value}', id: widget.id);
+                      isRefresh: true, value: widget.value, id: widget.id);
                   if (result) {
                     refreshController.refreshCompleted();
                   } else {
@@ -76,7 +74,7 @@ class _ReviewListState extends State<ReviewList> {
                 },
                 onLoading: () async {
                   final result = await HomeController.to
-                      .getReviewList(value: '${widget.value}', id: widget.id);
+                      .getReviewList(value: widget.value, id: widget.id);
                   if (HomeController.to.reviewCurrentPage.value >=
                       HomeController.to.reviewTotalPages.value) {
                     refreshController.loadNoData();
@@ -94,8 +92,8 @@ class _ReviewListState extends State<ReviewList> {
                       itemCount: HomeController.to.reviewList.value.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        var data = HomeController.to.reviewList.value[index];
-                        List images = data.images.split(',');
+                        final data = HomeController.to.reviewList.value[index];
+                        final List images = data.images.split(',');
                         return Container(
                           child: Stack(
                             children: [
@@ -125,10 +123,8 @@ class _ReviewListState extends State<ReviewList> {
                                                           .reviewList
                                                           .value[0]
                                                           .rating),
-                                                  direction: Axis.horizontal,
                                                   ignoreGestures: true,
                                                   allowHalfRating: true,
-                                                  itemCount: 5,
                                                   itemSize: 15,
                                                   unratedColor: Colors.grey,
                                                   ratingWidget: RatingWidget(
@@ -154,8 +150,6 @@ class _ReviewListState extends State<ReviewList> {
                                           child: Row(
                                               mainAxisAlignment:
                                               MainAxisAlignment.end,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
                                               children: [
                                                 Text('Helpful',
                                                     style: GoogleFonts.dmSans(

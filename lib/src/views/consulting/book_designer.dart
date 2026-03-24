@@ -43,8 +43,7 @@ class _BookDesignerState extends State<BookDesigner> {
           ),
           centerTitle: true,
           elevation: 2,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: SingleChildScrollView(
         child: Padding(

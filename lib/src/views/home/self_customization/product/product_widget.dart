@@ -2,17 +2,15 @@ import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
+import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../review/review_list.dart';
-import '../order/product_customization.dart';
 
 class ProductWidget extends StatefulWidget {
   const ProductWidget({super.key, this.type, this.id});
@@ -29,7 +27,7 @@ class _ProductWidgetState extends State<ProductWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 500),()async{
+    Future.delayed(const Duration(milliseconds: 500),()async{
       await HomeController.to
           .getProductList(isRefresh: true,id: widget.id);
     });
@@ -43,7 +41,6 @@ class _ProductWidgetState extends State<ProductWidget> {
         child: SmartRefresher(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: refreshController,
-          enablePullDown: true,
           enablePullUp: true,
           onRefresh: () async {
             final result = await HomeController.to
@@ -72,7 +69,7 @@ class _ProductWidgetState extends State<ProductWidget> {
               const CommonEmpty(title: 'Products'):
                  GridView.builder(
                    physics: const NeverScrollableScrollPhysics(),
-                   padding: const EdgeInsets.only(top: 0),
+                   padding: const EdgeInsets.only(),
                     itemCount: HomeController.to.productList.value.length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -81,7 +78,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                         mainAxisSpacing: 16),
                     itemBuilder: (BuildContext context, int index) {
                       final data = HomeController.to.productList.value[0];
-                      List images = data.imageUrl!.split(',');
+                      final List images = data.imageUrl!.split(',');
                       double rating;
                       if (data.rating is int) {
                         rating = data.rating!.toDouble();
@@ -131,7 +128,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                                         ),
                                       ),
                                     ),
-                                    imageUrl: (images[0]),
+                                    imageUrl: images[0],
                                   ):
                                   SizedBox(
                                       height: 25.0.hp,
@@ -223,9 +220,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                               children: [
                                 RatingBar(
                                     initialRating: rating,
-                                    direction: Axis.horizontal,
                                     allowHalfRating: true,
-                                    itemCount: 5,
                                     itemSize: 15,
                                     ignoreGestures: true,
                                     unratedColor: Colors.grey,

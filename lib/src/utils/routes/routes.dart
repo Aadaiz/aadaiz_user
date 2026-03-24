@@ -29,7 +29,7 @@ class Routes{
 
       case RoutesName.otpAuthActivity:
         return MaterialPageRoute<OtpScreen>(
-            builder: (BuildContext context) => OtpScreen()
+            builder: (BuildContext context) => const OtpScreen()
         );
 
       case RoutesName.loginActivity:

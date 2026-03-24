@@ -3,13 +3,11 @@ import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ticket_widget/ticket_widget.dart';
-
-import '../home/controller/home_controller.dart';
 
 class Coupon extends StatefulWidget {
   const Coupon({super.key, required this.callBack});
@@ -64,7 +62,7 @@ class _CouponState extends State<Coupon> {
                   ),
                   itemCount: HomeController.to.couponList.length,
                   itemBuilder: (context, index) {
-                    var data = HomeController.to.couponList[index];
+                    final data = HomeController.to.couponList[index];
 
                     return TicketWidget(
                       margin: EdgeInsets.symmetric(
@@ -79,7 +77,6 @@ class _CouponState extends State<Coupon> {
                           ListTile(
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: screenWidth * 0.1,
-                              vertical: 0,
                             ),
                             title: Text(
                               data.title ?? '',

@@ -2,14 +2,12 @@ import 'dart:convert';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/models/appointment_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_available_slot_model.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_category_model.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_designer_model.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/repository/consulting_repository.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/appointment_ create_model.dart';
-import '../models/consulting_available_slot_model.dart';
 
 class ConsultingController extends GetxController {
   static ConsultingController get to => Get.put(ConsultingController());
@@ -21,7 +19,7 @@ class ConsultingController extends GetxController {
 
   Future<dynamic> getCategory() async {
     categoryLoading(true);
-    ConsultingCategoryRes res = await repo.getCategory();
+    final ConsultingCategoryRes res = await repo.getCategory();
     categoryList.clear();
     designerPrefsList.clear();
     if (res.success == true) {
@@ -44,7 +42,7 @@ class ConsultingController extends GetxController {
 
   Future<dynamic> getDesigners(id, designer) async {
     designerLoading(true);
-    ConsultingDesignerRes res = await repo.getDesigners(1, designer);
+    final ConsultingDesignerRes res = await repo.getDesigners(1, designer);
     if (res.success == true) {
       designerList.value = res.data!;
       designerLoading(false);
@@ -59,7 +57,7 @@ class ConsultingController extends GetxController {
   Future<dynamic> getAvailableSlots(id, date) async {
     availableSlotsList.clear();
     availableSlotLoading(true);
-    AppointmentAvailableRes res = await repo.getAvailableSlots(id, date);
+    final AppointmentAvailableRes res = await repo.getAvailableSlots(id, date);
     if (res.success == true) {
       availableSlotLoading(false);
       for (var i = 0; i < res.data!.length; i++) {
@@ -74,8 +72,8 @@ class ConsultingController extends GetxController {
 
   Future<dynamic> createAppointment(id, date, time) async {
     createAppointmentLoading(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
     final Map<String, dynamic> body = {
       'designer_id': '$id',
       'date': '$date',
@@ -96,7 +94,7 @@ class ConsultingController extends GetxController {
     dynamic status,
   }) async {
     appointmentLoading(true);
-    AppointmentRes res = await repo.getAppointments(status);
+    final AppointmentRes res = await repo.getAppointments(status);
     appointmentLoading(false);
     if (res.status == true) {
       if (res.data!.isNotEmpty) {

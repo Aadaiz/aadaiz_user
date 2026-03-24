@@ -3,7 +3,6 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentHistory extends StatefulWidget {
@@ -62,8 +61,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           ),
           elevation: 2,
           centerTitle: true,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: ListView.builder(
         padding: EdgeInsets.symmetric(

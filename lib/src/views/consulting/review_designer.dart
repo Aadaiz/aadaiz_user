@@ -42,8 +42,7 @@ class _ReviewDesignerState extends State<ReviewDesigner> {
               )
           ),
           centerTitle: true,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: SingleChildScrollView(
         child: Padding(

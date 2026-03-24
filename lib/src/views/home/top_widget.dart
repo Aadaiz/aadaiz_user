@@ -1,6 +1,7 @@
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/offer_banner_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/search_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customization_home_screen.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'controller/home_controller.dart';
 
 class TopWidget extends StatefulWidget {
   const TopWidget({super.key});
@@ -123,7 +123,7 @@ class _TopWidgetState extends State<TopWidget> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: HomeController.to.genderList.length,
                   itemBuilder: (context, index){
-                    var data = HomeController.to.genderList[index];
+                    final data = HomeController.to.genderList[index];
                     return   InkWell(
                       onTap: (){
                         Get.to(()=>  SelfCustomizationHomeScreen(catIndex: index,id: data.id));

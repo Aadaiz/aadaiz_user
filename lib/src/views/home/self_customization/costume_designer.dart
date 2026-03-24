@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Costume extends StatefulWidget {
-  const Costume({Key? key}) : super(key: key);
+  const Costume({super.key});
 
   @override
   State<Costume> createState() => _CostumeState();
@@ -11,7 +11,7 @@ class Costume extends StatefulWidget {
 class _CostumeState extends State<Costume> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(child: DraggableExample()),
     );
   }

@@ -40,9 +40,7 @@ class FirebaseNotificationHandler {
 
     const DarwinInitializationSettings iosInit =
     DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      
     );
 
     const InitializationSettings settings = InitializationSettings(
@@ -66,9 +64,7 @@ class FirebaseNotificationHandler {
       'Incoming Calls',
       description: 'High priority incoming call notifications',
       importance: Importance.max,
-      playSound: true,
       sound: RawResourceAndroidNotificationSound('incoming_call'),
-      enableVibration: true,
     );
 
     final androidPlugin = _local
@@ -236,9 +232,7 @@ class FirebaseApi {
       log("User App: Initializing Firebase notifications");
 
       await _firebaseMessaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
+        
       );
 
       await FirebaseMessaging.instance

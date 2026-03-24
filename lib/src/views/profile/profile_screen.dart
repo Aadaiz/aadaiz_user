@@ -1,28 +1,22 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/controller/auth_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
-import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/my_orders_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/profile/payment_history.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/support/help_center.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/user_profile.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/wishlist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
-import 'controller/profile_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -154,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             InkWell(
                               onTap: () {
-                                Get.to(() => MyOrderScreen());
+                                Get.to(() => const MyOrderScreen());
                               },
                               child: customWidget(
                                 Image.asset(
@@ -167,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.to(() => Wishlist());
+                                Get.to(() => const Wishlist());
                               },
                               child: customWidget(
                                 const Icon(
@@ -184,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             InkWell(
                               onTap: () {
-                                Get.to(() => HelpCenter());
+                                Get.to(() => const HelpCenter());
                               },
                               child: customWidget(
                                 const Icon(
@@ -463,7 +457,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget customWidget(Widget icon, text) {
     return Container(
       width: Get.width * 0.43,
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
         border: Border.all(color: AppColor.tileBorderColor),
       ),

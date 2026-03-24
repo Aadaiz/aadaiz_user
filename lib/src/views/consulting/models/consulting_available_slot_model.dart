@@ -46,15 +46,15 @@ class AvailableSlot {
   String toJson() => json.encode(toMap());
 
   factory AvailableSlot.fromMap(Map<String, dynamic> json) => AvailableSlot(
-    id: json["id"]??null,
-    time: json["time"]??null,
+    id: json["id"],
+    time: json["time"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "time": time??null,
+    "id": id,
+    "time": time,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
   };

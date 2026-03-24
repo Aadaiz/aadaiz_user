@@ -62,7 +62,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             color: Colors.transparent,
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8),
                             child: Center(
                               child: Icon(
                                 Icons.arrow_back_ios_new_rounded,
@@ -96,7 +96,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             text: "Please enter the 6 digit code sent to ",
                             style: GoogleFonts.dmSans(
                               textStyle: const TextStyle(
-                                fontSize: 12.00,
+                                fontSize: 12,
                                 color: Color(0xff999999),
                                 fontWeight: FontWeight.w500,
                               ),
@@ -106,7 +106,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             text: '+91 ${AuthController.to.mobile.text} ',
                             style: GoogleFonts.dmSans(
                               textStyle: TextStyle(
-                                fontSize: 12.00,
+                                fontSize: 12,
                                 color: AppColor.primary,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -116,7 +116,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             text: "through SMS",
                             style: GoogleFonts.dmSans(
                               textStyle: const TextStyle(
-                                fontSize: 12.00,
+                                fontSize: 12,
                                 color: Color(0xff999999),
                                 fontWeight: FontWeight.w500,
                               ),
@@ -128,7 +128,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                   const Gap(16),
                   Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 0),
+                    padding: const EdgeInsets.only(),
                     child: PinCodeTextField(
                       controller: _otpController, // Use local controller
                       appContext: context,
@@ -187,7 +187,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               text: "Didn’t receive a code?  ",
                               style: GoogleFonts.dmSans(
                                 textStyle: const TextStyle(
-                                  fontSize: 15.00,
+                                  fontSize: 15,
                                   color: Color(0xff999999),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -197,7 +197,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               text: 'Resend otp',
                               style: GoogleFonts.dmSans(
                                 textStyle: TextStyle(
-                                  fontSize: 15.00,
+                                  fontSize: 15,
                                   color: AppColor.primary,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -233,7 +233,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 "By continuing you’re indicating that you accept our  ",
                             style: GoogleFonts.dmSans(
                               textStyle: const TextStyle(
-                                fontSize: 12.00,
+                                fontSize: 12,
                                 color: Color(0xff999999),
                                 fontWeight: FontWeight.w400,
                               ),
@@ -254,7 +254,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             text: "and our ",
                             style: GoogleFonts.dmSans(
                               textStyle: const TextStyle(
-                                fontSize: 12.00,
+                                fontSize: 12,
                                 color: Color(0xff999999),
                                 fontWeight: FontWeight.w400,
                               ),

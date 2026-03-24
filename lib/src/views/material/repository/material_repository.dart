@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
+import 'package:aadaiz_customer_crm/src/services/http_services.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/filter_category.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_cart_list_model.dart';
@@ -8,9 +9,6 @@ import 'package:aadaiz_customer_crm/src/views/material/model/material_category_m
 import 'package:aadaiz_customer_crm/src/views/material/model/material_favorites_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../services/api_service.dart';
-import '../../../services/http_services.dart';
 
 class MaterialRepository {
   static final HttpHelper _http = HttpHelper();
@@ -70,7 +68,6 @@ class MaterialRepository {
     final response = await _http.post(
       Api.materialFavorite,
       body,
-      contentType: true,
     );
     final MaterialRes res = MaterialRes.fromMap(jsonDecode(response));
     return res;
@@ -92,7 +89,6 @@ class MaterialRepository {
     final response = await _http.post(
       Api.materialAddtocart,
       body,
-      contentType: true,
     );
     final MaterialRes res = MaterialRes.fromMap(jsonDecode(response));
     return res;

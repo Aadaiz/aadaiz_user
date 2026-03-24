@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/Repository/chat_repo.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/model/chatList_model.dart';
+import 'package:chatview/chatview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:chatview/chatview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatMessageController extends GetxController {
@@ -185,7 +185,7 @@ class ChatMessageController extends GetxController {
     try {
       isLoading.value = true;
 
-      Map<String, dynamic> request = {'call_id': callId};
+      final Map<String, dynamic> request = {'call_id': callId};
 
       final res = await repo.callEnded(request);
 

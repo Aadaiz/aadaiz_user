@@ -1,7 +1,9 @@
 import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -11,9 +13,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
-import '../home/controller/home_controller.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({super.key});
@@ -96,9 +95,9 @@ class _WishlistState extends State<Wishlist> {
                                     mainAxisSpacing: 16),
                                 itemBuilder: (context, index) {
                                   final data = HomeController.to.favoriteList.value[index];
-                                  final currentData =data!.patern;
+                                  final currentData =data.patern;
                                   List images =[];
-                                  double rating=0.0;
+                                  double rating=0;
                                   if(data.patern!=null){
                                     images = data.patern!.imageUrl.split(',');
                                     if (data.patern!.rating is int) {
@@ -207,12 +206,12 @@ class _WishlistState extends State<Wishlist> {
                                                                           fontWeight: FontWeight.w500)))))))
                                             ]),
                                             ListTile(
-                                                title: Text('${currentData!.title??''}',
+                                                title: Text('${currentData.title??''}',
                                                     style: GoogleFonts.dmSans(
                                                         fontWeight: FontWeight.w400,
                                                         fontSize: 16.00.sp,
                                                         color: AppColor.black)),
-                                                subtitle: Text('${currentData!.subTitle??''}',
+                                                subtitle: Text('${currentData.subTitle??''}',
                                                     style: GoogleFonts.dmSans(
                                                         fontSize: 10.00.sp,
                                                         fontWeight: FontWeight.w400,
@@ -224,9 +223,7 @@ class _WishlistState extends State<Wishlist> {
                                                 children: [
                                                   RatingBar(
                                                       initialRating: rating,
-                                                      direction: Axis.horizontal,
                                                       allowHalfRating: true,
-                                                      itemCount: 5,
                                                       itemSize: 15,
                                                       ignoreGestures: true,
                                                       unratedColor: Colors.grey,

@@ -1,16 +1,13 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/filter_data_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/product_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../res/components/common_toast.dart';
-import '../../controller/home_controller.dart';
-import 'filter_data_widget.dart';
-import 'filter_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key, this.id, this.index});
@@ -85,7 +82,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 16),
               child: HomeController.to.categoryData.value.data!.isEmpty
-                  ? Text('Loading')
+                  ? const Text('Loading')
                   : SizedBox(
                       height: 5.0.hp,
                       width: Get.width,
@@ -97,7 +94,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                           itemCount:
                               HomeController.to.categoryData.value.data!.length,
                           itemBuilder: (context, index) {
-                            var data = HomeController
+                            final data = HomeController
                                 .to.categoryData.value.data![index];
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),

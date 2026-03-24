@@ -1,15 +1,13 @@
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/my_order_model.dart' as order;
+import 'package:aadaiz_customer_crm/src/views/my_orders/order_tracking/track_order.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../utils/colors.dart';
-import '../../utils/utils.dart';
-import '../home/model/my_order_model.dart' as order;
-import 'order_tracking/track_order.dart';
 
 class OrderCard extends StatefulWidget {
   const OrderCard({super.key, this.data, this.image, this.rating, this.status});
@@ -48,7 +46,7 @@ class _OrderCardState extends State<OrderCard> {
           children: [
             Row(children: [
               Container(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8),
                   child: Stack(children: [
                     ClipRRect(
                       borderRadius:BorderRadius.circular(12),
@@ -77,7 +75,7 @@ class _OrderCardState extends State<OrderCard> {
                                   ),
                                 ),
                               ),
-                              imageUrl: (widget.image[0]),
+                              imageUrl: widget.image[0],
                             )
                           : SizedBox(
                         height: screenHeight * 0.13,
@@ -118,12 +116,12 @@ class _OrderCardState extends State<OrderCard> {
                         width: screenWidth / 1.8,
                         child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text('${widget.data!.materialTitle??''}',
+                            title: Text(widget.data!.materialTitle??'',
                                 style: GoogleFonts.dmSans(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16.00.sp,
                                     color: AppColor.black)),
-                            subtitle: Text('${widget.data!.materialSubTitle??''}',
+                            subtitle: Text(widget.data!.materialSubTitle??'',
                                 style: GoogleFonts.dmSans(
                                     fontSize: 9.24.sp,
                                     fontWeight: FontWeight.w400,
@@ -202,14 +200,11 @@ class _OrderCardState extends State<OrderCard> {
                               ],
                             ))),
                     Row(
-                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           RatingBar(
                               initialRating: widget.rating??0.0,
-                              direction: Axis.horizontal,
                               allowHalfRating: true,
-                              itemCount: 5,
                               itemSize: 12,
                               unratedColor: Colors.grey,
                               ratingWidget: RatingWidget(
@@ -258,8 +253,7 @@ class _OrderCardState extends State<OrderCard> {
                         vertical: -3
                     ),
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.018,
-                        vertical: 0
+                        horizontal: screenWidth * 0.018
                     ),
                     leading: Image.asset(
                       'assets/images/ic_invoice.png',

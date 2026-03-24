@@ -18,8 +18,8 @@ class JobRepository {
     return JobFilterListRes.fromJson(res);
   }
 
-  Future<Map<String, dynamic>> createJob(String token, dynamic data) async {
-    final res = await _http.post(Api.createJob, data);
+  Future<Map<String, dynamic>> createJob(String token, dynamic data,bool? type,dynamic id) async {
+    final res = await _http.post(type==false? Api.createJob:"${Api.updateJob}/$id", data);
     return jsonDecode(res);
   }
   Future<Map<String, dynamic>> deleteJob(String token,int id) async {

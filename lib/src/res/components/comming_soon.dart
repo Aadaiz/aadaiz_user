@@ -14,7 +14,7 @@ class ComingSoonOverlay extends StatefulWidget {
   final Color primaryColor;
   final Color secondaryColor;
 
-   ComingSoonOverlay({
+   const ComingSoonOverlay({
     super.key,
     required this.child,
     this.title = "Coming Soon",
@@ -52,17 +52,17 @@ class _ComingSoonOverlayState extends State<ComingSoonOverlay>
       ),
     );
 
-    _fade = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _fade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+        curve: const Interval(0, 0.5, curve: Curves.easeOut),
       ),
     );
 
-    _rotate = Tween<double>(begin: 0.0, end: 2 * pi).animate(
+    _rotate = Tween<double>(begin: 0, end: 2 * pi).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.0, 1.0, curve: Curves.linear),
+        curve: const Interval(0, 1),
       ),
     );
 

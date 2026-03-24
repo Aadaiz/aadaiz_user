@@ -33,8 +33,7 @@ class _ContactState extends State<Contact> {
               )
           ),
           elevation: 2,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

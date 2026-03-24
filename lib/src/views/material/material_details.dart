@@ -8,9 +8,7 @@ import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.da
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,12 +103,12 @@ class _MaterialDetailsState extends State<MaterialDetails> {
     }
 
     // Find this product in cart items
-    var cartItems = MaterialController.to.cartList.value!.items;
+    final cartItems = MaterialController.to.cartList.value!.items;
     if (cartItems == null || cartItems.isEmpty) {
       return 0;
     }
 
-    for (var cartItem in cartItems) {
+    for (final cartItem in cartItems) {
       if (cartItem.product?.id == widget.data.id) {
         return cartItem.quantity ?? 0;
       }
@@ -146,7 +144,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
         actions: [
           // Cart Icon with badge
           Obx(() {
-            int cartCount = MaterialController.to.getTotalItemsCount();
+            final int cartCount = MaterialController.to.getTotalItemsCount();
             return Stack(
               children: [
                 IconButton(
@@ -194,11 +192,10 @@ class _MaterialDetailsState extends State<MaterialDetails> {
           SizedBox(width: screenWidth * 0.02),
         ],
         shadowColor: AppColor.black,
-        forceMaterialTransparency: false,
         elevation: 4,
       ),
       body: Obx(() {
-        bool isLoading = MaterialController.to.cartLoading.value;
+        final bool isLoading = MaterialController.to.cartLoading.value;
 
         return Stack(
           children: [
@@ -415,10 +412,8 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                           children: [
                             RatingBar(
                               initialRating: widget.rating,
-                              direction: Axis.horizontal,
                               ignoreGestures: true,
                               allowHalfRating: true,
-                              itemCount: 5,
                               itemSize: 18,
                               unratedColor: Colors.grey[300],
                               ratingWidget: RatingWidget(
@@ -479,7 +474,6 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: AppColor.primary,
-                                          width: 1,
                                         ),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -496,7 +490,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                                         'Minus button tapped : $cartQuantity',
                                                       );
 
-                                                      bool isInCart =
+                                                      final bool isInCart =
                                                           _isProductInCart();
                                                       if (isInCart) {
                                                         // If item is in cart, use controller method
@@ -507,7 +501,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                                             );
                                                       } else {
                                                         // If not in cart, just update local controller
-                                                        int currentQty =
+                                                        final int currentQty =
                                                             int.tryParse(
                                                               _quantityController
                                                                   .text,
@@ -566,10 +560,10 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                             color: Colors.white,
                                             alignment: Alignment.center,
                                             child: Obx(() {
-                                              bool isInCart = MaterialController
+                                              final bool isInCart = MaterialController
                                                   .to
                                                   .isItemInCart(widget.data.id);
-                                              int cartQuantity =
+                                              final int cartQuantity =
                                                   MaterialController.to
                                                       .getItemQuantity(
                                                         widget.data.id,
@@ -593,7 +587,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                                 isLoading
                                                     ? null
                                                     : () async {
-                                                      bool isInCart =
+                                                      final bool isInCart =
                                                           _isProductInCart();
                                                       if (isInCart) {
                                                         // If item is in cart, use controller method
@@ -604,7 +598,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                                             );
                                                       } else {
                                                         // If not in cart, just update local controller
-                                                        int currentQty =
+                                                        final int currentQty =
                                                             int.tryParse(
                                                               _quantityController
                                                                   .text,
@@ -661,11 +655,11 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                     // Quantity Input Field
                                     Expanded(
                                       child: Obx(() {
-                                        bool isInCart = MaterialController.to
+                                        final bool isInCart = MaterialController.to
                                             .isItemInCart(widget.data.id);
 
                                         // Get quantity from cart if item is in cart
-                                        int cartQuantity = _getCartQuantity();
+                                        final int cartQuantity = _getCartQuantity();
 
                                         // Sync text field with cart quantity
                                         if (isInCart &&
@@ -684,7 +678,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                             if (value.isEmpty) {
                                               _quantityController.text = '1';
                                             } else {
-                                              int qty =
+                                              final int qty =
                                                   int.tryParse(value) ?? 1;
                                               if (qty < 1) {
                                                 _quantityController.text = '1';
@@ -786,7 +780,6 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                           children: [
                             // Share Button
                             Expanded(
-                              flex: 1,
                               child: Container(
                                 height: screenHeight * 0.055,
                                 decoration: BoxDecoration(
@@ -829,9 +822,9 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                             Expanded(
                               flex: 2,
                               child: Obx(() {
-                                bool isInCart = MaterialController.to
+                                final bool isInCart = MaterialController.to
                                     .isItemInCart(widget.data.id);
-                                bool isLoading =
+                                final bool isLoading =
                                     MaterialController.to.cartLoading.value;
 
                                 return Material(
@@ -853,7 +846,7 @@ class _MaterialDetailsState extends State<MaterialDetails> {
                                                 );
                                               } else {
                                                 // Add to cart
-                                                int quantity =
+                                                final int quantity =
                                                     int.tryParse(
                                                       _quantityController.text,
                                                     ) ??

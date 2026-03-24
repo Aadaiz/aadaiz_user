@@ -1,14 +1,12 @@
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'as material;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'as material;
-import '../../../../utils/colors.dart';
-import '../../../../utils/utils.dart';
-import '../../model/productlist_model.dart';
 
 class PeopleViewedProductWidget extends StatelessWidget {
   const PeopleViewedProductWidget({super.key, required this.data, this.images, this.rating});
@@ -58,7 +56,7 @@ final dynamic rating;
                               ),
                             ),
                           ),
-                      imageUrl: (images[0]),
+                      imageUrl: images[0],
                     )
                         : SizedBox(
                       height: screenHeight * 0.27,
@@ -151,9 +149,7 @@ final dynamic rating;
                   children: [
                     RatingBar(
                         initialRating: rating,
-                        direction: Axis.horizontal,
                         allowHalfRating: true,
-                        itemCount: 5,
                         itemSize: 12,
                         unratedColor: Colors.grey,
                         ratingWidget: RatingWidget(

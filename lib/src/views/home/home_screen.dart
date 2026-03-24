@@ -7,9 +7,6 @@ import 'package:aadaiz_customer_crm/src/views/home/top_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../material/controller/material_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

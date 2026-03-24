@@ -58,8 +58,8 @@ class ChatInputBar extends StatelessWidget {
             child: Container(
               height: 40.h,
               width: 40.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0D174D),
+              decoration: const BoxDecoration(
+                color: Color(0xFF0D174D),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.send, color: Colors.white, size: 20),

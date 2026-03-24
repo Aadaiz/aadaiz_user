@@ -1,13 +1,15 @@
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
+import 'package:aadaiz_customer_crm/src/views/material/material_details.dart';
+import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -15,11 +17,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
-import '../review/review_list.dart';
-import 'controller/material_controller.dart';
-import 'material_details.dart';
 
 class MaterialScreen extends StatefulWidget {
   const MaterialScreen({super.key});
@@ -198,8 +195,8 @@ class _MaterialScreenState extends State<MaterialScreen> {
                           childAspectRatio: 0.60, // 🔥 IMPORTANT
                         ),
                         itemBuilder: (context, index) {
-                          var data = MaterialController.to.materialList.value[index];
-                          List images = data.image.split(',');
+                          final data = MaterialController.to.materialList.value[index];
+                          final List images = data.image.split(',');
 
                           double rating;
                           if (data.rating is int) {

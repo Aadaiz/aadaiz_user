@@ -50,19 +50,19 @@ class ConsultingCategory {
   String toJson() => json.encode(toMap());
 
   factory ConsultingCategory.fromMap(Map<String, dynamic> json) => ConsultingCategory(
-    id: json["id"]??null,
-    name: json["name"]??null,
-    imageUrl: json["image_url"]??null,
-    type: json["type"]??null,
+    id: json["id"],
+    name: json["name"],
+    imageUrl: json["image_url"],
+    type: json["type"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "name": name??null,
-    "image_url": imageUrl??null,
-    "type": type??null,
+    "id": id,
+    "name": name,
+    "image_url": imageUrl,
+    "type": type,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

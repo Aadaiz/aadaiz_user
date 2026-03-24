@@ -1,30 +1,29 @@
 import 'dart:convert';
 
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
+import 'package:aadaiz_customer_crm/src/services/http_services.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/model/add_image.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/model/profile_model.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/model/support_list.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../services/api_service.dart';
-import '../../../services/http_services.dart';
-import '../model/profile_model.dart';
-import '../model/add_image.dart';
 
 class ProfileRepository {
   static final HttpHelper _http = HttpHelper();
 
 
   Future<dynamic> profile() async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    var response = await _http.get("${Api.profile}?token=$token");
-    ProfileRes res  = ProfileRes.fromMap(jsonDecode(response));
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final response = await _http.get("${Api.profile}?token=$token");
+    final ProfileRes res  = ProfileRes.fromMap(jsonDecode(response));
     return res;
   }
 
 
   Future<dynamic> updateProfile(body) async {
-    var response = await _http.post(Api.profile,body,contentType: true);
-    ProfileRes res  = ProfileRes.fromMap(jsonDecode(response));
+    final response = await _http.post(Api.profile,body);
+    final ProfileRes res  = ProfileRes.fromMap(jsonDecode(response));
     return res;
   }
 
@@ -33,15 +32,15 @@ class ProfileRepository {
     image
   }) async
   {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
     String fileNames = '';
     if (image != '') {
       fileNames = image.toString().split('/').last;
     }
     try {
-      Dio dio = Dio();
-      FormData formData = FormData.fromMap({
+      final Dio dio = Dio();
+      final FormData formData = FormData.fromMap({
         "file": await MultipartFile.fromFile(
           image.toString(),
           filename: fileNames.toString(),
@@ -51,12 +50,12 @@ class ProfileRepository {
           // ),
         ),
       });
-      formData.fields.forEach((field) {
+      for (final field in formData.fields) {
         print('afdafd ${field.value}');
-      });
+      }
 
-      Response response = await dio.post(
-          '${Api.uploadImage}',
+      final Response response = await dio.post(
+          Api.uploadImage,
           data: formData,
           options: Options(headers: {
             "Accept": "application/json",
@@ -77,7 +76,7 @@ class ProfileRepository {
       }
     } catch (e) {
       if (e is DioException) {
-        var response = e.response;
+        final response = e.response;
         if (response != null) {
           // print('Request failed with status code ${response.statusCode}');
           // print('Error response: ${response.data}');
@@ -90,17 +89,17 @@ class ProfileRepository {
     }
   }
   Future<dynamic> supportLists() async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    var response = await _http.get("${Api.supportLists}?token=$token");
-    SupportListRes res  = SupportListRes.fromMap(jsonDecode(response));
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final response = await _http.get("${Api.supportLists}?token=$token");
+    final SupportListRes res  = SupportListRes.fromMap(jsonDecode(response));
     return res;
   }
 
   Future<dynamic> addSupport(body) async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    var response = await _http.post(Api.support,body,contentType: true);
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final response = await _http.post(Api.support,body);
     return jsonDecode(response);
   }
 

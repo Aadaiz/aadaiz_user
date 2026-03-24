@@ -79,8 +79,10 @@ class Api {
   static const jobList = '${AppConfig.baseUrl}job/jobList';
   static const jobFilterList = '${AppConfig.baseUrl}job/jobFilterList';
   static const createJob = '${AppConfig.baseUrl}job/createJob';
+  static const updateJob = '${AppConfig.baseUrl}job/updateJob';
   static const jobListData = '${AppConfig.baseUrl}job/userJobList';
   static const deleteJob = '${AppConfig.baseUrl}job/deleteJob';
+  static const applyJob = '${AppConfig.baseUrl}job/applyJob';
 
 
 

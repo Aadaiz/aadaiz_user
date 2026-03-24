@@ -44,14 +44,14 @@ class Datum {
   String toJson() => json.encode(toMap());
 
   factory Datum.fromMap(Map<String, dynamic> json) => Datum(
-    id: json["id"]??null,
-    catName: json["cat_name"]??null,
-    imageUrl: json["image_url"]??null,
+    id: json["id"],
+    catName: json["cat_name"],
+    imageUrl: json["image_url"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "cat_name": catName??null,
-  "image_url": imageUrl??null,
+    "id": id,
+    "cat_name": catName,
+  "image_url": imageUrl,
   };
 }

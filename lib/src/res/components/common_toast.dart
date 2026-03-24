@@ -2,17 +2,15 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CommonToast {
-  static show({String? msg}) {
+  static Future<bool?> show({String? msg}) {
     return Fluttertoast.showToast(
       msg: "$msg",
       webShowClose: true,
       textColor: Colors.black,
-      backgroundColor: Colors.grey.shade400.withOpacity(0.5),
-      timeInSecForIosWeb: 1,
+
       webBgColor: "linear-gradient(#334, #000)",
       webPosition: "center", // message
       toastLength: Toast.LENGTH_LONG, // length
@@ -71,7 +69,7 @@ class ShimmerBox extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.grey[100],
-          borderRadius: borderRadius ?? BorderRadius.circular(8.0),
+          borderRadius: borderRadius ?? BorderRadius.circular(8),
         ),
       ),
     );
@@ -92,8 +90,8 @@ class ShimmerList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: horizontal),
-          child: ShimmerBox(),
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: horizontal),
+          child: const ShimmerBox(),
         );
       },
     );
@@ -186,7 +184,7 @@ class ProfileShimmer extends StatelessWidget {
       children: [
         _circleShimmer(32),
         const SizedBox(width: 12),
-        Expanded(child: _rectShimmer(height: 14)),
+        Expanded(child: _rectShimmer()),
         const SizedBox(width: 12),
         _rectShimmer(width: 16, height: 16),
       ],
@@ -196,7 +194,7 @@ class ProfileShimmer extends StatelessWidget {
   Widget _textRowShimmer() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: _rectShimmer(width: 140, height: 14),
+      child: _rectShimmer(width: 140),
     );
   }
 }

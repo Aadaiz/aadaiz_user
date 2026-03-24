@@ -1,22 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:aadaiz_customer_crm/src/services/api_service.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/model/event_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/Event/model/event_model.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/repository/event_repository.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EventController extends GetxController {
   final TextEditingController eventNameController = TextEditingController();

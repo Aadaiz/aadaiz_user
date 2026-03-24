@@ -1,42 +1,36 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/utils/colors.dart';
-import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/views/home/model/banner_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_address_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_cart_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_favorite_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/addresslist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/banner_model.dart' as banner;
-import 'package:aadaiz_customer_crm/src/views/home/model/gender_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/banner_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/cartlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/category_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/couponlist_model.dart' as coupon;
+import 'package:aadaiz_customer_crm/src/views/home/model/couponlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/favoritelist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/filter_model.dart' as filter;
+import 'package:aadaiz_customer_crm/src/views/home/model/filter_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/gender_model.dart' as gender;
+import 'package:aadaiz_customer_crm/src/views/home/model/gender_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/my_order_model.dart' as order;
+import 'package:aadaiz_customer_crm/src/views/home/model/my_order_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/order.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/review_list_model.dart';
-import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart' as tailor;
+import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/repository/home_repository.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/payment_success.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../order/coupon.dart';
-import '../model/add_address_model.dart';
-import '../model/add_cart_model.dart';
-import '../model/add_favorite_model.dart';
-import '../model/addresslist_model.dart';
-import '../model/cartlist_model.dart';
-import '../model/category_model.dart';
-import '../model/couponlist_model.dart';
-import '../model/couponlist_model.dart' as coupon;
-import '../model/favoritelist_model.dart';
-import '../model/filter_model.dart';
-import '../model/filter_model.dart' as filter;
-import '../model/my_order_model.dart';
-import '../model/my_order_model.dart' as order;
-import '../model/order.dart';
-import '../model/productlist_model.dart';
 
 
 class HomeController extends GetxController {
@@ -50,7 +44,7 @@ class HomeController extends GetxController {
 
   Future<dynamic> getBannerList() async {
     bannerLoading(true);
-    BannerListRes res = await repo.getBannerList();
+    final BannerListRes res = await repo.getBannerList();
     if (res.success == true) {
       bannerLoading(false);
       bannerList.value = res.data!;
@@ -64,7 +58,7 @@ class HomeController extends GetxController {
 
   Future<dynamic> getGender() async {
     genderLoading(true);
-    GenderRes res = await repo.getGender();
+    final GenderRes res = await repo.getGender();
     if (res.success == true) {
       genderLoading(false);
       genderList.value = res.data!;
@@ -79,7 +73,7 @@ class HomeController extends GetxController {
 
   Future<dynamic> getCategoryData(id) async {
     categoryDataLoading(true);
-    CategoryDataRes res = await repo.getCategoryData(id);
+    final CategoryDataRes res = await repo.getCategoryData(id);
     if (res.status == true) {
       categoryDataLoading(false);
       categoryData.value = res;
@@ -109,7 +103,7 @@ class HomeController extends GetxController {
     } else {
       currentPage.value++;
     }
-    ProductListRes res = await repo.getProductList(id:id??catId,page:currentPage.value,price:price??"" ,range: priceRange,rating: rating,
+    final ProductListRes res = await repo.getProductList(id:id??catId,page:currentPage.value,price:price??"" ,range: priceRange,rating: rating,
         filterCategory:filterCategory ,keyword:search.text??'' , bannerId:bannerId);
     if (res.status == true) {
       totalPages.value = res.patternList!.lastPage;
@@ -140,7 +134,7 @@ class HomeController extends GetxController {
     } else {
       tailorCurrentPage.value++;
     }
-    TailorListRes res = await repo.getTailorList(id:id,page:tailorCurrentPage.value,city: city);
+    final TailorListRes res = await repo.getTailorList(id:id,page:tailorCurrentPage.value,city: city);
     if (res.success == true) {
       tailorTotalPages.value = res.data!.lastPage;
       if (res.data!.data!.isNotEmpty) {
@@ -161,7 +155,7 @@ class HomeController extends GetxController {
   
   Future<dynamic> getFilterList() async {
     filterListLoading(true);
-    FilterRes res = await repo.getFilters();
+    final FilterRes res = await repo.getFilters();
     if(res.status==true){
       filterListLoading(false);
       filterList.value=res.categories!;
@@ -175,14 +169,14 @@ class HomeController extends GetxController {
   List isDefaultList = [].obs;
   Future<dynamic> getAddressList() async {
     isDefaultList.clear();
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
     addressListLoading(true);
-    Map body = {
+    final Map body = {
       'action':'list',
       'token':'$token',
     };
-    AddressListRes res = await repo.addressList(jsonEncode(body));
+    final AddressListRes res = await repo.addressList(jsonEncode(body));
     if(res.success==true){
       addressList.value = res.data!;
       isDefaultList = List.generate(
@@ -205,31 +199,31 @@ TextEditingController country = TextEditingController();
 
   var addressLoading=false.obs;
   Future<dynamic> address(action,{dynamic addressId,dynamic isDefault}) async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
     addressLoading(true);
-    Map body = {
-      'name':'${name.text}',
-      'address':'${addressController.text}',
-      'landmark':'${landmark.text}',
-      'city':'${city.text}',
-      'state':'${state.text}',
-      'country':'${country.text}',
-      'pincode':'${zipCode.text}',
-      'mobile':'${mobile.text}',
+    final Map body = {
+      'name':name.text,
+      'address':addressController.text,
+      'landmark':landmark.text,
+      'city':city.text,
+      'state':state.text,
+      'country':country.text,
+      'pincode':zipCode.text,
+      'mobile':mobile.text,
       'is_default':'$isDefault',
       'action':'$action',
       'address_id':'$addressId',
       'token':'$token',
     };
-    AddAddressRes res = await repo.address(jsonEncode(body));
+    final AddAddressRes res = await repo.address(jsonEncode(body));
     if(res.success==true){
       addressLoading(false);
       await getAddressList();
       Get.back();
     }else{
       addressLoading(false);
-      CommonToast.show(msg: '${res!.message}');
+      CommonToast.show(msg: '${res.message}');
     }
   }
 
@@ -247,7 +241,7 @@ TextEditingController country = TextEditingController();
     } else {
       favoriteCurrentPage.value++;
     }
-    FavoriteListRes res = await repo.favoriteList();
+    final FavoriteListRes res = await repo.favoriteList();
     if(res.success==true){
       favoriteTotalPages.value=res.data!.lastPage;
       if(res.data!.data!.isNotEmpty){
@@ -267,13 +261,13 @@ TextEditingController country = TextEditingController();
   }
 
   Future<dynamic> addFavorite(value,id) async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    Map body ={
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final Map body ={
       '$value': '$id',
       'token': '$token',
     };
-    AddFavoriteRes res = await repo.addFavorite(jsonEncode(body));
+    final AddFavoriteRes res = await repo.addFavorite(jsonEncode(body));
   }
 
 
@@ -283,16 +277,16 @@ TextEditingController country = TextEditingController();
 
   Future<dynamic> getCartList({dynamic code, dynamic apply}) async {
     itemValues.clear();
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
     cartListLoading(true);
-    Map body = {
+    final Map body = {
       'action':'list',
       'coupon_apply':'$apply',
       'coupon_code':'$code',
       'token':'$token',
     };
-    CartListRes res = await repo.cartList(jsonEncode(body));
+    final CartListRes res = await repo.cartList(jsonEncode(body));
     if(res.success==true){
       cartListLoading(false);
       cartList.value = res;
@@ -351,10 +345,10 @@ TextEditingController country = TextEditingController();
       dynamic cartId,
       dynamic fabricMeter,
   }) async {
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
     cartLoading(true);
-    Map body = {
+    final Map body = {
       'pattern_id':'$id',
       'fabric_metre':fabricMeter,
       'quantity':'$quantity',
@@ -373,7 +367,7 @@ TextEditingController country = TextEditingController();
       'coupon_code':'',
       'token':'$token',
     };
-    AddCartRes res = await repo.addCart(jsonEncode(body));
+    final AddCartRes res = await repo.addCart(jsonEncode(body));
     if(res.success==true){
       cartLoading(false);
     }else{
@@ -402,7 +396,7 @@ TextEditingController country = TextEditingController();
 
   Future<dynamic> getCouponList() async {
     couponListLoading(true);
-    CouponListRes res = await repo.couponList();
+    final CouponListRes res = await repo.couponList();
     if(res.success==true){
       couponListLoading(false);
       couponList.value = res.data!;
@@ -423,7 +417,7 @@ TextEditingController country = TextEditingController();
     } else {
       orderCurrentPage.value++;
     }
-    MyOrderListRes res = await repo.myOrders(status,orderCurrentPage.value);
+    final MyOrderListRes res = await repo.myOrders(status,orderCurrentPage.value);
     if(res.status==true){
       orderTotalPages.value = res.data!.lastPage!;
       if(res.data!.data!.isNotEmpty){
@@ -444,14 +438,14 @@ TextEditingController country = TextEditingController();
  var placeOrderLoading =false.obs;
 
   Future<dynamic> placeOrder({required dynamic addressId}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
 
 
-    List<int> cartIds = [];
+    final List<int> cartIds = [];
 
     if (MaterialController.to.cartList.value?.items != null) {
-      for (var cartItem in MaterialController.to.cartList.value!.items!) {
+      for (final cartItem in MaterialController.to.cartList.value!.items!) {
         if (cartItem.cartId != null) {
           cartIds.add(cartItem.cartId);
         }
@@ -460,29 +454,29 @@ TextEditingController country = TextEditingController();
 
     placeOrderLoading.value = true;
 
-    Map<String, dynamic> body = {
+    final Map<String, dynamic> body = {
       "address": addressId,
       "cart_ids": cartIds,
       "token": token,
     };
 
-    OrderRes res = await repo.placeOrder(jsonEncode(body));
+    final OrderRes res = await repo.placeOrder(jsonEncode(body));
 
     placeOrderLoading.value = false;
 
     if (res.status == true) {
-      await Get.to(() => PaymentSuccess());
+      await Get.to(() => const PaymentSuccess());
     }
   }
 
   Future<dynamic>  cancelOrder() async{
-    SharedPreferences prefs=await SharedPreferences.getInstance();
-    var token=prefs.getString("token");
-    Map body ={
+    final SharedPreferences prefs=await SharedPreferences.getInstance();
+    final token=prefs.getString("token");
+    final Map body ={
       'order_id':'',
       'token':'$token',
     };
-    OrderRes res = await repo.cancelOrder(jsonEncode(body));
+    final OrderRes res = await repo.cancelOrder(jsonEncode(body));
   }
 
   final reviewCurrentPage = 1.obs;
@@ -502,7 +496,7 @@ TextEditingController country = TextEditingController();
       reviewCurrentPage.value++;
     }
     reviewLoading(true);
-    ReviewListRes res = await repo.reviewList(value,id,reviewCurrentPage);
+    final ReviewListRes res = await repo.reviewList(value,id,reviewCurrentPage);
     if(res.status==true){
       reviewLoading(false);
       reviewTotalPages.value=res.data!.lastPage!;

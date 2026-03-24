@@ -54,13 +54,13 @@ class Data {
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    id: json["id"]??null,
-    patternId: json["pattern_id"]??null,
-    price: json["price"]??null,
-    subTotalprice: json["sub_totalprice"]??null,
-    totalPrice: json["total_price"]??null,
-    quantity: json["quantity"]??null,
-    gstAmount: json["gst_amount"]??null,
+    id: json["id"],
+    patternId: json["pattern_id"],
+    price: json["price"],
+    subTotalprice: json["sub_totalprice"],
+    totalPrice: json["total_price"],
+    quantity: json["quantity"],
+    gstAmount: json["gst_amount"],
     pattern: json["pattern"] == null ? null : Pattern.fromMap(json["pattern"]),
   );
 
@@ -96,18 +96,18 @@ class Pattern {
   String toJson() => json.encode(toMap());
 
   factory Pattern.fromMap(Map<String, dynamic> json) => Pattern(
-    id: json["id"]??null,
-    pCatId: json["p_cat_id"]??null,
-    price: json["price"]??null,
-    title: json["title"]??null,
-    subTitle: json["sub_title"]??null,
+    id: json["id"],
+    pCatId: json["p_cat_id"],
+    price: json["price"],
+    title: json["title"],
+    subTitle: json["sub_title"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "p_cat_id": pCatId??null,
-    "price": price??null,
-    "title": title??null,
-    "sub_title": subTitle??null,
+    "id": id,
+    "p_cat_id": pCatId,
+    "price": price,
+    "title": title,
+    "sub_title": subTitle,
   };
 }

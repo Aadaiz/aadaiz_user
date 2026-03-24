@@ -1,13 +1,10 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
-import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/order_card.dart';
-import 'package:aadaiz_customer_crm/src/views/my_orders/order_tracking/track_order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ActiveOrders extends StatefulWidget {
@@ -19,7 +16,7 @@ class ActiveOrders extends StatefulWidget {
 
 class _ActiveOrdersState extends State<ActiveOrders> {
   final RefreshController refreshController =
-  RefreshController(initialRefresh: false);
+  RefreshController();
 
   @override
   void initState() {
@@ -41,7 +38,6 @@ class _ActiveOrdersState extends State<ActiveOrders> {
       color: AppColor.white,
       child: SmartRefresher(
         controller: refreshController,
-        enablePullDown: true,
         enablePullUp: true,
         physics: const AlwaysScrollableScrollPhysics(),
 
@@ -84,10 +80,10 @@ class _ActiveOrdersState extends State<ActiveOrders> {
             ),
             itemCount: list.length,
             itemBuilder: (context, index) {
-              var data = list[index];
-              List images = data.materialImage!.split(',');
+              final data = list[index];
+              final List images = data.materialImage!.split(',');
 
-              double rating = 5.0;
+              const double rating = 5;
               // (data.rating is num)
               //     ? (data.rating as num).toDouble()
               //     : 1.0;

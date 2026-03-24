@@ -154,7 +154,7 @@ class _AddLocationState extends State<AddLocation> {
             children: [
               Center(
                 child: Container(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
@@ -181,7 +181,7 @@ class _AddLocationState extends State<AddLocation> {
                             fontSize: 16,
                           ),
                           enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
 
                           focusedBorder: const UnderlineInputBorder(
@@ -215,7 +215,7 @@ class _AddLocationState extends State<AddLocation> {
                           ),
 
                           enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
 
                           focusedBorder: const UnderlineInputBorder(
@@ -234,7 +234,7 @@ class _AddLocationState extends State<AddLocation> {
                             fontSize: 16,
                           ),
                           enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
 
                           focusedBorder: const UnderlineInputBorder(
@@ -253,7 +253,7 @@ class _AddLocationState extends State<AddLocation> {
                             fontSize: 16,
                           ),
                           enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1),
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
 
                           focusedBorder: const UnderlineInputBorder(

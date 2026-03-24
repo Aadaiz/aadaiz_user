@@ -24,7 +24,7 @@ class CategoryDataRes {
   factory CategoryDataRes.fromMap(Map<String, dynamic> json) => CategoryDataRes(
     status: json["status"],
     message: json["message"],
-    specialPatternText: json["special_pattern_text"]??null,
+    specialPatternText: json["special_pattern_text"],
     catDetails: json["cat_details"] == null ? null : CatDetails.fromMap(json["cat_details"]),
     data: json["data"] == null ? [] : List<Datum>.from(json["data"]!.map((x) => Datum.fromMap(x))),
     specialPatterns: json["special_patterns"] == null ? [] : List<SpecialPattern>.from(json["special_patterns"]!.map((x) => SpecialPattern.fromMap(x))),
@@ -33,7 +33,7 @@ class CategoryDataRes {
   Map<String, dynamic> toMap() => {
     "status": status,
     "message": message,
-    "special_pattern_text": specialPatternText??null,
+    "special_pattern_text": specialPatternText,
     "cat_details": catDetails?.toMap(),
     "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
     "special_patterns": specialPatterns == null ? [] : List<dynamic>.from(specialPatterns!.map((x) => x.toMap())),
@@ -60,19 +60,19 @@ class CatDetails {
   String toJson() => json.encode(toMap());
 
   factory CatDetails.fromMap(Map<String, dynamic> json) => CatDetails(
-    id: json["id"]??null,
-    catName: json["cat_name"]??null,
-    imageUrl: json["image_url"]??null,
-    slideImageUrl: json["slide_image_url"]??null,
-    catId: json["cat_id"]??null,
+    id: json["id"],
+    catName: json["cat_name"],
+    imageUrl: json["image_url"],
+    slideImageUrl: json["slide_image_url"],
+    catId: json["cat_id"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "cat_name": catName??null,
-    "image_url": imageUrl??null,
-    "slide_image_url": slideImageUrl??null,
-    "cat_id": catId??null,
+    "id": id,
+    "cat_name": catName,
+    "image_url": imageUrl,
+    "slide_image_url": slideImageUrl,
+    "cat_id": catId,
   };
 }
 
@@ -94,17 +94,17 @@ class Datum {
   String toJson() => json.encode(toMap());
 
   factory Datum.fromMap(Map<String, dynamic> json) => Datum(
-    id: json["id"]??null,
-    catId: json["cat_id"]??null,
-    imageUrl: json["image_url"]??null,
-    catName: json["cat_name"]??null,
+    id: json["id"],
+    catId: json["cat_id"],
+    imageUrl: json["image_url"],
+    catName: json["cat_name"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "cat_id": catId??null,
-    "image_url": imageUrl??null,
-    "cat_name": catName??null,
+    "id": id,
+    "cat_id": catId,
+    "image_url": imageUrl,
+    "cat_name": catName,
   };
 }
 
@@ -128,18 +128,18 @@ class SpecialPattern {
   String toJson() => json.encode(toMap());
 
   factory SpecialPattern.fromMap(Map<String, dynamic> json) => SpecialPattern(
-    id: json["id"]??null,
-    pCatId: json["p_cat_id"]??null,
-    title: json["title"]??null,
-    subTitle: json["sub_title"]??null,
-    imageUrl: json["image_url"]??null,
+    id: json["id"],
+    pCatId: json["p_cat_id"],
+    title: json["title"],
+    subTitle: json["sub_title"],
+    imageUrl: json["image_url"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "p_cat_id": pCatId??null,
-    "title": title??null,
-    "sub_title": subTitle??null,
-    "image_url": imageUrl??null,
+    "id": id,
+    "p_cat_id": pCatId,
+    "title": title,
+    "sub_title": subTitle,
+    "image_url": imageUrl,
   };
 }

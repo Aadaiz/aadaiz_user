@@ -1,17 +1,15 @@
+import 'dart:developer';
+
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatMessageController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatSocketController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/voice_call.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
-import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
 import 'package:chatview/chatview.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {
   final String token;
@@ -94,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
         msgCon.clearMessages();
 
-        for (var m in list) {
+        for (final m in list) {
           msgCon.addMessage(Map<String, dynamic>.from(m));
         }
       }
@@ -152,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
-                    margin: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                    margin: EdgeInsets.symmetric(horizontal: 8),
                     padding: EdgeInsets.all(8),
                   ),
 
@@ -168,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 0),
+                    margin: const EdgeInsets.symmetric(),
                     padding: const EdgeInsets.all(10),
                   ),
                 ),
@@ -215,10 +213,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: Colors.blue.shade50,
-                          child: (widget.adminProfile != null && widget.adminProfile!.isNotEmpty)
+                          child: (widget.adminProfile.isNotEmpty)
                               ? ClipOval(
                             child: Image.network(
-                              widget.adminProfile!,
+                              widget.adminProfile,
                               width: 40,
                               height: 40,
                               fit: BoxFit.cover,
@@ -242,7 +240,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         IconButton(
                           icon: const Icon(Icons.call, size: 26),
                           onPressed: () async {
-                            final tempChannel = "testchannelname";
+                            const tempChannel = "testchannelname";
 
                             final callData = await msgCon.callOthers(
                               ProfileController.to.profileData.value.username ??
@@ -299,8 +297,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
   Widget _adminInitial() {
     return Text(
-      (widget.adminName?.isNotEmpty ?? false)
-          ? widget.adminName!.substring(0, 1).toUpperCase()
+      (widget.adminName.isNotEmpty ?? false)
+          ? widget.adminName.substring(0, 1).toUpperCase()
           : "",
       style: const TextStyle(
         fontSize: 20,

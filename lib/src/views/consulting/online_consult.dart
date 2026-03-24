@@ -1,14 +1,12 @@
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/appointment.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/completed.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/scheduled.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../res/widgets/common_app_bar.dart';
 
 class OnlineConsult extends StatefulWidget {
   const OnlineConsult({super.key});
@@ -108,7 +106,7 @@ class _OnlineConsultState extends State<OnlineConsult> with SingleTickerProvider
               SizedBox(
                 height: screenHeight*0.78,
                 child: TabBarView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                     controller: _tabController,
                     children: const <Widget>[
                       Appointment(),

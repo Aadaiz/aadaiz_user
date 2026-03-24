@@ -5,7 +5,6 @@ import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,7 +70,6 @@ class _YourAdsViewDetailsState extends State<YourAdsViewDetails> {
                       options: CarouselOptions(
                         height: screenHeight * 0.28,
                         viewportFraction: 1,
-                        autoPlay: false,
                       ),
                       items:
                           widget.imageUrls.map((image) {

@@ -1,5 +1,4 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
-import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -4,14 +4,12 @@ import 'package:aadaiz_customer_crm/src/utils/custom_text_field.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/order/saved_address.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_address_model.dart';
+import 'package:country_state_city/country_state_city.dart' as csc;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:country_state_city/country_state_city.dart' as csc;
-
-import '../home/model/add_address_model.dart';
 
 class NewAddress extends StatefulWidget {
   const NewAddress({super.key, this.data, this.isEdit = false});
@@ -86,7 +84,6 @@ class _NewAddressState extends State<NewAddress> {
         centerTitle: true,
         elevation: 2,
         shadowColor: AppColor.black,
-        forceMaterialTransparency: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -157,7 +154,7 @@ class _NewAddressState extends State<NewAddress> {
                                                 const AlwaysScrollableScrollPhysics(),
                                             itemCount: countries.length,
                                             itemBuilder: (context, index) {
-                                              var data = countries[index];
+                                              final data = countries[index];
                                               return InkWell(
                                                 onTap: () async {
                                                   Get.back();
@@ -178,7 +175,7 @@ class _NewAddressState extends State<NewAddress> {
                                                     children: [
                                                       Expanded(
                                                         child: Text(
-                                                          '${data.name}',
+                                                          data.name,
                                                           style: GoogleFonts.poppins(
                                                             textStyle: TextStyle(
                                                               fontSize: 16,
@@ -256,7 +253,7 @@ class _NewAddressState extends State<NewAddress> {
                                                 const AlwaysScrollableScrollPhysics(),
                                             itemCount: states.length,
                                             itemBuilder: (context, index) {
-                                              var data = states[index];
+                                              final data = states[index];
                                               return InkWell(
                                                 onTap: () async {
                                                   Get.back();
@@ -277,7 +274,7 @@ class _NewAddressState extends State<NewAddress> {
                                                     children: [
                                                       Expanded(
                                                         child: Text(
-                                                          '${data.name}',
+                                                          data.name,
                                                           style: GoogleFonts.poppins(
                                                             textStyle: TextStyle(
                                                               fontSize: 16,
@@ -358,7 +355,7 @@ class _NewAddressState extends State<NewAddress> {
                                                     const AlwaysScrollableScrollPhysics(),
                                                 itemCount: cities.length,
                                                 itemBuilder: (context, index) {
-                                                  var data = cities[index];
+                                                  final data = cities[index];
                                                   return InkWell(
                                                     onTap: () async {
                                                       Get.back();
@@ -377,7 +374,7 @@ class _NewAddressState extends State<NewAddress> {
                                                         children: [
                                                           Expanded(
                                                             child: Text(
-                                                              '${data.name}',
+                                                              data.name,
                                                               style: GoogleFonts.poppins(
                                                                 textStyle: TextStyle(
                                                                   fontSize: 16,
@@ -437,11 +434,10 @@ class _NewAddressState extends State<NewAddress> {
                     child: Checkbox(
                       //checkColor: appcolor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3.0),
+                        borderRadius: BorderRadius.circular(3),
                       ),
-                      side: MaterialStateBorderSide.resolveWith(
+                      side: WidgetStateBorderSide.resolveWith(
                         (states) => const BorderSide(
-                          width: 1,
                           color: Color(0xffBCB5B5),
                         ),
                       ),

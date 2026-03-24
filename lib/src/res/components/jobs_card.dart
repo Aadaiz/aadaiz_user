@@ -13,7 +13,6 @@ class JobsCard extends StatelessWidget {
   final bool isApplied;
   final Function()? onTap;
 
-
   const JobsCard({
     super.key,
     required this.title,
@@ -32,15 +31,19 @@ class JobsCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+        margin: EdgeInsets.only(
+          bottom: screenHeight * 0.02,
+          left: screenWidth * 0.02,
+          right: screenWidth * 0.02,
+        ),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 4,
-              offset: const Offset(2, 2),
+              color: Colors.grey.withAlpha(30),
+              blurRadius: 8,
+              spreadRadius: 2,
             ),
           ],
         ),
@@ -158,7 +161,8 @@ class JobsCard extends StatelessWidget {
                             color: Colors.green,
                           ),
                         ),
-                      if (isApplied == true) SizedBox(width: screenWidth * 0.01),
+                      if (isApplied == true)
+                        SizedBox(width: screenWidth * 0.01),
                       Text(
                         isApplied == true ? 'Applied' : 'Apply Now',
                         textAlign: TextAlign.center,
@@ -181,7 +185,7 @@ class JobsCard extends StatelessWidget {
 }
 
 class YourJobCard extends StatelessWidget {
- final bool? isLoading;
+  final bool? isLoading;
   final String title;
   final String subTitle;
   final String time;
@@ -190,15 +194,14 @@ class YourJobCard extends StatelessWidget {
   final Function()? editOnTap;
   final Function()? deleteOnTap;
 
-
   const YourJobCard({
     super.key,
-     this.isLoading,
+    this.isLoading,
     required this.title,
     required this.subTitle,
     required this.time,
     required this.jobs,
-     this.isApplied,
+    this.isApplied,
     this.editOnTap,
     this.deleteOnTap,
   });
@@ -209,15 +212,19 @@ class YourJobCard extends StatelessWidget {
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
     return Container(
-      margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+      margin: EdgeInsets.only(
+        bottom: screenHeight * 0.02,
+        left: screenWidth * 0.02,
+        right: screenWidth * 0.02,
+      ),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(2, 2),
+            color: Colors.grey.withAlpha(30),
+            blurRadius: 8,
+            spreadRadius: 2,
           ),
         ],
       ),
@@ -270,7 +277,7 @@ class YourJobCard extends StatelessWidget {
                   vertical: screenHeight * 0.002,
                 ),
                 decoration: BoxDecoration(
-                  color: isApplied == true ? Colors.green : AppColor.minusColor,
+                  color: isApplied == 'approved' ? Colors.green : AppColor.minusColor,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 width: screenWidth * 0.25,
@@ -290,7 +297,8 @@ class YourJobCard extends StatelessWidget {
                           color: Colors.green,
                         ),
                       ),
-                    if (isApplied == 'approved') SizedBox(width: screenWidth * 0.01),
+                    if (isApplied == 'approved')
+                      SizedBox(width: screenWidth * 0.01),
                     Text(
                       isApplied == 'approved' ? 'Approved' : 'Pending',
                       textAlign: TextAlign.center,
@@ -372,17 +380,19 @@ class YourJobCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(),
-              SizedBox(
-                width: screenWidth / 2.5,
-                height: screenHeight * 0.045,
-                child: CommonButton(
-                  loading: isLoading,
-                  press: (){
-                    deleteOnTap!();
-                  },
-                  text: 'Delete Post',
-                  borderRadius: 0.0,
+              const SizedBox(width: 10),
+              Expanded(
+                child: SizedBox(
+                  width: screenWidth / 2.5,
+                  height: screenHeight * 0.045,
+                  child: CommonButton(
+                    loading: isLoading,
+                    press: () {
+                      deleteOnTap!();
+                    },
+                    text: 'Delete Post',
+                    borderRadius: 0.0,
+                  ),
                 ),
               ),
             ],
@@ -392,6 +402,7 @@ class YourJobCard extends StatelessWidget {
     );
   }
 }
+
 class AppliedJobCard extends StatelessWidget {
   final String title;
   final String company;
@@ -455,7 +466,6 @@ class AppliedJobCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// HEADER
             Row(
               children: [
@@ -475,14 +485,20 @@ class AppliedJobCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title,
-                          style: GoogleFonts.dmSans(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600)),
-                      Text(company,
-                          style: GoogleFonts.dmSans(
-                              fontSize: 13.sp,
-                              color: AppColor.textFieldLabelColor)),
+                      Text(
+                        title,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        company,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 13.sp,
+                          color: AppColor.textFieldLabelColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -490,7 +506,9 @@ class AppliedJobCard extends StatelessWidget {
                 /// STATUS BADGE
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 4),
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: getStatusColor(),
                     borderRadius: BorderRadius.circular(4),
@@ -502,7 +520,7 @@ class AppliedJobCard extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                )
+                ),
               ],
             ),
 
@@ -512,18 +530,23 @@ class AppliedJobCard extends StatelessWidget {
             Wrap(
               spacing: 6,
               runSpacing: 6,
-              children: jobs.map((e) {
-                return Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColor.jobDetailContainerBg,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(e,
-                      style: GoogleFonts.dmSans(fontSize: 12.sp)),
-                );
-              }).toList(),
+              children:
+                  jobs.map((e) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColor.jobDetailContainerBg,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        e,
+                        style: GoogleFonts.dmSans(fontSize: 12.sp),
+                      ),
+                    );
+                  }).toList(),
             ),
 
             SizedBox(height: screenHeight * 0.015),
@@ -532,9 +555,13 @@ class AppliedJobCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(time,
-                    style: GoogleFonts.dmSans(
-                        fontSize: 11.sp, color: Colors.grey)),
+                Text(
+                  time,
+                  style: GoogleFonts.dmSans(
+                    fontSize: 11.sp,
+                    color: Colors.grey,
+                  ),
+                ),
 
                 /// Optional withdraw
                 if (status == 'applied')
@@ -557,6 +584,7 @@ class AppliedJobCard extends StatelessWidget {
     );
   }
 }
+
 class ApplicantCard extends StatelessWidget {
   final String name;
   final String role;
@@ -596,7 +624,6 @@ class ApplicantCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// HEADER
           Row(
             children: [
@@ -612,14 +639,20 @@ class ApplicantCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
-                        style: GoogleFonts.dmSans(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600)),
-                    Text(role,
-                        style: GoogleFonts.dmSans(
-                            fontSize: 13.sp,
-                            color: AppColor.textFieldLabelColor)),
+                    Text(
+                      name,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      role,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 13.sp,
+                        color: AppColor.textFieldLabelColor,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -632,26 +665,29 @@ class ApplicantCard extends StatelessWidget {
           Wrap(
             spacing: 6,
             runSpacing: 6,
-            children: skills.map((e) {
-              return Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColor.jobDetailContainerBg,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(e,
-                    style: GoogleFonts.dmSans(fontSize: 12.sp)),
-              );
-            }).toList(),
+            children:
+                skills.map((e) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColor.jobDetailContainerBg,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(e, style: GoogleFonts.dmSans(fontSize: 12.sp)),
+                  );
+                }).toList(),
           ),
 
           SizedBox(height: screenHeight * 0.015),
 
           /// TIME
-          Text(time,
-              style: GoogleFonts.dmSans(
-                  fontSize: 11.sp, color: Colors.grey)),
+          Text(
+            time,
+            style: GoogleFonts.dmSans(fontSize: 11.sp, color: Colors.grey),
+          ),
 
           SizedBox(height: screenHeight * 0.015),
 
@@ -682,15 +718,16 @@ class ApplicantCard extends StatelessWidget {
 
               Expanded(
                 child: CommonButton(
-                  press: (){
+                  height: screenHeight * 0.045,
+                  press: () {
                     onAccept!();
                   },
                   text: "Accept",
-                  borderRadius: 0,
+                  borderRadius: 0.0,
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

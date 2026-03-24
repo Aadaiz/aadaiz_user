@@ -6,7 +6,6 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -234,8 +233,8 @@ bool isPriceChoosed=false;
             max: _maxPrice,
             divisions: 100,
             labels: RangeLabels(
-              '\₹${_priceRange.start.round()}',
-              '\₹${_priceRange.end.round()}',
+              '₹${_priceRange.start.round()}',
+              '₹${_priceRange.end.round()}',
             ),
             onChanged: (RangeValues values) {
               setState(() {
@@ -515,9 +514,7 @@ bool isPriceChoosed=false;
 
   void _applyFilters() {
     controller.getMaterials(
-        rating: _selectedRating != null
-            ? _selectedRating.toString()
-            : null,
+        rating: _selectedRating?.toString(),
 
         minPrice: isPriceChoosed
             ? _priceRange.start.round().toString()

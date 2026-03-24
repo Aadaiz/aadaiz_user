@@ -55,10 +55,10 @@ class _FabricWidgetState extends State<FabricWidget> {
             spacing: 8,
             runSpacing: 8,
             children: MaterialController.to.materialList.value.asMap().entries.take(4).map((entry) {
-              int index = entry.key;
-              var e = entry.value;
-              bool prime = isPrime(index);
-              int value = customFunction(index);
+              final int index = entry.key;
+              final e = entry.value;
+              final bool prime = isPrime(index);
+              final int value = customFunction(index);
               double width;
               if (prime) {
                 width = value == 1 ? 0.5 : 0.4;
@@ -98,7 +98,7 @@ class _FabricWidgetState extends State<FabricWidget> {
                                 ),
                               ),
                             ),
-                        imageUrl: (e.image),
+                        imageUrl: e.image,
                       )
                     ),
                     index != 3

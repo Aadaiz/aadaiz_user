@@ -1,8 +1,7 @@
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/calling_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../app_components/calling_screen.dart';
 
 class ConnectCall extends StatefulWidget {
   const ConnectCall({super.key});
@@ -21,16 +20,14 @@ class _ConnectCallState extends State<ConnectCall> {
         leading: InkWell(
           onTap: ()=> Get.back(),
           child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16),
             child: Image.asset("assets/images/bac1.png",height: 39.h,width: 39.w,),
           ),
         ),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CallScreen(
+          const CallScreen(
             name: 'Aadaiz Team',
             status: 'Calling...',
             imageUrl: 'https://t4.ftcdn.net/jpg/05/07/95/21/360_F_507952111_67OxZSqsFTUPiSkKqb7QkSmdEo5WFght.jpg',

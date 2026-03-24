@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:path/path.dart' as p;
+
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 class Images {
 
@@ -14,7 +14,7 @@ class Images {
   }) async {
     print('Compression started');
     File compressedFiled =File('');
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
     final String targetPath =  p.join(Directory.systemTemp.path, '$now.${format.name}');
 
     // Get the original file size

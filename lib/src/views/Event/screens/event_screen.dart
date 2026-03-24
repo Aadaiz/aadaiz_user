@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class EventScreen extends StatefulWidget {
   const EventScreen({super.key});
@@ -200,7 +200,6 @@ class _EventScreenState extends State<EventScreen> {
               return Expanded(
                 child: SmartRefresher(
                   controller: controller.refreshController,
-                  enablePullDown: true,
                   enablePullUp: true,
                   onRefresh: () {
                     controller.getEventData(true);

@@ -1,5 +1,3 @@
-import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
-import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -187,7 +185,6 @@ class _PostCardState extends State<PostCard> {
             child: ReadMoreText(
               widget.post.description,
               trimMode: TrimMode.Line,
-              trimLines: 2,
               colorClickableText: Colors.black,
               style: GoogleFonts.dmSans(
                 fontSize: 12.sp,

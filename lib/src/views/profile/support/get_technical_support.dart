@@ -8,8 +8,6 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GetTechnicalSupport extends StatefulWidget {
@@ -57,8 +55,7 @@ class _GetTechnicalSupportState extends State<GetTechnicalSupport> {
           ),
           elevation: 2,
           centerTitle: true,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

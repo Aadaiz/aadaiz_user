@@ -55,7 +55,7 @@ class ChatSocketController extends GetxController {
   }
 
   // ------------ SEND MESSAGE --------------
-  void sendMessage({
+  Future<void> sendMessage({
     required String token,
     required String orderId,
     required String userId,

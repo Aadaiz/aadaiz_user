@@ -23,7 +23,7 @@ class CommonTextField extends StatefulWidget {
   final dynamic edit;
   final String? Function(String?)? validator;
 
-  CommonTextField(
+  const CommonTextField(
       {super.key,
         this.asset,
         required this.hintText,
@@ -74,7 +74,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
         color: const Color(0xffF7F8F9),
         boxShadow: const [
           BoxShadow(
-              color: Colors.white, blurRadius: 2.0, offset: Offset(0.0, 0.0)),
+              color: Colors.white, blurRadius: 2),
         ],
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
@@ -83,7 +83,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
         children: <Widget>[
           if (widget.enablePrefixImage)
             Padding(
-                padding: EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 15),
                 child: (widget.iconData != null)
                     ? Icon(
                   widget.iconData,
@@ -117,10 +117,10 @@ class _CommonTextFieldState extends State<CommonTextField> {
                         color: AppColor.greyTitleColor,
                         fontWeight: FontWeight.w400)),
                 contentPadding: widget.forPassword
-                    ? const EdgeInsets.symmetric(vertical: 10, horizontal: 0)
+                    ? const EdgeInsets.symmetric(vertical: 10)
                     :widget.isDropDown
-                    ? const EdgeInsets.symmetric(vertical: 10, horizontal: 0)
-                    : const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                    ? const EdgeInsets.symmetric(vertical: 10)
+                    : const EdgeInsets.symmetric(vertical: 8),
                 isDense: true,
                 suffixIcon: widget.forPassword
                     ? GestureDetector(
@@ -142,7 +142,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
                   child: Text(widget.edit,
                       style: GoogleFonts.inter(
                           textStyle:  const TextStyle(
-                              fontSize: 11.00,
+                              fontSize: 11,
                               color: Colors.red,
                               fontWeight: FontWeight.w500))),
                 ):
@@ -151,7 +151,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
               onChanged: (value) => widget.onchange!(value),
               style: GoogleFonts.inter(
                   textStyle:  TextStyle(
-                      fontSize: 14.00,
+                      fontSize: 14,
                       color: AppColor.greyTitleColor,
                       fontWeight: FontWeight.w700)),
               validator: widget.validator,

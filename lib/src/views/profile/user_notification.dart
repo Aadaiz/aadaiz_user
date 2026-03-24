@@ -1,14 +1,12 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/controller/customer_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../customer_crm/controller/customer_controller.dart';
 
 class UserNotification extends StatefulWidget {
   const UserNotification({super.key});
@@ -51,7 +49,6 @@ class _UserNotificationState extends State<UserNotification> {
         elevation: 2,
         centerTitle: true,
         shadowColor: AppColor.black,
-        forceMaterialTransparency: false,
       ),
       body: Column(
         children: [
@@ -62,7 +59,6 @@ class _UserNotificationState extends State<UserNotification> {
               child: SmartRefresher(
                 controller: refreshController,
                 physics: const AlwaysScrollableScrollPhysics(),
-                enablePullDown: true,
                 enablePullUp: true,
                 onRefresh: () async {
                   final result = await con.getNotifications(isRefresh: true);
@@ -91,9 +87,9 @@ class _UserNotificationState extends State<UserNotification> {
                   ),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    var data = con.notificationList[index];
+                    final data = con.notificationList[index];
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -119,7 +115,7 @@ class _UserNotificationState extends State<UserNotification> {
                               ),
                             ),
                             Text(
-                              '${con.timeAgo(data.createdAt!)}',
+                              con.timeAgo(data.createdAt!),
                               style: GoogleFonts.dmSans(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 9.00.sp,

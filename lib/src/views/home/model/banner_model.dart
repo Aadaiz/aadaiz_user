@@ -50,20 +50,20 @@ class Datum {
   String toJson() => json.encode(toMap());
 
   factory Datum.fromMap(Map<String, dynamic> json) => Datum(
-    id: json["id"]??null,
-    title: json["title"]??null,
-    imageUrl: json["images"]??null,
-    status: json["status"]??null,
-    createdAt: json["created_at"]??null,
-    updatedAt: json["updated_at"] ??null,
+    id: json["id"],
+    title: json["title"],
+    imageUrl: json["images"],
+    status: json["status"],
+    createdAt: json["created_at"],
+    updatedAt: json["updated_at"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "title": title??null,
-    "images": imageUrl??null,
-    "status": status??null,
-    "created_at": createdAt??null,
-    "updated_at": updatedAt??null,
+    "id": id,
+    "title": title,
+    "images": imageUrl,
+    "status": status,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
   };
 }

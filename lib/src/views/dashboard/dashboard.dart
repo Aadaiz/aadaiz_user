@@ -3,25 +3,21 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/Event/screens/event_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/consulting.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/screens/customer_dashboard.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_list_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/order/cart.dart';
 import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customize.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_list_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/material/material_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/my_orders/my_orders_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/order/material_cart.dart';
 import 'package:aadaiz_customer_crm/src/views/post/screens/post_list.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate_border/flutter_animate_border.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../customer_crm/screens/customer_dashboard.dart';
-import '../home/self_customization/self_customize.dart';
-import '../my_orders/my_orders_screen.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -94,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
     },
   ];
   final FlutterAnimateBorderController aniController =
-      FlutterAnimateBorderController(isLoading: true);
+      FlutterAnimateBorderController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,10 +120,10 @@ class _DashboardState extends State<Dashboard> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: drawerIcon.length,
                   itemBuilder: (context, index) {
-                    bool isCustomerOrders =
+                    final bool isCustomerOrders =
                         drawerIcon[index]['text'] == 'Customer orders';
 
-                    Widget menuRow = Row(
+                    final Widget menuRow = Row(
                       children: [
                         Image.asset(
                           drawerIcon[index]['icon'],

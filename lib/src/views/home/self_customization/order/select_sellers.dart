@@ -2,19 +2,17 @@ import 'dart:io';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
-import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/product_customization.dart';
 import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../res/widgets/common_app_bar.dart';
 
 class SelectSellers extends StatefulWidget {
   const SelectSellers({super.key, required this.image, this.data});
@@ -65,7 +63,7 @@ class _SelectSellersState extends State<SelectSellers> {
                 ),
                 child: AnimatedRotation(
                   turns: 0.5,
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   child: Image.file(widget.image),
                 ),
               ),
@@ -107,7 +105,7 @@ class _SelectSellersState extends State<SelectSellers> {
               ),
               child: AnimatedRotation(
                 turns: 0.5,
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 child: Image.file(widget.image,fit: BoxFit.cover,),
               ),
             ),
@@ -115,9 +113,9 @@ class _SelectSellersState extends State<SelectSellers> {
             Obx(
               () =>
                   HomeController.to.tailorLoading.value
-                      ? CommonLoading()
+                      ? const CommonLoading()
                       : HomeController.to.tailorList.isEmpty
-                      ? CommonEmpty(title: 'tailors')
+                      ? const CommonEmpty(title: 'tailors')
                       : ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.symmetric(
@@ -126,15 +124,14 @@ class _SelectSellersState extends State<SelectSellers> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: HomeController.to.tailorList.length,
                         itemBuilder: (context, i) {
-                          var data = HomeController.to.tailorList[i];
+                          final data = HomeController.to.tailorList[i];
                           return Padding(
                             padding: EdgeInsets.only(
                               bottom: screenHeight * 0.03,
                             ),
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
-                                vertical: 0,
                               ),
                               decoration: BoxDecoration(
                                 color: AppColor.white,
@@ -299,7 +296,7 @@ class _SelectSellersState extends State<SelectSellers> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 15),
+                                  const SizedBox(height: 15),
                                 ],
                               ),
                             ),

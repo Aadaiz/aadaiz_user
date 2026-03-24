@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_textfiled_two.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
@@ -11,9 +13,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_data_model.dart';
 
 class LastStepCreateJob extends StatefulWidget {
-  LastStepCreateJob({super.key});
+  final bool? isEditing;
+  final Datum? data;
+  const LastStepCreateJob({super.key, this.isEditing = false, this.data});
 
   @override
   State<LastStepCreateJob> createState() => _LastStepCreateJobState();
@@ -21,6 +26,119 @@ class LastStepCreateJob extends StatefulWidget {
 
 class _LastStepCreateJobState extends State<LastStepCreateJob> {
   final JobsController controller = Get.find<JobsController>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isEditing == true) {
+        final fromTime = DateFormat('HH:mm').parse(widget.data?.startTime);
+        final toTime = DateFormat('HH:mm').parse(widget.data?.endTime);
+
+        widget.data?.isFresher == '1'
+            ? controller.onlyFreshers.value = true
+            : controller.onlyFreshers.value = false;
+        widget.data?.minExp != null
+            ? controller.minExpController.text =
+                widget.data?.minExp.toString() ?? ''
+            : controller.minExpController.text = '';
+        widget.data?.maxExp != null
+            ? controller.maxExpController.text =
+                widget.data?.maxExp.toString() ?? ''
+            : controller.maxExpController.text = '';
+        widget.data?.salaryFrom != null
+            ? controller.minSalaryController.text =
+                widget.data?.salaryFrom.toString() ?? ''
+            : controller.minSalaryController.text = '';
+        widget.data?.salaryTo != null
+            ? controller.maxSalaryController.text =
+                widget.data?.salaryTo.toString() ?? ''
+            : controller.maxSalaryController.text = '';
+        final apiBenefits =
+            widget.data?.jobBenefit
+                ?.map((e) => e.name)
+                .whereType<String>()
+                .toList() ??
+            [];
+
+        controller.benefits.clear();
+        controller.benefits.addAll(apiBenefits);
+
+        controller.benefitSelected.value = List.generate(
+          apiBenefits.length,
+          (_) => true,
+        );
+
+        controller.selectedJobBenefits.value = apiBenefits;
+        final apiSkills =
+            widget.data?.jobSkill
+                ?.map((e) => e.name)
+                .whereType<String>()
+                .toList() ??
+            [];
+
+        controller.skills.clear();
+        controller.skills.addAll(apiSkills);
+
+        controller.skillSelected.value = List.generate(
+          apiSkills.length,
+          (_) => true,
+        );
+
+        controller.selectedJobSkills.value = apiSkills;
+        final apiWorkingDay = widget.data?.workingDays ?? '';
+
+        controller.workingDaySelected.value = List.generate(
+          controller.workingDays.length,
+          (_) => false,
+        );
+
+        for (int i = 0; i < controller.workingDays.length; i++) {
+          if (controller.workingDays[i] == apiWorkingDay) {
+            controller.workingDaySelected[i] = true;
+            controller.workingDayIndex.value = i;
+          }
+        }
+
+        controller.selectedWorkingDays.value =
+            apiWorkingDay.isNotEmpty ? [apiWorkingDay] : [];
+        final apiRequirements =
+            widget.data?.jobRequirement
+                ?.map((e) => e.requirements)
+                .whereType<String>()
+                .toList() ??
+            [];
+
+        if (controller.otherRequirement.isEmpty) {
+          controller.otherRequirement.addAll(apiRequirements);
+
+          controller.otherRequirementSelected.value = List.generate(
+            controller.otherRequirement.length,
+            (_) => true,
+          );
+        } else {
+          if (controller.otherRequirementSelected.length !=
+              controller.otherRequirement.length) {
+            controller.otherRequirementSelected.value = List.generate(
+              controller.otherRequirement.length,
+              (_) => false,
+            );
+          }
+
+          for (int i = 0; i < controller.otherRequirement.length; i++) {
+            controller.otherRequirementSelected[i] = apiRequirements.contains(
+              controller.otherRequirement[i],
+            );
+          }
+        }
+
+        controller.from.text = DateFormat('hh:mm a').format(fromTime);
+        controller.to.text = DateFormat('hh:mm a').format(toTime);
+        controller.communicationPref.value =
+            widget.data?.communication != '' ? true : false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +246,6 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     hintName: "₹15,000",
                     controller: controller.maxSalaryController,
                     keyboardType: TextInputType.number,
-
                   ),
                 ),
               ],
@@ -172,7 +289,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   builder:
                       (context) => AlertDialog(
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         backgroundColor: Colors.white,
                         content: SizedBox(
@@ -194,10 +311,16 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                                     CommonToast.show(msg: 'Add Something');
                                     return;
                                   }
-                                  controller.benefits.add(
-                                    controller.benefitsController.text,
+
+                                  final newBenefit =
+                                      controller.benefitsController.text;
+
+                                  controller.benefits.add(newBenefit);
+                                  controller.benefitSelected.add(true);
+                                  controller.selectedJobBenefits.add(
+                                    newBenefit,
                                   );
-                                  controller.benefitSelected.add(false);
+
                                   controller.benefitsController.clear();
                                   Get.back();
                                 },
@@ -260,7 +383,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                 ),
               ),
             ),
-            if (controller.skills.isNotEmpty) SizedBox(height: height * .01),
+            SizedBox(height: height * .01),
             InkWell(
               onTap: () {
                 showDialog(
@@ -268,7 +391,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   builder:
                       (context) => AlertDialog(
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         backgroundColor: Colors.white,
                         content: SizedBox(
@@ -290,10 +413,14 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                                     CommonToast.show(msg: 'Add Something');
                                     return;
                                   }
-                                  controller.skills.add(
-                                    controller.skillsController.text,
-                                  );
-                                  controller.skillSelected.add(false);
+
+                                  final newSkill =
+                                      controller.skillsController.text;
+
+                                  controller.skills.add(newSkill);
+                                  controller.skillSelected.add(true);
+                                  controller.selectedJobSkills.add(newSkill);
+
                                   controller.skillsController.clear();
                                   Get.back();
                                 },
@@ -331,7 +458,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
 
             Obx(
               () => ListView.builder(
-                padding: EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.only(),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.otherRequirement.length,
@@ -343,8 +470,10 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     contentPadding: EdgeInsets.zero,
                     title: Text(controller.otherRequirement[index]),
                     onChanged: (value) {
-                      controller.otherRequirementSelected[index] = value!;
-                      controller.otherRequirementSelected.refresh();
+                      setState(() {
+                        controller.otherRequirementSelected[index] = value!;
+                        controller.otherRequirementSelected.refresh();
+                      });
                     },
                   );
                 },
@@ -439,6 +568,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                                         .indexOf(element)],
                               )
                               .toList();
+
                     },
                   ),
                 ),
@@ -452,7 +582,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   builder:
                       (context) => AlertDialog(
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         backgroundColor: Colors.white,
                         content: SizedBox(
@@ -519,14 +649,23 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        (controller.hrNumber.text.isEmpty &&
-                                controller.contactFrom.text.isEmpty &&
-                                controller.contactTo.text.isEmpty)
-                            ? "Allow Candidates To Call Between\n10:00 AM – 7:00 PM on +91 0123456789"
-                            : "Allow Candidates To Call Between\n${controller.contactFrom.text} – ${controller.contactTo.text} on ${controller.hrNumber.text}",
-                        style: GoogleFonts.dmSans(fontSize: 12.sp),
-                      ),
+                      widget.isEditing == true
+                          ? Text(
+                            (controller.hrNumber.text.isEmpty &&
+                                    controller.contactFrom.text.isEmpty &&
+                                    controller.contactTo.text.isEmpty)
+                                ? "${widget.data?.communication}"
+                                : "Allow Candidates To Call Between\n${controller.contactFrom.text} – ${controller.contactTo.text} on ${controller.hrNumber.text}",
+                            style: GoogleFonts.dmSans(fontSize: 12.sp),
+                          )
+                          : Text(
+                            (controller.hrNumber.text.isEmpty &&
+                                    controller.contactFrom.text.isEmpty &&
+                                    controller.contactTo.text.isEmpty)
+                                ? "Allow Candidates To Call Between\n10:00 AM – 7:00 PM on +91 0123456789"
+                                : "Allow Candidates To Call Between\n${controller.contactFrom.text} – ${controller.contactTo.text} on ${controller.hrNumber.text}",
+                            style: GoogleFonts.dmSans(fontSize: 12.sp),
+                          ),
                       SizedBox(height: height * .01),
                       InkWell(
                         onTap: () => _showContactDialog(context, height),
@@ -544,8 +683,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
               ),
             ),
             SizedBox(height: height * .03),
-            Obx(()=>
-              CommonButton(
+            Obx(
+              () => CommonButton(
                 loading: controller.createJobLoading.value,
                 press: () {
                   if (!controller.onlyFreshers.value) {
@@ -555,11 +694,15 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                       return;
                     }
 
-                    final minExp = int.tryParse(controller.minExpController.text) ?? 0;
-                    final maxExp = int.tryParse(controller.maxExpController.text) ?? 0;
+                    final minExp =
+                        int.tryParse(controller.minExpController.text) ?? 0;
+                    final maxExp =
+                        int.tryParse(controller.maxExpController.text) ?? 0;
 
                     if (minExp > maxExp) {
-                      CommonToast.show(msg: 'Min Exp should be less than Max Exp');
+                      CommonToast.show(
+                        msg: 'Min Exp should be less than Max Exp',
+                      );
                       return;
                     }
                   }
@@ -570,21 +713,26 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     return;
                   }
 
-                  final minSalary = int.tryParse(controller.minSalaryController.text) ?? 0;
-                  final maxSalary = int.tryParse(controller.maxSalaryController.text) ?? 0;
+                  final minSalary =
+                      int.tryParse(controller.minSalaryController.text) ?? 0;
+                  final maxSalary =
+                      int.tryParse(controller.maxSalaryController.text) ?? 0;
 
                   if (minSalary > maxSalary) {
-                    CommonToast.show(msg: 'Min Salary should be less than Max Salary');
+                    CommonToast.show(
+                      msg: 'Min Salary should be less than Max Salary',
+                    );
                     return;
                   }
                   if (controller.selectedJobBenefits.isEmpty) {
                     CommonToast.show(msg: 'Add Benefits');
-                    return;   }
+                    return;
+                  }
                   if (controller.selectedJobSkills.isEmpty) {
                     CommonToast.show(msg: 'Add Skills');
                     return;
                   }
-                  if(controller.otherRequirement.isEmpty) {
+                  if (controller.otherRequirement.isEmpty) {
                     CommonToast.show(msg: 'Add Requirements');
                     return;
                   }
@@ -602,7 +750,8 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                     CommonToast.show(msg: 'Check Communication Pref');
                     return;
                   }
-                  controller.createJob();
+
+                  controller.createJob(widget.isEditing, widget.data?.id);
                 },
                 text: "Post This Job",
                 borderRadius: 0.0,
@@ -716,7 +865,7 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
       builder:
           (context) => AlertDialog(
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
             backgroundColor: Colors.white,
             content: SizedBox(

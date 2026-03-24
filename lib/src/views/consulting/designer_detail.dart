@@ -1,23 +1,19 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/models/consulting_designer_model.dart';
-import 'package:aadaiz_customer_crm/src/views/consulting/review_designer.dart';
 import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
 
 class DesignerDetail extends StatefulWidget {
   const DesignerDetail({super.key, required this.data});
@@ -32,8 +28,8 @@ class _DesignerDetailState extends State<DesignerDetail> {
   int selected = 0;
   DateTime selectedDate = DateTime.now();
 
-  dateConvert(dat) {
-    var formatter = DateFormat('dd-MM-yyyy');
+  void dateConvert(dat) {
+    final formatter = DateFormat('dd-MM-yyyy');
     setState(() {
       date = formatter.format(dat);
     });
@@ -129,7 +125,7 @@ class _DesignerDetailState extends State<DesignerDetail> {
                                             ),
                                           ),
                                         ),
-                                    imageUrl: (widget.data.profileImage),
+                                    imageUrl: widget.data.profileImage,
                                   ),
                                 )
                                 : Container(
@@ -273,7 +269,7 @@ class _DesignerDetailState extends State<DesignerDetail> {
                                       .availableSlotsList
                                       .length,
                               itemBuilder: (context, index) {
-                                var data =
+                                final data =
                                     ConsultingController
                                         .to
                                         .availableSlotsList[index];
@@ -301,7 +297,7 @@ class _DesignerDetailState extends State<DesignerDetail> {
                                     width: Get.width / 5,
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${data}',
+                                      '$data',
                                       style: GoogleFonts.dmSans(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
@@ -318,12 +314,12 @@ class _DesignerDetailState extends State<DesignerDetail> {
                                 BuildContext context,
                                 int index,
                               ) {
-                                return SizedBox(width: 12);
+                                return const SizedBox(width: 12);
                               },
                             ),
                           ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 // Container(
                 //     width: double.infinity,
                 //     height: screenHeight * 0.05,

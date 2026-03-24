@@ -44,8 +44,7 @@ class _TrackOrderState extends State<TrackOrder> {
           ),
           centerTitle: true,
           elevation: 2,
-          shadowColor: AppColor.black,
-          forceMaterialTransparency: false
+          shadowColor: AppColor.black
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -18,7 +18,7 @@ class InputField extends StatelessWidget {
   final FocusNode? focusNode;
 
   const InputField({
-    Key? key,
+    super.key,
     required this.labeltext,
 
     //this.bgcolor,
@@ -33,12 +33,12 @@ class InputField extends StatelessWidget {
     // this.elevationvalue,
 
     // required this.press,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8),
+      padding: const EdgeInsets.only(left: 8, right: 8),
       child: TextFormField(
         focusNode: focusNode,
         inputFormatters: [

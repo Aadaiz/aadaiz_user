@@ -31,9 +31,9 @@ class _PendingTechnicalSupportState extends State<PendingTechnicalSupport> {
     return Obx(
           () =>
       ProfileController.to.supportListLoading.value
-          ? CommonLoading()
+          ? const CommonLoading()
           : ProfileController.to.supportList.isEmpty
-          ? CommonEmpty(title: 'support')
+          ? const CommonEmpty(title: 'support')
           : ListView.builder(
         shrinkWrap: true,
         itemCount: ProfileController.to.supportList.length,
@@ -85,7 +85,7 @@ class _PendingTechnicalSupportState extends State<PendingTechnicalSupport> {
                       ),
                       const Spacer(),
                       Text(
-                        '${data.date??""}',
+                        data.date??"",
                         style: GoogleFonts.dmSans(
                           fontWeight: FontWeight.w400,
                           fontSize: 11.00.sp,
@@ -97,7 +97,7 @@ class _PendingTechnicalSupportState extends State<PendingTechnicalSupport> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      '${data.title??""}',
+                      data.title??"",
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12.00.sp,
@@ -105,7 +105,7 @@ class _PendingTechnicalSupportState extends State<PendingTechnicalSupport> {
                       ),
                     ),
                     subtitle: Text(
-                      '${data.description??""}',
+                      data.description??"",
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 10.00.sp,
@@ -122,7 +122,7 @@ class _PendingTechnicalSupportState extends State<PendingTechnicalSupport> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      '${data.status??""}',
+                      data.status??"",
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 10.00.sp,

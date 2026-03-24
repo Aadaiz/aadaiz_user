@@ -6,7 +6,6 @@ import 'package:aadaiz_customer_crm/src/views/profile/support/technical_support.
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HelpCenter extends StatefulWidget {
@@ -51,8 +50,7 @@ class _HelpCenterState extends State<HelpCenter> {
             ),
             elevation: 2,
             centerTitle: true,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false
+            shadowColor: AppColor.black
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(

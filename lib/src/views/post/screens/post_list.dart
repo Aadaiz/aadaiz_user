@@ -1,21 +1,9 @@
-import 'dart:math' as math;
 
-import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
-import 'package:aadaiz_customer_crm/src/res/components/jobs_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/post_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
-import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/create_event_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_filter.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_view_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/create_jobs.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_detail_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_filter.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
 import 'package:aadaiz_customer_crm/src/views/post/screens/post_profile_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';

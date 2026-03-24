@@ -1,17 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/jobs_card.dart';
 import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/create_event_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_filter.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_view_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/create_jobs.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_detail_screen.dart';
@@ -173,42 +168,51 @@ class _JobsScreenState extends State<JobsScreen> {
               return Expanded(
                 child: SmartRefresher(
                   controller: controller.refreshController,
-                  enablePullDown: true,
                   enablePullUp: true,
                   onRefresh: () => controller.getJobData(true),
                   onLoading: () => controller.getJobData(false),
                   child: ListView.builder(
+                    padding: const EdgeInsets.only(top: 2),
                     itemCount: controller.jobListData.length,
                     itemBuilder: (context, index) {
                       final data = controller.jobListData[index];
 
                       if (controller.selectedJobType.value == 'our_jobs') {
-                        return YourJobCard(
-                          title: data.jobTitle ?? '',
-                          subTitle: '',
-                          time: '',
-                          jobs: [
-                            _getJobType(data.jobType),
-                            data.qualification ?? '',
-                          ],
-                          isApplied: data.jobStatus ?? '',
-                          deleteOnTap: () {
-                            controller.deleteJob(data.id);
-                          },
-                          isLoading: controller.jobDeleteLoading.value,
+                        return Obx(()=>
+                         YourJobCard(
+
+                            title: data.jobTitle ?? '',
+                            subTitle: '',
+                            time: data.timeNow ?? '',
+                            jobs: [
+                              _getJobType(data.jobType),
+                              data.qualification ?? '',
+                            ],
+                            isApplied: data.jobStatus ?? '',
+                            deleteOnTap: () {
+                              controller.deleteJob(data.id);
+                            },
+                            editOnTap: () {
+                              Get.to(
+                                 CreateJobScreen(isEdit:true,data:data),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                           isLoading: controller.deletingJobId.value == data.id,
+                          ),
                         );
                       } else if (controller.selectedJobType.value ==
                           'recent_jobs') {
                         return JobsCard(
                           onTap: () {
                             Get.to(
-                              () => const JobDetailScreen(),
+                              () =>  JobDetailScreen(data:data),
                               transition: Transition.rightToLeft,
                             );
                           },
                           title: data.jobTitle ?? '',
                           subTitle: '',
-                          time: '',
+                          time: data.timeNow ?? '',
                           jobs: [
                             _getJobType(data.jobType),
                             data.qualification ?? '',
@@ -220,7 +224,7 @@ class _JobsScreenState extends State<JobsScreen> {
                         return AppliedJobCard(
                           title: data.jobTitle ?? '',
                           company: data.user?.username ?? '',
-                          time: '',
+                          time: data.timeNow ?? '',
                           jobs: [
                             _getJobType(data.jobType),
                             data.qualification ?? '',
@@ -238,7 +242,8 @@ class _JobsScreenState extends State<JobsScreen> {
                         return ApplicantCard(
                           name: data.user?.username ?? 'User',
                           role: data.jobTitle ?? '',
-                          time: '',
+                          time: data.timeNow ?? '',
+
                           skills: [...?data.jobSkill?.map((e) => e.name ?? '')],
                           onAccept: () {},
                           onReject: () {},

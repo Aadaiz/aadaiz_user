@@ -1,29 +1,14 @@
-import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:aadaiz_customer_crm/src/res/components/event_card.dart';
-import 'package:aadaiz_customer_crm/src/res/components/jobs_card.dart';
-import 'package:aadaiz_customer_crm/src/res/components/post_card.dart';
-import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/create_event_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_filter.dart';
-import 'package:aadaiz_customer_crm/src/views/Event/screens/event_view_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/create_jobs.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_detail_screen.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_filter.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -123,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 0,),
+                            padding: const EdgeInsets.only(),
                             child: _countWidget(data.followers, "Followers"),
                           ),
                         ),
@@ -148,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Align(
                           alignment: Alignment.bottomLeft,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 0),
+                            padding: const EdgeInsets.only(),
                             child: _countWidget(data.following, "Following"),
                           ),
                         ),

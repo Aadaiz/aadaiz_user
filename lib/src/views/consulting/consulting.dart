@@ -1,4 +1,3 @@
-import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -52,8 +51,7 @@ class _ConsultingState extends State<Consulting> {
             ),
             elevation: 2,
             centerTitle: true,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false
+            shadowColor: AppColor.black
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(

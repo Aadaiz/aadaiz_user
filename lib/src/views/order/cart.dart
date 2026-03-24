@@ -5,15 +5,11 @@ import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/saved_address.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
-
-import '../home/controller/home_controller.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -48,7 +44,7 @@ class _CartState extends State<Cart> {
           ),
         ),
         body: Obx(() => HomeController.to.cartListLoading.value
-            ? CommonLoading()
+            ? const CommonLoading()
             : HomeController.to.cartList.value.data!.items!.isEmpty
                 ? Container(
                     alignment: Alignment.center,
@@ -78,9 +74,9 @@ class _CartState extends State<Cart> {
                             itemCount: HomeController
                                 .to.cartList.value.data!.items!.length,
                             itemBuilder: (context, index) {
-                              var data = HomeController
+                              final data = HomeController
                                   .to.cartList.value.data!.items![index];
-                              List images = data.pattern!.image.split(',');
+                              final List images = data.pattern!.image.split(',');
                               double rating;
                               if (data.pattern!.rating is int) {
                                 rating = data.pattern!.rating.toDouble();
@@ -404,7 +400,6 @@ class _CartState extends State<Cart> {
                                               const SavedAddress()));
                                 },
                                 text: 'CHECKOUT',
-                                loading: false,
                                 width: screenWidth / 1.2,
                                 height: screenHeight * 0.7))
                       ]))));

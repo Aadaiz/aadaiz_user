@@ -1,23 +1,18 @@
 import 'dart:io';
 
-import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/components/custom_widgets.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/textfield_capital.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
-import '../../utils/textfield_capital.dart';
-import '../home/controller/home_controller.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -117,11 +112,11 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                       ),
                               imageUrl:
-                                  (ProfileController
+                                  ProfileController
                                       .to
                                       .profileData
                                       .value
-                                      .profileImage),
+                                      .profileImage,
                             ),
                           )
                           : const CircleAvatar(

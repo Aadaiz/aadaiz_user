@@ -1,7 +1,9 @@
-import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
+import 'package:aadaiz_customer_crm/src/res/components/app_bar.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/search_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customize_category_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,10 +12,6 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../res/components/app_bar.dart';
-import '../../../res/components/search_field.dart';
-import '../controller/home_controller.dart';
 
 class SelfCustomizationHomeScreen extends StatefulWidget {
   const SelfCustomizationHomeScreen(
@@ -75,12 +73,12 @@ class _SelfCustomizationHomeScreenState
                     ),
                     const Gap(24),
                     HomeController.to.genderLoading.value
-                        ? Text('loading')
+                        ? const Text('loading')
                         : SizedBox(
                             height: 5.0.hp,
                             width: Get.width,
                             child: HomeController.to.genderList.value.isEmpty
-                                ? Text('empty')
+                                ? const Text('empty')
                                 : ListView.builder(
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
@@ -89,7 +87,7 @@ class _SelfCustomizationHomeScreenState
                                     itemCount: HomeController
                                         .to.genderList.value.length,
                                     itemBuilder: (context, index) {
-                                      var data = HomeController
+                                      final data = HomeController
                                           .to.genderList.value[index];
                                       return Padding(
                                         padding:

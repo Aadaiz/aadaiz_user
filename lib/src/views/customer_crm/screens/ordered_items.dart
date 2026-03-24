@@ -1,11 +1,8 @@
-import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/aadaiz_button.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../app_components/app_colors.dart';
-import '../app_components/items.dart';
-import '../chat/screens/chat_screen.dart';
 
 class OrderedItems extends StatefulWidget {
   final String product_name;
@@ -18,7 +15,7 @@ class OrderedItems extends StatefulWidget {
   final dynamic shopName;
   final dynamic price;
   final dynamic quantity;
-  OrderedItems({
+  const OrderedItems({
     super.key,
     required this.product_name,
     required this.materialImages,
@@ -47,7 +44,7 @@ class _OrderedItemsState extends State<OrderedItems> {
         leading: InkWell(
           onTap: () => Get.back(),
           child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               "assets/images/bac1.png",
               height: 39.h,

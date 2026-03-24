@@ -1,6 +1,4 @@
-import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
-import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MaterialCart extends StatefulWidget {
   const MaterialCart({super.key});
@@ -80,14 +77,14 @@ class _MaterialCartState extends State<MaterialCart> {
 
               itemBuilder: (context, index) {
                 // Get cart item
-                var cartItem = MaterialController.to.cartList.value!.items![index];
-                var product = cartItem.product;
+                final cartItem = MaterialController.to.cartList.value!.items![index];
+                final product = cartItem.product;
 
                 if (product == null) {
                   return const SizedBox();
                 }
 
-                List images = product.image?.split(',') ?? [];
+                final List images = product.image?.split(',') ?? [];
                 double rating;
                 if (product.rating is int) {
                   rating = product.rating.toDouble();
@@ -98,20 +95,20 @@ class _MaterialCartState extends State<MaterialCart> {
                 }
 
                 // Get current quantity from cart item
-                int currentQuantity = cartItem.quantity ?? 1;
-                var productId = product.id;
+                final int currentQuantity = cartItem.quantity ?? 1;
+                final productId = product.id;
 
                 // Calculate item total price
-                double itemPrice = double.tryParse(product.price?.toString() ?? '0') ?? 0;
-                double itemTotal = itemPrice * currentQuantity;
+                final double itemPrice = double.tryParse(product.price?.toString() ?? '0') ?? 0;
+                final double itemTotal = itemPrice * currentQuantity;
 
                 return Obx(() {
                   // Use Obx to wrap the entire cart item for reactive updates
-                  int displayQuantity = productId != null
+                  final int displayQuantity = productId != null
                       ? MaterialController.to.getItemQuantity(productId)
                       : currentQuantity;
 
-                  double displayTotal = itemPrice * displayQuantity;
+                  final double displayTotal = itemPrice * displayQuantity;
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12),
@@ -132,7 +129,7 @@ class _MaterialCartState extends State<MaterialCart> {
                         children: [
                           // Product Image (same as before)
                           Container(
-                            padding: const EdgeInsets.all(12.0),
+                            padding: const EdgeInsets.all(12),
                             child: Stack(
                               children: [
                                 ClipRRect(
@@ -149,7 +146,7 @@ class _MaterialCartState extends State<MaterialCart> {
                                         width: screenHeight * 0.12,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                       ),
                                     ),
@@ -162,7 +159,7 @@ class _MaterialCartState extends State<MaterialCart> {
                                             width: screenHeight * 0.12,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius: BorderRadius.circular(10.0),
+                                              borderRadius: BorderRadius.circular(10),
                                             ),
                                           ),
                                         ),
@@ -237,9 +234,7 @@ class _MaterialCartState extends State<MaterialCart> {
                                     children: [
                                       RatingBar(
                                         initialRating: rating,
-                                        direction: Axis.horizontal,
                                         allowHalfRating: true,
-                                        itemCount: 5,
                                         itemSize: 12,
                                         ignoreGestures: true,
                                         unratedColor: Colors.grey[300],
@@ -284,7 +279,6 @@ class _MaterialCartState extends State<MaterialCart> {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             color: AppColor.primary,
-                                            width: 1,
                                           ),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
@@ -406,7 +400,7 @@ class _MaterialCartState extends State<MaterialCart> {
             ),
             // Order Summary
             Obx(() {
-              var cartSummary =
+              final cartSummary =
               MaterialController.to.getCartSummary();
               return Container(
                 decoration: BoxDecoration(
@@ -414,7 +408,6 @@ class _MaterialCartState extends State<MaterialCart> {
                   border: Border(
                     top: BorderSide(
                       color: Colors.grey.withOpacity(0.3),
-                      width: 1,
                     ),
                   ),
                   boxShadow: [
@@ -600,7 +593,6 @@ class _MaterialCartState extends State<MaterialCart> {
               MaterialController.to.cartList.value!.items!.isEmpty
               ? const SizedBox()
               : CommonButton(
-            borderRadius: 8.0,
             press: () {
               Navigator.push(
                 context,
@@ -610,7 +602,6 @@ class _MaterialCartState extends State<MaterialCart> {
               );
             },
             text: 'PROCEED TO CHECKOUT',
-            loading: false,
             width: screenWidth,
             height: screenHeight * 0.06,
           ),

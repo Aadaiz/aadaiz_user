@@ -1,5 +1,3 @@
-import 'package:aadaiz_customer_crm/src/utils/colors.dart';
-import 'package:aadaiz_customer_crm/src/views/my_orders/order_tracking/event_card.dart';
 import 'package:flutter/material.dart';
 
 class TimelineWidget extends StatelessWidget {
@@ -14,7 +12,7 @@ class TimelineWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
+    return const SizedBox(
         height: 100,///while update add package
         // child: TimelineTile(
         //     isFirst: isFirst,

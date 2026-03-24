@@ -1,8 +1,6 @@
-import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -30,7 +28,7 @@ class _OfferBannerWidgetState extends State<OfferBannerWidget> {
             ),
             itemCount: HomeController.to.bannerList.value.length,
             itemBuilder: (context, index){
-              var data = HomeController.to.bannerList.value[index];
+              final data = HomeController.to.bannerList.value[index];
           return   Row(
             children: [
               // ClipRRect(
@@ -57,7 +55,7 @@ class _OfferBannerWidgetState extends State<OfferBannerWidget> {
                           width: Get.width*0.8,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
@@ -70,11 +68,11 @@ class _OfferBannerWidgetState extends State<OfferBannerWidget> {
                           width: Get.width*0.8,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                  imageUrl: (data.imageUrl),
+                  imageUrl: data.imageUrl,
                 ),
               ),
               Gap(5.0.wp)

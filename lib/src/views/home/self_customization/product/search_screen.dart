@@ -1,13 +1,11 @@
+import 'package:aadaiz_customer_crm/src/res/components/app_bar.dart';
+import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/product_list_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/filter_data_widget.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-import '../../../../res/components/app_bar.dart';
-import '../../../../res/components/search_field.dart';
-import '../../controller/home_controller.dart';
-import 'filter_data_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

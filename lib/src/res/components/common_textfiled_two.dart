@@ -1,12 +1,10 @@
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CommonTextFieldTwo extends StatelessWidget {
-
   final String? labelName;
   final bool showLabel;
   final bool isRequired;
@@ -26,8 +24,6 @@ class CommonTextFieldTwo extends StatelessWidget {
   final bool? isBorderNeed;
   final int? maxLength;
 
-
-
   const CommonTextFieldTwo({
     super.key,
     this.labelName,
@@ -46,8 +42,8 @@ class CommonTextFieldTwo extends StatelessWidget {
     this.hintStyle,
     this.lableStyle,
     this.onTap,
-    this.isBorderNeed=true,
-    this.maxLength
+    this.isBorderNeed = true,
+    this.maxLength,
   });
 
   @override
@@ -59,19 +55,19 @@ class CommonTextFieldTwo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
           if (showLabel && labelName != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: RichText(
                 text: TextSpan(
                   text: labelName,
-                  style:lableStyle?? GoogleFonts.dmSans(
-                    color: AppColors.blackColor,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style:
+                      lableStyle ??
+                      GoogleFonts.dmSans(
+                        color: AppColors.blackColor,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
                   children: [
                     if (isRequired)
                       TextSpan(
@@ -85,12 +81,10 @@ class CommonTextFieldTwo extends StatelessWidget {
               ),
             ),
 
-
           SizedBox(
             height: maxLines == 1 ? screenHeight * 0.067 : null,
             child: TextFormField(
               onTap: () {
-                FocusScope.of(context).unfocus();
                 if (onTap != null) onTap!();
               },
 
@@ -100,11 +94,12 @@ class CommonTextFieldTwo extends StatelessWidget {
               textInputAction: textInputAction,
               maxLines: maxLines,
               readOnly: readOnly,
-maxLength: maxLength,
+              maxLength: maxLength,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hintName,
-                hintStyle: hintStyle ??
+                hintStyle:
+                    hintStyle ??
                     GoogleFonts.dmSans(
                       color: AppColors.textgrey,
                       fontSize: 12.sp,
@@ -115,25 +110,33 @@ maxLength: maxLength,
 
                 suffixIcon: suffixIcon,
 
-
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide:  BorderSide(
-                    color:isBorderNeed==true? AppColors.textFieldBorderColor:Colors.transparent,
+                  borderSide: BorderSide(
+                    color:
+                        isBorderNeed == true
+                            ? AppColors.textFieldBorderColor
+                            : Colors.transparent,
                   ),
                 ),
 
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide:  BorderSide(
-                    color:isBorderNeed==true? AppColors.textFieldBorderColor:Colors.transparent,
+                  borderSide: BorderSide(
+                    color:
+                        isBorderNeed == true
+                            ? AppColors.textFieldBorderColor
+                            : Colors.transparent,
                   ),
                 ),
 
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide:  BorderSide(
-                    color:isBorderNeed==true? AppColors.textFieldBorderColor:Colors.transparent,
+                  borderSide: BorderSide(
+                    color:
+                        isBorderNeed == true
+                            ? AppColors.textFieldBorderColor
+                            : Colors.transparent,
                   ),
                 ),
               ),

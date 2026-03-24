@@ -8,19 +8,14 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/controller/buyAndSellController.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/add_buy_and_sell_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/your_ads_view_details.dart';
-import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shimmer/shimmer.dart';
 
 class BuyAndSell extends StatefulWidget {
   const BuyAndSell({super.key});
@@ -32,7 +27,7 @@ class BuyAndSell extends StatefulWidget {
 class _BuyAndSellState extends State<BuyAndSell> {
   BuyAndSellController controller = Get.find<BuyAndSellController>();
   final RefreshController refreshController = RefreshController(
-    initialRefresh: false,
+    
   );
 
   List<Map<String, dynamic>> buyAndSellList = [
@@ -228,7 +223,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
                                 childAspectRatio: 0.60,
                               ),
                           itemBuilder: (context, index) {
-                            var data = buyAndSellList[index];
+                            final data = buyAndSellList[index];
 
                             return InkWell(
                               onTap: () {},
@@ -384,7 +379,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
                       child: ListView.builder(
                         itemCount: buyAndSellList.length,
                         itemBuilder: (context, index) {
-                          var data = buyAndSellList[index];
+                          final data = buyAndSellList[index];
                           List<String> convertImages(String images) {
                             return images.split(',').map((e) => e.trim()).toList();
                           }

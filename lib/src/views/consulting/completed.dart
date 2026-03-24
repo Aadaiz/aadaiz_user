@@ -1,16 +1,14 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../utils/utils.dart';
-import 'controller/consulting_controller.dart';
 
 class Completed extends StatefulWidget {
   const Completed({super.key});
@@ -51,14 +49,14 @@ class _CompletedState extends State<Completed> {
             child: Obx(
               () =>
                   ConsultingController.to.appointmentLoading.value
-                      ? CommonLoading()
+                      ? const CommonLoading()
                       : ConsultingController.to.appointmentList.isEmpty
-                      ? CommonEmpty(title: 'appointments')
+                      ? const CommonEmpty(title: 'appointments')
                       : ListView.builder(
                         itemCount:
                             ConsultingController.to.appointmentList.length,
                         itemBuilder: (context, index) {
-                          var data =
+                          final data =
                               ConsultingController.to.appointmentList[index];
                           return Container(
                             padding: EdgeInsets.symmetric(
@@ -118,7 +116,7 @@ class _CompletedState extends State<Completed> {
                                                           ),
                                                     ),
                                                   ),
-                                          imageUrl: (data.profileImage!),
+                                          imageUrl: data.profileImage!,
                                         ),
                                       )
                                       : Container(

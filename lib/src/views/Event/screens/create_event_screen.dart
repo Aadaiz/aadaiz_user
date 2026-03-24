@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_textfiled_two.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
@@ -12,13 +9,13 @@ import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.
 import 'package:aadaiz_customer_crm/src/views/Event/model/event_model.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:country_state_city/country_state_city.dart' as csc;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:country_state_city/country_state_city.dart' as csc;
+import 'package:intl/intl.dart';
 
 class CreateEventScreen extends StatefulWidget {
   final bool isEdit;
@@ -288,7 +285,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '${data.name}',
+                                                        data.name,
                                                         style: GoogleFonts.poppins(
                                                           fontSize: 16,
                                                           color: AppColor.black,
@@ -395,7 +392,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                                     children: [
                                                       Expanded(
                                                         child: Text(
-                                                          '${data.name}',
+                                                          data.name,
                                                           style: GoogleFonts.poppins(
                                                             textStyle: TextStyle(
                                                               fontSize: 16,
@@ -529,7 +526,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               CommonTextFieldTwo(
                 hintName: "Enter Area",
                 controller: controller.areaController,
-                keyboardType: TextInputType.text,
               ),
               SizedBox(height: screenHeight * 0.02),
 

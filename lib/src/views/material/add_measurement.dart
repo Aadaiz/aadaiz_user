@@ -1,10 +1,7 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
-import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/res/components/custom_widgets.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -118,8 +115,8 @@ class _AddMeasurementState extends State<AddMeasurement> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 12, bottom: 24),
-                      padding: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.only(top: 12, bottom: 24),
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 6,
                       ),
@@ -157,7 +154,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                               });
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8),
                               child: GestureDetector(
                                 child: Icon(
                                   Icons.keyboard_arrow_down_rounded,
@@ -479,7 +476,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
               Text(hint, style: GoogleFonts.dmSans(color: AppColor.red)),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextField(
             controller: controller,
             decoration: InputDecoration(
@@ -487,13 +484,13 @@ class _AddMeasurementState extends State<AddMeasurement> {
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: AppColor.black.withOpacity(0.4),
-                  width: 0.0,
+                  width: 0,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: AppColor.black.withOpacity(0.4),
-                  width: 0.0,
+                  width: 0,
                 ),
               ),
               hintText: "Enter Here",
@@ -501,7 +498,7 @@ class _AddMeasurementState extends State<AddMeasurement> {
                 color: AppColor.black.withOpacity(0.3),
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),

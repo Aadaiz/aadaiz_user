@@ -1,23 +1,14 @@
 import 'dart:convert';
-
-import 'package:aadaiz_customer_crm/src/services/api_service.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/service/api_service_.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../services/http_services.dart';
-import '../model/notification_model.dart';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
+import 'package:aadaiz_customer_crm/src/services/http_services.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/notification_model.dart';
 import 'package:dio/dio.dart';
-
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:typed_data';
-
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class CustomerRepository {

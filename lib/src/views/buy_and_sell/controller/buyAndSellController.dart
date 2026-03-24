@@ -4,7 +4,6 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -157,7 +156,7 @@ class BuyAndSellController extends GetxController {
 
     if (pickedFile == null) return;
 
-    File file = File(pickedFile.path);
+    final File file = File(pickedFile.path);
 
     if (picture == 1) {
       image1.value = file;

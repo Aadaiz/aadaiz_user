@@ -50,19 +50,19 @@ class Data {
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    id: json["id"]??null,
-    userId: json["user_id"]??null,
-    patternId: json["pattern_id"]??null,
-    status: json["status"]??null,
+    id: json["id"],
+    userId: json["user_id"],
+    patternId: json["pattern_id"],
+    status: json["status"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "user_id": userId??null,
-    "pattern_id": patternId??null,
-    "status": status??null,
+    "id": id,
+    "user_id": userId,
+    "pattern_id": patternId,
+    "status": status,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
   };

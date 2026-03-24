@@ -14,9 +14,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../res/widgets/common_app_bar.dart';
-import '../home/controller/home_controller.dart';
-import '../home/model/add_address_model.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
+import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_address_model.dart';
 
 class Checkout extends StatefulWidget {
   const Checkout({super.key, this.data});
@@ -40,14 +40,10 @@ class _CheckoutState extends State<Checkout> {
       });
     });
 
-    bool isCouponApplied = false;
+    const bool isCouponApplied = false;
 
     address =
-        "${widget.data!.address}," +
-        " ${widget.data!.city}," +
-        " ${widget.data!.state}," +
-        ' ${widget.data!.country},' +
-        " - ${widget.data!.pincode.toString()}";
+        "${widget.data!.address}," " ${widget.data!.city}," " ${widget.data!.state}," ' ${widget.data!.country},' " - ${widget.data!.pincode.toString()}";
   }
 
   TextEditingController coupon = TextEditingController();
@@ -78,7 +74,6 @@ class _CheckoutState extends State<Checkout> {
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.045,
-                  vertical: 0,
                 ),
                 child: Text(
                   'Shipping Address',
@@ -136,7 +131,7 @@ class _CheckoutState extends State<Checkout> {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     Text(
-                      '${address}',
+                      address,
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 13.00.sp,
@@ -159,9 +154,9 @@ class _CheckoutState extends State<Checkout> {
                   itemCount:
                       MaterialController.to.cartList.value?.items?.length ?? 0,
                   itemBuilder: (context, index) {
-                    var data =
+                    final data =
                         MaterialController.to.cartList.value!.items![index];
-                    List images = data.product!.image!.split(',');
+                    final List images = data.product!.image!.split(',');
                     double rating;
                     if (data.product!.rating is int) {
                       rating = data.product!.rating.toDouble();
@@ -179,7 +174,7 @@ class _CheckoutState extends State<Checkout> {
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8),
                             child: Stack(
                               children: [
                                 data.product!.image != null
@@ -202,7 +197,7 @@ class _CheckoutState extends State<Checkout> {
                                                       color: Colors.white,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            10.0,
+                                                            10,
                                                           ),
                                                     ),
                                                   ),
@@ -220,12 +215,12 @@ class _CheckoutState extends State<Checkout> {
                                                       color: Colors.white,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            10.0,
+                                                            10,
                                                           ),
                                                     ),
                                                   ),
                                                 ),
-                                        imageUrl: (images[0]),
+                                        imageUrl: images[0],
                                       ),
                                     )
                                     : Shimmer.fromColors(
@@ -237,7 +232,7 @@ class _CheckoutState extends State<Checkout> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.circular(
-                                            10.0,
+                                            10,
                                           ),
                                         ),
                                       ),
@@ -343,9 +338,7 @@ class _CheckoutState extends State<Checkout> {
                                   children: [
                                     RatingBar(
                                       initialRating: rating,
-                                      direction: Axis.horizontal,
                                       allowHalfRating: true,
-                                      itemCount: 5,
                                       itemSize: 12,
                                       unratedColor: Colors.grey,
                                       ratingWidget: RatingWidget(

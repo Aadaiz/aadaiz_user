@@ -8,7 +8,6 @@ import 'package:aadaiz_customer_crm/src/views/profile/support/technical_support_
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TechnicalSupport extends StatefulWidget {
@@ -67,8 +66,7 @@ class _TechnicalSupportState extends State<TechnicalSupport> with SingleTickerPr
             ),
             elevation: 2,
             centerTitle: true,
-            shadowColor: AppColor.black,
-            forceMaterialTransparency: false
+            shadowColor: AppColor.black
         ),
           body: Padding(
             padding: EdgeInsets.symmetric(
@@ -111,7 +109,7 @@ class _TechnicalSupportState extends State<TechnicalSupport> with SingleTickerPr
                   Expanded(
                   //  height: screenHeight,
                     child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                         controller: _tabController,
                         children: <Widget>[
                           TechnicalSupportList(

@@ -1,17 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'exceptions.dart';
+import 'package:aadaiz_customer_crm/src/services/exceptions.dart';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 class HttpHelper {
   Future<dynamic> get(String url, {bool auth = false}) async {
 
-    Map<String, String> hd = await getHeaders(auth);
+    final Map<String, String> hd = await getHeaders(auth);
 
     dynamic responseJson;
     try {
@@ -26,7 +24,7 @@ class HttpHelper {
 
   Future<dynamic> post(String url,dynamic body ,
       {bool auth = false,bool contentType=true}) async {
-    Map<String, String> hd = await getHeaders(auth,contentType:contentType);
+    final Map<String, String> hd = await getHeaders(auth,contentType:contentType);
     dynamic responseJson;
     try {
       final response = await http.post(Uri.parse(url), body:body,headers: hd);
@@ -41,7 +39,7 @@ class HttpHelper {
 
   Future<dynamic> put(String url, dynamic body,
       {bool auth = false,bool contentType=false}) async {
-    Map<String, String> hd = await getHeaders(auth,contentType:contentType);
+    final Map<String, String> hd = await getHeaders(auth,contentType:contentType);
     dynamic responseJson;
     try {
       final response = await http.put(Uri.parse(url), body:body,headers: hd);
@@ -56,7 +54,7 @@ class HttpHelper {
 
   Future<dynamic> delete(String url, dynamic body,
       {bool auth=false, bool contentType= false}) async{
-    Map<String, String> hd = await getHeaders(auth, contentType: contentType);
+    final Map<String, String> hd = await getHeaders(auth, contentType: contentType);
     dynamic responseJson;
     try{
       final response = await http.delete(Uri.parse(url), body: body, headers: hd);
@@ -75,16 +73,16 @@ class HttpHelper {
         bool isImageUpload = false,
         bool auth = false,
       }) async {
-    Map<String, String> headers = await getHeaders(auth);;
+    final Map<String, String> headers = await getHeaders(auth);
 
-    Dio dio = Dio();
-    FormData formData = FormData();
+    final Dio dio = Dio();
+    final FormData formData = FormData();
 
     if (isImageUpload) {
-      for (MapEntry<String, File> fileEntry in files.entries) {
-        File file = fileEntry.value;
+      for (final MapEntry<String, File> fileEntry in files.entries) {
+        final File file = fileEntry.value;
         if (file.existsSync()) {
-          String fileName = file.path.split('/').last;
+          final String fileName = file.path.split('/').last;
           formData.files.add(
             MapEntry(
               fileEntry.key, // Field name
@@ -96,23 +94,23 @@ class HttpHelper {
       }
     }
 
-    Map<String, String> stringData = {};
+    final Map<String, String> stringData = {};
     data.forEach((key, value) {
       stringData[key] = value.toString();
     });
 
     formData.fields.addAll(stringData.entries);
     String formDataString = 'FormData {\n';
-    formData.fields.forEach((field) {
+    for (final field in formData.fields) {
       formDataString += "  ${field.key}: ${field.value}\n";
-    });
-    formData.files.forEach((file) {
+    }
+    for (final file in formData.files) {
       formDataString += "  ${file.key}: ${file.value.filename}\n";
-    });
+    }
     formDataString += '}';
 
     try {
-      Response response = await dio.post(
+      final Response response = await dio.post(
         url,
         data: formData,
         options: Options(
@@ -122,7 +120,7 @@ class HttpHelper {
       );
       return response;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -147,11 +145,11 @@ class HttpHelper {
   // }
 
 
-  getHeaders(auth,{bool contentType=false}) async {
+  Future<Map<String, String>> getHeaders(auth,{bool contentType=false}) async {
   //  SharedPreferences prefs=await SharedPreferences.getInstance();
-    String location='';
+    const String location='';
    // location=prefs.getString("location")??"";
-    Map<String, String> headers = {
+    final Map<String, String> headers = {
       HttpHeaders.acceptHeader: "application/json",
      // "location":"$location"
       // "Access-Control-Allow-Origin": "*"
@@ -188,16 +186,16 @@ dynamic _returnResponse(http.Response response) async {
 
   switch (response.statusCode) {
     case 200:
-    var responseJson = response.body;
+    final responseJson = response.body;
     return responseJson;
     case 404:
-      var responseJson = response.body;
+      final responseJson = response.body;
       return responseJson;
     case 201:
-      var responseJson = response.body;
+      final responseJson = response.body;
       return responseJson;
     case 400:
-      var responseJson = response.body;
+      final responseJson = response.body;
       return responseJson;
     //  var message = "";
      // throw BadRequestException(message.toString(), response.statusCode);
@@ -208,12 +206,11 @@ dynamic _returnResponse(http.Response response) async {
     case 403:
     //Utility.log('object');
 
-      throw UnauthorisedException( "", response.statusCode,
-          next: "");
+      throw UnauthorisedException( "", response.statusCode);
 
       break;
     case 422:
-      var responseJson = response.body;
+      final responseJson = response.body;
       return responseJson;
     case 502:
       throw FetchDataException('',500);

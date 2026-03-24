@@ -18,7 +18,7 @@ class ChatRepository{
     return ChatList.fromMap(res);
 
   }
-  callEnded(dynamic request) async {
+  Future callEnded(dynamic request) async {
     final res = await _http.post(Api.callEnded, request);
     return res;
   }

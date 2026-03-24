@@ -1,4 +1,5 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
@@ -7,11 +8,8 @@ import 'package:aadaiz_customer_crm/src/views/consulting/designer_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../res/widgets/common_app_bar.dart';
 
 class Designers extends StatefulWidget {
   const Designers({super.key, this.id, this.designer});
@@ -61,7 +59,7 @@ class _DesignersState extends State<Designers> {
                   ),
                   itemCount: ConsultingController.to.designerList.length,
                   itemBuilder: (_, int index) {
-                    var data = ConsultingController.to.designerList[index];
+                    final data = ConsultingController.to.designerList[index];
                     return InkWell(
                       onTap: () {
                         Navigator.push(
@@ -131,7 +129,7 @@ class _DesignersState extends State<Designers> {
                                                   ),
                                                 ),
                                               ),
-                                          imageUrl: (data.profileImage),
+                                          imageUrl: data.profileImage,
                                         ),
                                       )
                                       : Container(

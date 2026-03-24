@@ -8,23 +8,25 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_type_model.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/last_step_create_jobs.dart';
+import 'package:country_state_city/country_state_city.dart' as csc;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:country_state_city/country_state_city.dart' as csc;
+import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_data_model.dart'
+    as edit;
 
 class CreateJobScreen extends StatefulWidget {
-  const CreateJobScreen({super.key});
+  final bool? isEdit;
+  final edit.Datum? data;
+  const CreateJobScreen({super.key, this.isEdit = false, this.data});
 
   @override
   State<CreateJobScreen> createState() => _CreateJobScreenState();
 }
 
 class _CreateJobScreenState extends State<CreateJobScreen> {
-
-
   final TextEditingController localityController = TextEditingController();
   JobsController controller = Get.find();
 
@@ -32,6 +34,13 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
   int qualificationIndex = -1;
   List<Subjob> selectedSubJobs = [];
   int selectedJobIndex = -1;
+  final jobTypeMap = {
+    'full_time': 'Full Time',
+    'part_time': 'Part Time',
+    'internship': 'Internship',
+    'remote': 'Remote',
+  };
+  final jobModeMap = {'work_from_home': 'Work From Home', 'office': 'Office'};
   @override
   void initState() {
     // TODO: implement initState
@@ -43,7 +52,48 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
       controller.jobTypes.length,
       (index) => false,
     );
-    controller.clearAllFields();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isEdit == true) {
+        controller.jobTitleController.text = widget.data?.jobTitle ?? "";
+        controller.categoryController.text = widget.data?.jobCategory ?? "";
+        controller.openingsController.text =
+            widget.data?.numberOfOpenings ?? "";
+        controller.jobDescriptionController.text =
+            widget.data?.jobDescription ?? "";
+
+
+        final selectedType = jobTypeMap[widget.data?.jobType] ?? '';
+
+        controller.selectedJobType.value = selectedType;
+
+        for (int i = 0; i < controller.jobTypes.length; i++) {
+          selectedValues[i] = controller.jobTypes[i] == selectedType;
+        }
+        setState(() {});
+        final selectedMode = jobModeMap[widget.data?.jobMode] ?? '';
+
+        controller.selectedJobMode.value = selectedMode;
+
+        for (int i = 0; i < controller.jobMode.length; i++) {
+          selectedValues[i] = controller.jobMode[i] == selectedMode;
+        }
+        setState(() {});
+        controller.countryController.text = widget.data?.jobCountry ?? "";
+        controller.stateController.text = widget.data?.jobState ?? "";
+        controller.cityController.text = widget.data?.jobCity ?? "";
+        controller.areaController.text = widget.data?.jobArea ?? "";
+        controller.pincodeController.text = widget.data?.jobPincode ?? "";
+
+        controller.selectedGender.value = widget.data?.gender ?? "";
+        controller.selectedQualification.value =
+            widget.data?.qualification ?? "";
+        widget.data?.companyName != null
+            ? controller.companyNameController.text = widget.data!.companyName!
+            : controller.companyNameController.text = '';
+      } else {
+        controller.clearAllFields();
+      }
+    });
   }
 
   List<String> jobLocalities = ['Chennai', "Coimbatore"];
@@ -67,7 +117,14 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
 
       appBar: PreferredSize(
         preferredSize: Size(100, 6.0.hp),
-        child: CommonAppBar(leadingclick: () => Get.back(), title: "Jobs"),
+        child: CommonAppBar(
+          leadingclick: () {
+            controller.selectedJobType.value = 'our_jobs';
+            controller.getJobData(false);
+            Get.back();
+          },
+          title: "Jobs",
+        ),
       ),
 
       body: SingleChildScrollView(
@@ -88,13 +145,17 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             ),
 
             SizedBox(height: screenHeight * 0.02),
-
+            CommonTextFieldTwo(
+              labelName: 'Company Name',
+              hintName: 'Company Name',
+              controller: controller.companyNameController,
+            ),
             CommonTextFieldTwo(
               labelName: "Job Title",
               hintName: "UI UX Designer",
-              controller:controller.jobTitleController,
+              controller: controller.jobTitleController,
               suffixIcon:
-              controller.jobTitleController.text.isNotEmpty
+                  controller.jobTitleController.text.isNotEmpty
                       ? InkWell(
                         onTap: () {
                           setState(() {
@@ -158,7 +219,8 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                             selectedJobIndex = index;
                             selectedSubJobs = List.from(job.subjobs ?? []);
 
-                            controller.jobTitleController.text = job.jobTitle ?? '';
+                            controller.jobTitleController.text =
+                                job.jobTitle ?? '';
 
                             controller.categoryController.clear();
 
@@ -179,7 +241,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
               hintName: "Selected Option",
               controller: controller.categoryController,
               suffixIcon:
-              controller.categoryController.text.isNotEmpty
+                  controller.categoryController.text.isNotEmpty
                       ? InkWell(
                         onTap: () {
                           setState(() {
@@ -239,7 +301,8 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                       title: Text(subJob.jobCategory ?? ''),
                       onTap: () {
                         setState(() {
-                          controller.categoryController.text = subJob.jobCategory ?? '';
+                          controller.categoryController.text =
+                              subJob.jobCategory ?? '';
                           isJobCategorySelected = false;
                         });
                       },
@@ -247,6 +310,22 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                   },
                 ),
               ),
+            SizedBox(height: screenHeight * 0.01),
+
+            Text(
+              "Job Description",
+              style: GoogleFonts.dmSans(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+
+            SizedBox(height: screenHeight * 0.01),
+
+            CommonTextFieldTwo(
+              controller: controller.jobDescriptionController,
+              maxLines: 4,
+            ),
 
             SizedBox(height: screenHeight * 0.01),
 
@@ -290,12 +369,15 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                     itemBuilder: (context, index) {
                       final jobType = controller.jobTypes[index];
 
-                      return _jobTypeItem(jobType, selectedValues[index], () {
-                        setState(() {
-                          selectedValues[index] = !selectedValues[index];
-                          controller.selectedJobType.value = jobType;
-                        });
-                      });
+                      return _jobTypeItem(
+                        jobType,
+                        controller.selectedJobType.value == jobType,
+                        () {
+                          setState(() {
+                            controller.selectedJobType.value = jobType;
+                          });
+                        },
+                      );
                     },
                   ),
                 ),
@@ -303,7 +385,42 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             ),
 
             SizedBox(height: screenHeight * 0.01),
+            Text(
+              "Job Mode",
+              style: GoogleFonts.dmSans(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
 
+            SizedBox(height: screenHeight * 0.01),
+
+            Column(
+              children: [
+                Obx(
+                  () => ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.jobMode.length,
+                    itemBuilder: (context, index) {
+                      final jobMode = controller.jobMode[index];
+
+                      return _jobTypeItem(
+                        jobMode,
+                        controller.selectedJobMode.value == jobMode,
+                        () {
+                          setState(() {
+                            controller.selectedJobMode.value = jobMode;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: screenHeight * 0.01),
             CommonTextFieldTwo(
               labelName: 'Job Location',
               readOnly: true,
@@ -385,7 +502,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                                                     children: [
                                                       Expanded(
                                                         child: Text(
-                                                          '${data.name}',
+                                                          data.name,
                                                           style:
                                                               GoogleFonts.poppins(
                                                                 fontSize: 16,
@@ -496,7 +613,7 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '${data.name}',
+                                                        data.name,
                                                         style: GoogleFonts.poppins(
                                                           textStyle: TextStyle(
                                                             fontSize: 16,
@@ -624,7 +741,6 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             CommonTextFieldTwo(
               hintName: "Enter Area",
               controller: controller.areaController,
-              keyboardType: TextInputType.text,
             ),
             SizedBox(height: screenHeight * 0.02),
 
@@ -649,23 +765,20 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             Obx(
               () => Wrap(
                 spacing: 8,
-                children: List.generate(
-                  controller.genders.length,
-                  (index) => _selectionChip(
+                children: List.generate(controller.genders.length, (index) {
+                  final gender = controller.genders[index];
+
+                  return _selectionChip(
                     'gender',
-                    controller.genders[index],
-                    genderIndex == index,
+                    gender,
+                    controller.selectedGender.value == gender,
                     () {
                       setState(() {
-                        genderIndex = index;
-                        controller.selectedGender.value =
-                            controller.genders[index];
-
-
+                        controller.selectedGender.value = gender;
                       });
                     },
-                  ),
-                ),
+                  );
+                }),
               ),
             ),
 
@@ -685,22 +798,22 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
               () => Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: List.generate(
-                  controller.qualifications.length,
-                  (index) => _selectionChip(
+                children: List.generate(controller.qualifications.length, (
+                  index,
+                ) {
+                  final qualification = controller.qualifications[index];
+
+                  return _selectionChip(
                     'qualification',
-                    controller.qualifications[index],
-                    qualificationIndex == index,
+                    qualification,
+                    controller.selectedQualification.value == qualification,
                     () {
                       setState(() {
-                        qualificationIndex = index;
-                        controller.selectedQualification.value =
-                            controller.qualifications[index];
-
+                        controller.selectedQualification.value = qualification;
                       });
                     },
-                  ),
-                ),
+                  );
+                }),
               ),
             ),
 
@@ -709,12 +822,20 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
             CommonButton(
               press: () {
                 FocusScope.of(context).unfocus();
-                if ( controller.jobTitleController.text.isEmpty) {
+                if (controller.companyNameController.text.isEmpty) {
+                  CommonToast.show(msg: "Please enter company name");
+                  return;
+                }
+                if (controller.jobTitleController.text.isEmpty) {
                   CommonToast.show(msg: "Please select job title");
                   return;
                 }
-                if ( controller.categoryController.text.isEmpty) {
+                if (controller.categoryController.text.isEmpty) {
                   CommonToast.show(msg: "Please select job category");
+                  return;
+                }
+                if (controller.jobDescriptionController.text.isEmpty) {
+                  CommonToast.show(msg: "Please enter job description");
                   return;
                 }
                 if (controller.openingsController.text.isEmpty) {
@@ -725,6 +846,11 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                   CommonToast.show(msg: "Please select job type");
                   return;
                 }
+                if (controller.selectedJobMode.value == '') {
+                  CommonToast.show(msg: "Please select job mode");
+                  return;
+                }
+
                 if (controller.countryController.text.isEmpty) {
                   CommonToast.show(msg: "Please select country");
                   return;
@@ -745,17 +871,20 @@ class _CreateJobScreenState extends State<CreateJobScreen> {
                   CommonToast.show(msg: "Please enter pincode");
                   return;
                 }
-                if (genderIndex == -1) {
+                if (controller.selectedGender.value == '') {
                   CommonToast.show(msg: "Please select gender");
                   return;
                 }
-                if (qualificationIndex == -1) {
+                if (controller.selectedQualification.value == '') {
                   CommonToast.show(msg: "Please select qualification");
                   return;
                 }
 
                 Get.to(
-                  () => LastStepCreateJob(),
+                  () => LastStepCreateJob(
+                    isEditing: widget.isEdit,
+                    data: widget.data,
+                  ),
                   transition: Transition.rightToLeft,
                 );
               },

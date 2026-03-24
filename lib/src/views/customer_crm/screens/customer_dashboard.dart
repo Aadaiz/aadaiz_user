@@ -2,17 +2,14 @@
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/order_widget.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/controller/customer_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-
-
-import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/order_widget.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/search_field.dart';
 
 
 class CustomerDashboard extends StatefulWidget {
@@ -42,7 +39,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
         if (con.isLoading.value && (con.orderDatas.value.data == null)) {
           return const Padding(
             padding: EdgeInsets.fromLTRB(16,36,16,16),
-            child: ShimmerList(itemCount: 10,),
+            child: ShimmerList(),
           );
         }
 
@@ -78,7 +75,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
+                      vertical: 4,
                       horizontal: 8,
                     ),
                     child: TabBar(
@@ -111,16 +108,14 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                         controller: _refreshNew,
                         enablePullUp: true,
                         onRefresh: () async {
-                          await con.getOrders(filter: "progress");
+                          await con.getOrders();
                           _refreshNew.refreshCompleted();
                         },
                         onLoading: () async {
                           if (con.hasMoreNew) {
                             await con.getOrders(
-                              filter: "progress",
                               page: con.currentPageNew + 1,
                               isLoadMore: true,
-                              isNewOrder: true,
                             );
                             _refreshNew.loadComplete();
                           } else {
@@ -143,7 +138,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               products: item.newOrdersProduct ?? [],
                                 orderShop: item.subadmin!.admin.shopName??'',
                               orderItemCount:
-                                  "${item.newOrdersProduct?.length ?? 0}",
+                                  "${item.newOrdersProduct.length ?? 0}",
                               deliveryDate: item.deliveryDate ?? "",
                               orderDate: item.createdAt ?? "",
                               name: item.customerName ?? "",
@@ -208,7 +203,7 @@ class _CustomerDashboardState extends State<CustomerDashboard> {
                               products: item.existingOrdersProduct ?? [],
                               orderShop: item.subadmin!.admin.shopName??'',
                               orderItemCount:
-                                  "${item.existingOrdersProduct?.length ?? 0}",
+                                  "${item.existingOrdersProduct.length ?? 0}",
                               deliveryDate: item.deliveryDate ?? "",
                               orderDate: item.createdAt ?? "",
                               name: item.customerName ?? "",

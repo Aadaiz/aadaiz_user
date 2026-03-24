@@ -50,18 +50,18 @@ class Data {
   String toJson() => json.encode(toMap());
 
   factory Data.fromMap(Map<String, dynamic> json) => Data(
-    mobileNumber: json["mobile_number"]??null,
-    otpCode: json["otp_code"]??null,
-    otpToken: json["otp_token"]??null,
+    mobileNumber: json["mobile_number"],
+    otpCode: json["otp_code"],
+    otpToken: json["otp_token"],
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     id: json["id"],
   );
 
   Map<String, dynamic> toMap() => {
-    "mobile_number": mobileNumber??null,
-    "otp_code": otpCode??null,
-    "otp_token": otpToken??null,
+    "mobile_number": mobileNumber,
+    "otp_code": otpCode,
+    "otp_token": otpToken,
     "updated_at": updatedAt,
     "created_at": createdAt?.toIso8601String(),
     "id": id,

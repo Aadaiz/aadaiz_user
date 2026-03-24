@@ -134,24 +134,24 @@ class Review {
   String toJson() => json.encode(toMap());
 
   factory Review.fromMap(Map<String, dynamic> json) => Review(
-    id: json["id"]??null,
-    userId: json["user_id"]??null,
-    rating: json["rating"]??null,
-    comment: json["comment"]??null,
+    id: json["id"],
+    userId: json["user_id"],
+    rating: json["rating"],
+    comment: json["comment"],
     images: json["images"],
-    date: json["date"]??null,
-    time: json["time"]??null,
+    date: json["date"],
+    time: json["time"],
     user: json["user"] == null ? null : User.fromMap(json["user"]),
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "user_id": userId??null,
-    "rating": rating??null,
-    "comment": comment??null,
-    "images": images??null,
-    "date": date??null,
-    "time": time??null,
+    "id": id,
+    "user_id": userId,
+    "rating": rating,
+    "comment": comment,
+    "images": images,
+    "date": date,
+    "time": time,
     "user": user?.toMap(),
   };
 }
@@ -172,15 +172,15 @@ class User {
   String toJson() => json.encode(toMap());
 
   factory User.fromMap(Map<String, dynamic> json) => User(
-    id: json["id"]??null,
-    username: json["username"]??null,
-    profile: json["profile"]??null,
+    id: json["id"],
+    username: json["username"],
+    profile: json["profile"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "username": username??null,
-    "profile": profile??null,
+    "id": id,
+    "username": username,
+    "profile": profile,
   };
 }
 

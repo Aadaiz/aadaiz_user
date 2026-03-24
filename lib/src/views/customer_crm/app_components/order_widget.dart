@@ -1,12 +1,11 @@
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/screens/order_details.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/screens/ordered_items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../screens/order_details.dart';
-import '../screens/ordered_items.dart';
-import 'app_colors.dart';
 
 class OrderWidget extends StatefulWidget {
   final String orderStatus,
@@ -125,7 +124,7 @@ print('customerImage:${widget.customerImage}');
                       color: AppColors.blackColor.withAlpha(20),
                     ),
                   ),
-                  child: (widget.customerImage == null || widget.customerImage!.isEmpty)
+                  child: (widget.customerImage.isEmpty)
                       ? Icon(
                     Icons.person,
                     color: AppColors.orangeColor,
@@ -134,7 +133,7 @@ print('customerImage:${widget.customerImage}');
                       : ClipRRect(
                     borderRadius: BorderRadius.circular(Get.width * 0.025),
                     child: Image.network(
-                      widget.customerImage!,
+                      widget.customerImage,
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,
@@ -179,7 +178,7 @@ print('customerImage:${widget.customerImage}');
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    widget.orderStatus!.capitalizeFirst??'',
+                    widget.orderStatus.capitalizeFirst??'',
                     style: GoogleFonts.inter(
                       fontSize: 12.sp,
                       color: Colors.black,

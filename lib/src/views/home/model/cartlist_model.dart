@@ -55,19 +55,19 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> json) => Data(
     shippingAddress: json["shippingAddress"] == null ? null : ShippingAddress.fromMap(json["shippingAddress"]),
     items: json["items"] == null ? [] : List<Item>.from(json["items"]!.map((x) => Item.fromMap(x))),
-    subTotalAmount: json["subTotalAmount"]??null,
-    gstAmount: json["gstAmount"]??null,
-    discountAmount: json["discountAmount"]??null,
-    totalAmount: json["TotalAmount"]??null,
+    subTotalAmount: json["subTotalAmount"],
+    gstAmount: json["gstAmount"],
+    discountAmount: json["discountAmount"],
+    totalAmount: json["TotalAmount"],
     couponDetails: json["coupon_details"] == null ? null : CouponDetails.fromMap(json["coupon_details"]),  );
 
   Map<String, dynamic> toMap() => {
     "shippingAddress": shippingAddress?.toMap(),
     "items": items == null ? [] : List<dynamic>.from(items!.map((x) => x.toMap())),
-    "subTotalAmount": subTotalAmount??null,
-    "gstAmount": gstAmount??null,
-    "discountAmount": discountAmount??null,
-    "TotalAmount": totalAmount??null,
+    "subTotalAmount": subTotalAmount,
+    "gstAmount": gstAmount,
+    "discountAmount": discountAmount,
+    "TotalAmount": totalAmount,
     "coupon_details": couponDetails?.toMap(),
   };
 }
@@ -130,24 +130,24 @@ class Item {
   String toJson() => json.encode(toMap());
 
   factory Item.fromMap(Map<String, dynamic> json) => Item(
-    cartId: json["cart_id"]??null,
-    patternId: json["pattern_id"]??null,
-    price: json["price"]??null,
-    quantity: json["quantity"]??null,
+    cartId: json["cart_id"],
+    patternId: json["pattern_id"],
+    price: json["price"],
+    quantity: json["quantity"],
     measurement: json["measurement"] == null ? null : Measurement.fromMap(json["measurement"]),
-    fabricMetre: json["fabric_metre"]??null,
-    size: json["size"]??null,
+    fabricMetre: json["fabric_metre"],
+    size: json["size"],
     pattern: json["pattern"] == null ? null : Pattern.fromMap(json["pattern"]),
   );
 
   Map<String, dynamic> toMap() => {
-    "cart_id": cartId??null,
-    "pattern_id": patternId??null,
-    "price": price??null,
-    "quantity": quantity??null,
+    "cart_id": cartId,
+    "pattern_id": patternId,
+    "price": price,
+    "quantity": quantity,
     "measurement": measurement?.toMap(),
-    "fabric_metre": fabricMetre??null,
-    "size": size??null,
+    "fabric_metre": fabricMetre,
+    "size": size,
     "pattern": pattern?.toMap(),
   };
 }
@@ -172,19 +172,19 @@ class Measurement {
   String toJson() => json.encode(toMap());
 
   factory Measurement.fromMap(Map<String, dynamic> json) => Measurement(
-    length: json["length"]??null,
-    shoulder: json["shoulder"]??null,
-    chest: json["chest"]??null,
-    waist: json["waist"]??null,
-    hip: json["hip"]??null,
+    length: json["length"],
+    shoulder: json["shoulder"],
+    chest: json["chest"],
+    waist: json["waist"],
+    hip: json["hip"],
   );
 
   Map<String, dynamic> toMap() => {
-    "length": length??null,
-    "shoulder": shoulder??null,
-    "chest": chest??null,
-    "waist": waist??null,
-    "hip": hip??null,
+    "length": length,
+    "shoulder": shoulder,
+    "chest": chest,
+    "waist": waist,
+    "hip": hip,
   };
 }
 
@@ -220,31 +220,31 @@ class Pattern {
   String toJson() => json.encode(toMap());
 
   factory Pattern.fromMap(Map<String, dynamic> json) => Pattern(
-    id: json["id"]??null,
-    pCatId: json["p_cat_id"]??null,
-    price: json["price"]??null,
-    title: json["title"]??null,
-    image: json["image_url"]??null,
-    subTitle: json["sub_title"]??null,
-    gstPercentage: json["gst_percentage"]??null,
-    length: json["length"]??null,
-    breadth: json["breadth"]??null,
-    height: json["height"]??null,
-    rating: json["rating"]??null,
+    id: json["id"],
+    pCatId: json["p_cat_id"],
+    price: json["price"],
+    title: json["title"],
+    image: json["image_url"],
+    subTitle: json["sub_title"],
+    gstPercentage: json["gst_percentage"],
+    length: json["length"],
+    breadth: json["breadth"],
+    height: json["height"],
+    rating: json["rating"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "p_cat_id": pCatId??null,
-    "price": price??null,
-    "title": title??null,
-    "image_url": image??null,
-    "sub_title": subTitle??null,
-    "gst_percentage": gstPercentage??null,
-    "length": length??null,
-    "breadth": breadth??null,
-    "height": height??null,
-    "rating": rating??null,
+    "id": id,
+    "p_cat_id": pCatId,
+    "price": price,
+    "title": title,
+    "image_url": image,
+    "sub_title": subTitle,
+    "gst_percentage": gstPercentage,
+    "length": length,
+    "breadth": breadth,
+    "height": height,
+    "rating": rating,
   };
 }
 
@@ -272,22 +272,22 @@ class ShippingAddress {
   String toJson() => json.encode(toMap());
 
   factory ShippingAddress.fromMap(Map<String, dynamic> json) => ShippingAddress(
-    id: json["id"]??null,
-    name: json["name"]??null,
-    address: json["address"]??null,
-    landmark: json["landmark"]??null,
-    city: json["city"]??null,
-    state: json["state"]??null,
-    pincode: json["pincode"]??null,
+    id: json["id"],
+    name: json["name"],
+    address: json["address"],
+    landmark: json["landmark"],
+    city: json["city"],
+    state: json["state"],
+    pincode: json["pincode"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "name": name??null,
-    "address": address??null,
-    "landmark": landmark??null,
-    "city": city??null,
-    "state": state??null,
-    "pincode": pincode??null,
+    "id": id,
+    "name": name,
+    "address": address,
+    "landmark": landmark,
+    "city": city,
+    "state": state,
+    "pincode": pincode,
   };
 }

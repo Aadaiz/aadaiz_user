@@ -1,18 +1,22 @@
 import 'dart:ui';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_data_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class JobDetailScreen extends StatefulWidget {
-  const JobDetailScreen({super.key});
+  final Datum? data;
+  const JobDetailScreen({super.key, this.data});
 
   @override
   State<JobDetailScreen> createState() => _JobDetailScreenState();
@@ -37,11 +41,10 @@ class _JobDetailScreenState extends State<JobDetailScreen>
 
   void _showApplyBottomSheet() {
     showModalBottomSheet(
-
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const ApplyBottomSheet(),
+      builder: (_) =>  ApplyBottomSheet(id: widget.data?.id),
     );
   }
 
@@ -96,16 +99,15 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Fashion Designer',
+                    widget.data?.jobTitle ?? '',
                     style: GoogleFonts.dmSans(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.w400,
-                      
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.002),
                   Text(
-                    'Aadaiz',
+                    widget.data?.companyName ?? '',
                     style: GoogleFonts.dmSans(
                       fontSize: 14.sp,
                       color: Colors.grey,
@@ -118,11 +120,9 @@ class _JobDetailScreenState extends State<JobDetailScreen>
           SizedBox(height: screenHeight * 0.018),
           Row(
             children: [
-              _buildTag('Fulltime', screenWidth),
+              _buildTag(widget.data?.jobType ?? '', screenWidth),
               SizedBox(width: screenWidth * 0.02),
-              _buildTag('Senior Level', screenWidth),
-              SizedBox(width: screenWidth * 0.02),
-              _buildTag('Remote', screenWidth),
+              _buildTag(widget.data?.qualification ?? '', screenWidth),
             ],
           ),
           SizedBox(height: screenHeight * 0.012),
@@ -139,15 +139,10 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     return Container(
       width: 52.w,
       height: 52.w,
-      decoration: BoxDecoration(
-        color: AppColor.black,
-
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: AppColor.black, shape: BoxShape.circle),
 
       alignment: Alignment.center,
       child: const Icon(Icons.business_sharp, color: Colors.white),
-
     );
   }
 
@@ -161,13 +156,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         color: AppColor.jobDetailContainerBg,
         borderRadius: BorderRadius.circular(5.r),
       ),
-      child: Text(
-        label,
-        style: GoogleFonts.dmSans(
-          fontSize: 12.sp,
-         
-        ),
-      ),
+      child: Text(label, style: GoogleFonts.dmSans(fontSize: 12.sp)),
     );
   }
 
@@ -187,13 +176,12 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sed ut perspiciatis under omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem ...',
+                      widget.data?.jobDescription ?? '',
                       style: GoogleFonts.dmSans(
                         fontSize: 12.sp,
-                        color:Colors.grey,
+                        color: Colors.grey,
                         fontWeight: FontWeight.w400,
 
-                       
                         height: 1.6,
                       ),
                       maxLines: 4,
@@ -217,12 +205,8 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione sequi nesciunt.',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 13.5.sp,
-                       
-                        height: 1.6,
-                      ),
+                      widget.data?.jobDescription ?? '',
+                      style: GoogleFonts.dmSans(fontSize: 13.5.sp, height: 1.6),
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     GestureDetector(
@@ -252,14 +236,15 @@ class _JobDetailScreenState extends State<JobDetailScreen>
             children: [
               _sectionTitle('Requirements'),
               SizedBox(height: screenHeight * 0.012),
-              _bulletPoint(
-                'Create Visual Designs And Graphics For Print Or Digital Media And Websites',
-                screenWidth,
-              ),
-              SizedBox(height: screenHeight * 0.007),
-              _bulletPoint(
-                "Provide Creative Ideas As Per Company's Requirements",
-                screenWidth,
+
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.data?.jobRequirement?.length ?? 0,
+                itemBuilder: (context, index) {
+                  final data = widget.data?.jobRequirement?[index];
+                  return _bulletPoint(data?.requirements ?? '', screenWidth);
+                },
               ),
             ],
           ),
@@ -273,11 +258,9 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                 spacing: screenWidth * 0.02,
                 runSpacing: screenHeight * 0.01,
                 children:
-                    [
-                      'UI UX',
-                      'Product Design',
-                      'Web Designing',
-                    ].map((s) => _skillChip(s, screenWidth)).toList(),
+                    widget.data!.jobSkill!
+                        .map((s) => _skillChip(s.name ?? '', screenWidth))
+                        .toList(),
               ),
             ],
           ),
@@ -287,7 +270,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
             children: [
               _sectionTitle('Working Days'),
               SizedBox(height: screenHeight * 0.012),
-              _skillChip('5 Days Working', screenWidth),
+              _skillChip(widget.data?.workingDays ?? '', screenWidth),
             ],
           ),
           SizedBox(height: screenHeight * 0.015),
@@ -298,19 +281,38 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               SizedBox(height: screenHeight * 0.012),
               Row(
                 children: [
-                  Icon(Icons.phone, size: 16.sp, ),
+                  Icon(Icons.phone, size: 16.sp),
                   SizedBox(width: screenWidth * 0.015),
-                  Text(
-                    '+91 123 456 7890',
-                    style: GoogleFonts.dmSans(
-                      color: AppColor.red,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14.sp,
+                  Expanded(
+                    child: Text(
+                      formatCommunication(
+                        widget.data?.communication ?? '',
+                      ).replaceAll(r'\n', '\n'),
+                      style: GoogleFonts.dmSans(
+                        color: AppColor.red,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
-                  const Spacer(),
+
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final phone = extractPhone(widget.data?.communication ?? '');
+
+                      if (phone.isEmpty) {
+                        await CommonToast.show(msg: 'Phone number not found');
+                        return;
+                      }
+
+                      final Uri url = Uri.parse("tel:+91$phone");
+
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      } else {
+                        CommonToast.show(msg: 'Cannot open dialer');
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary,
                       foregroundColor: Colors.white,
@@ -332,6 +334,25 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         ],
       ),
     );
+  }
+  String extractPhone(String text) {
+    final regex = RegExp(r'\d{10}');
+    final match = regex.firstMatch(text);
+    return match?.group(0) ?? '';
+  }
+  String formatCommunication(String text) {
+    if (text.isEmpty) return text;
+
+    final regex = RegExp(r'on (\d{10})');
+    final match = regex.firstMatch(text);
+
+    if (match != null) {
+      final number = match.group(1);
+
+      return text.replaceFirst('on $number', 'on +91 $number');
+    }
+
+    return text;
   }
 
   Widget _buildApplyButton(double screenWidth, double screenHeight) {
@@ -355,11 +376,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
   Widget _sectionTitle(String title) {
     return Text(
       title,
-      style: GoogleFonts.dmSans(
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
-        
-      ),
+      style: GoogleFonts.dmSans(fontSize: 14.sp, fontWeight: FontWeight.w700),
     );
   }
 
@@ -369,7 +386,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
       children: [
         Padding(
           padding: EdgeInsets.only(top: 4.h),
-          child: Icon(Icons.circle, size: 6.sp, ),
+          child: Icon(Icons.circle, size: 6.sp),
         ),
         SizedBox(width: screenWidth * 0.02),
         Expanded(
@@ -379,7 +396,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Colors.grey,
-             
+
               height: 1.5,
             ),
           ),
@@ -400,25 +417,22 @@ class _JobDetailScreenState extends State<JobDetailScreen>
       ),
       child: Text(
         label,
-        style: GoogleFonts.dmSans(
-          fontSize: 12.sp,
-        
-          fontWeight: FontWeight.w500,
-        ),
+        style: GoogleFonts.dmSans(fontSize: 12.sp, fontWeight: FontWeight.w500),
       ),
     );
   }
 }
 
 class ApplyBottomSheet extends StatefulWidget {
-  const ApplyBottomSheet({super.key});
+  final dynamic? id;
+  const ApplyBottomSheet({super.key, this.id});
 
   @override
   State<ApplyBottomSheet> createState() => _ApplyBottomSheetState();
 }
 
 class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
-  final TextEditingController _infoController = TextEditingController();
+final JobsController controller = Get.find();
   bool _fileUploaded = false;
   final bool _isDragging = false;
 
@@ -426,9 +440,11 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
     setState(() => _fileUploaded = true);
   }
 
-  void _removeFile() {
-    setState(() => _fileUploaded = false);
-  }
+void _removeFile() {
+  controller.resumeFile.value = null;
+  controller.resumeFileName.value = '';
+  setState(() => _fileUploaded = false);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -472,7 +488,6 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
                       style: GoogleFonts.dmSans(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
-                        
                       ),
                     ),
                     const Spacer(),
@@ -506,23 +521,22 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Upload Area
+
                       _fileUploaded
                           ? _buildFileAttached(screenWidth, screenHeight)
                           : _buildUploadArea(screenWidth, screenHeight),
                       SizedBox(height: screenHeight * 0.03),
-                      // Information
+
                       Text(
                         'Information',
                         style: GoogleFonts.dmSans(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                         
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.012),
                       TextField(
-                        controller: _infoController,
+                        controller: controller.infoController,
                         maxLines: 5,
                         style: GoogleFonts.dmSans(fontSize: 14.sp),
                         decoration: InputDecoration(
@@ -542,7 +556,6 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
-                           
                           ),
                           contentPadding: EdgeInsets.all(14.w),
                         ),
@@ -555,12 +568,28 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
               // Apply Button
               Padding(
                 padding: EdgeInsets.all(screenWidth * 0.02),
-                child: CommonButton(
-                  press: () {},
-                  height: 40.h,
-                  width: double.infinity,
-                  text: 'Apply',
-                ),
+                child:
+                 Obx(()=>
+              CommonButton(
+                loading: controller.jobApplyLoading.value,
+                      press: () {
+                        if (controller.resumeFile.value == null) {
+                          CommonToast.show(msg: "Upload Resume");
+                          return;
+                        }
+                        if (controller.infoController.text.isEmpty) {
+                          CommonToast.show(msg: "Enter Information");
+                          return;
+                        }
+
+                        controller.appJob(false, widget.id, context);
+                      },
+                      height: 40.h,
+                      width: double.infinity,
+                      text: 'Apply',
+                    ),
+                 ),
+
               ),
             ],
           ),
@@ -571,7 +600,12 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
 
   Widget _buildUploadArea(double screenWidth, double screenHeight) {
     return GestureDetector(
-      onTap: _simulateUpload,
+      onTap: () async {
+        await controller.pickResume();
+        if (controller.resumeFile.value != null) {
+          setState(() => _fileUploaded = true);
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: double.infinity,
@@ -608,7 +642,6 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
                 style: GoogleFonts.dmSans(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
@@ -627,48 +660,51 @@ class _ApplyBottomSheetState extends State<ApplyBottomSheet> {
   }
 
   Widget _buildFileAttached(double screenWidth, double screenHeight) {
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: AppColor.red.withOpacity(0.05),
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(14.r),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(
-              color: AppColor.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10.r),
+    return Obx(()=>
+     Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: AppColor.red.withOpacity(0.05),
+          border: Border.all(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: AppColor.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Icon(Icons.picture_as_pdf, color: AppColor.red, size: 26.sp),
             ),
-            child: Icon(Icons.picture_as_pdf, color: AppColor.red, size: 26.sp),
-          ),
-          SizedBox(width: screenWidth * 0.03),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Josh – CV – UI/UX Designer',
-                  style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
-                    
+            SizedBox(width: screenWidth * 0.03),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+              controller.resumeFileName.value.isNotEmpty
+                ? controller.resumeFileName.value
+                    : 'Resume File',
+                    style: GoogleFonts.dmSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                    ),
                   ),
-                ),
-                SizedBox(height: screenHeight * 0.004),
-                Text(
-                  '867 Kb · 14 Feb 2022 at 11:30 am',
-                  style: GoogleFonts.dmSans(
-                    fontSize: 12.sp,
-                    color: Colors.grey.shade500,
+                  SizedBox(height: screenHeight * 0.004),
+                  Text(
+                    'PDF, DOC up to 10MB',
+                    style: GoogleFonts.dmSans(
+                      fontSize: 12.sp,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

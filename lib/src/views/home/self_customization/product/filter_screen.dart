@@ -1,15 +1,14 @@
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/filter_model.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../res/widgets/common_app_bar.dart';
-import '../../model/filter_model.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -170,7 +169,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                     shrinkWrap: true,
                                     itemCount: category.length,
                                     itemBuilder: (context, i) {
-                                      var data = category[i];
+                                      final data = category[i];
                                       return Column(
                                         children: [
                                           Padding(
@@ -193,13 +192,12 @@ class _FilterScreenState extends State<FilterScreen> {
                                           data.patternFiltercategories!.isEmpty
                                               ? const SizedBox()
                                               : Wrap(
-                                                  direction: Axis.horizontal,
                                                   children: data
                                                       .patternFiltercategories!
                                                       .asMap()
                                                       .entries
                                                       .map((i) {
-                                                    int index = i.key + 1;
+                                                    final int index = i.key + 1;
                                                     return InkWell(
                                                       onTap: () {
                                                         setState(() {
@@ -218,8 +216,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                                                     ? AppColor
                                                                         .red
                                                                     : Colors
-                                                                        .transparent,
-                                                                width: 1),
+                                                                        .transparent),
                                                             color:
                                                                 AppColor.white,
                                                             boxShadow: [
@@ -244,7 +241,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                                                     child: Image.network('${i.value.image}',
                                                                     fit: BoxFit.cover,))),
                                                             const SizedBox(
-                                                                height: 8.0),
+                                                                height: 8),
                                                             Text(
                                                                 "${i.value.name ?? ''}",
                                                                 style: GoogleFonts.dmSans(
@@ -257,7 +254,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                                                         fontWeight:
                                                                             FontWeight.w400))),
                                                             const SizedBox(
-                                                                height: 8.0),
+                                                                height: 8),
                                                           ],
                                                         ),
                                                       ),
@@ -375,7 +372,6 @@ class _FilterScreenState extends State<FilterScreen> {
               width: Get.width*0.4,
               press: () {
               },
-              loading: false,
               borderRadius:0.0,
               isBorder: true,
             ),
@@ -384,7 +380,6 @@ class _FilterScreenState extends State<FilterScreen> {
               width: Get.width*0.4,
               press: () {
               },
-              loading: false,
               borderRadius:0.0,
             ),
           ],

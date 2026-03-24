@@ -1,14 +1,11 @@
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../utils/colors.dart';
-import 'filter_screen.dart';
 
 class FilterDataWidget extends StatefulWidget {
   const FilterDataWidget({super.key});

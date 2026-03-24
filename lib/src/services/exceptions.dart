@@ -44,7 +44,7 @@ class UnauthorisedException extends AppException {
 
   UnauthorisedException(this.message, this.code,{this.next=""})
       : super(message, "Unauthorised: ") {
-    String scode = code != null ? code.toString() : '401';
+    final String scode = code.toString();
     //navigator.pushNamed('/login');
     // Utility.log("next screen $next error $res");
     // LoginController.to.otpStatusFor.value="Login";

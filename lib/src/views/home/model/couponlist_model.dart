@@ -48,18 +48,18 @@ class Coupon {
   String toJson() => json.encode(toMap());
 
   factory Coupon.fromMap(Map<String, dynamic> json) => Coupon(
-    id: json["id"]??null,
-    title: json["title"]??null,
-    description: json["description"]??null,
-    couponCode: json["coupon_code"]??null,
-    imageUrl: json["image_url"]??null,
+    id: json["id"],
+    title: json["title"],
+    description: json["description"],
+    couponCode: json["coupon_code"],
+    imageUrl: json["image_url"],
   );
 
   Map<String, dynamic> toMap() => {
-    "id": id??null,
-    "title": title??null,
-    "description": description??null,
-    "coupon_code": couponCode??null,
-    "image_url": imageUrl??null,
+    "id": id,
+    "title": title,
+    "description": description,
+    "coupon_code": couponCode,
+    "image_url": imageUrl,
   };
 }

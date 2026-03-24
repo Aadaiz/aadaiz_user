@@ -2,16 +2,14 @@ import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/designers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../utils/utils.dart';
 
 class Appointment extends StatefulWidget {
   const Appointment({
@@ -66,7 +64,7 @@ class _AppointmentState extends State<Appointment> {
                               itemCount:
                                   ConsultingController.to.categoryList.length,
                               itemBuilder: (BuildContext context, int index) {
-                                var data =
+                                final data =
                                     ConsultingController.to.categoryList[index];
                                 return InkWell(
                                     onTap: () {
@@ -123,7 +121,7 @@ class _AppointmentState extends State<Appointment> {
                                                       ),
                                                     ),
                                                   ),
-                                                  imageUrl: (data.imageUrl),
+                                                  imageUrl: data.imageUrl,
                                                 )
                                               :
                                           Container(
@@ -165,7 +163,7 @@ class _AppointmentState extends State<Appointment> {
                               itemCount: ConsultingController
                                   .to.designerPrefsList.length,
                               itemBuilder: (BuildContext context, int index) {
-                                var data = ConsultingController
+                                final data = ConsultingController
                                     .to.designerPrefsList[index];
                                 return InkWell(
                                     onTap: () {
@@ -230,7 +228,7 @@ class _AppointmentState extends State<Appointment> {
                                                           ),
                                                         ),
                                                         imageUrl:
-                                                            (data.imageUrl),
+                                                            data.imageUrl,
                                                       )
                                                     :      Container(
                                                   decoration: BoxDecoration(

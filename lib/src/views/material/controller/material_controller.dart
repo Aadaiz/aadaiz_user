@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart'
     as material;
+import 'package:aadaiz_customer_crm/src/views/material/model/category_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/filter_category.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_cart_list_model.dart';
-import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart'
     as category;
+import 'package:aadaiz_customer_crm/src/views/material/model/material_category_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_model.dart';
+import 'package:aadaiz_customer_crm/src/views/material/repository/material_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../repository/material_repository.dart';
 
 class MaterialController extends GetxController {
   static MaterialController get to => Get.put(MaterialController());
@@ -98,7 +98,7 @@ class MaterialController extends GetxController {
   var filterListCategories = <Category>[].obs;
   var filterListColors = <String>[].obs;
 
-  getFilterCategory() async {
+  Future<void> getFilterCategory() async {
     filterLoading(true);
     final FilterCategory res = await repo.getFilterCategory();
     filterLoading(false);
@@ -112,7 +112,7 @@ class MaterialController extends GetxController {
     }
   }
 
-  getCategory() async {
+  Future<void> getCategory() async {
     orderLoading(true);
     final MaterialCategoryListRes res = await repo.getMaterialCategory();
     orderLoading(false);
@@ -164,7 +164,7 @@ class MaterialController extends GetxController {
         itemQuantities.clear();
         cartItems.clear();
 
-        for (var item in cartList.value!.items!) {
+        for (final item in cartList.value!.items!) {
           // Get product ID from the nested product object
           final productId = item.product?.id?.toString();
           if (productId != null) {
@@ -218,7 +218,7 @@ class MaterialController extends GetxController {
   Future<void> incrementQuantity(dynamic itemId) async {
     final int currentQty = getItemQuantity(itemId);
     // Since API adds quantity, we only send 1 to increment by 1
-    final int quantityToSend = 1;
+    const int quantityToSend = 1;
 
     // Update immediately in UI - add 1 locally
     final int newQty = currentQty + 1;
@@ -239,7 +239,7 @@ class MaterialController extends GetxController {
     }
 
     // Since API adds quantity, we send -1 to decrement
-    final int quantityToSend = -1;
+    const int quantityToSend = -1;
 
     // Update immediately in UI - subtract 1 locally
     final int newQty = currentQty - 1;

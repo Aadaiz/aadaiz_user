@@ -1,25 +1,19 @@
-import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/self_customize.dart';
 import 'package:aadaiz_customer_crm/src/views/material/add_measurement.dart';
+import 'package:aadaiz_customer_crm/src/views/review/review_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shimmer/shimmer.dart';
-
-import '../../../../res/widgets/common_app_bar.dart';
-import '../../../review/review_list.dart';
-import '../../model/productlist_model.dart';
-import '../product/people_viewed_product_widget.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key, this.data, required this.rating});
@@ -59,7 +53,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   ScrollController controller = ScrollController();
   // Add a boolean flag to control arrow clickability
   bool _isArrowClickable = true;
-  void _handleArrowClick(bool isLeftArrow) async {
+  Future<void> _handleArrowClick(bool isLeftArrow) async {
     if (_isArrowClickable) {
       setState(() {
         _isArrowClickable = false;
@@ -67,7 +61,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       if (isLeftArrow) {
         await controller.animateTo(
           controller.offset - MediaQuery.of(context).size.width * 0.8,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
         setState(() {
@@ -76,7 +70,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       } else {
         await controller.animateTo(
           controller.offset + MediaQuery.of(context).size.width * 0.8,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
         setState(() {
@@ -85,7 +79,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       }
 
       // Delay to make arrows clickable after scrolling completes
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       setState(() {
         _isArrowClickable = true;
@@ -147,10 +141,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       children: [
                         RatingBar(
                           initialRating: widget.rating,
-                          direction: Axis.horizontal,
                           ignoreGestures: true,
                           allowHalfRating: true,
-                          itemCount: 5,
                           itemSize: 15,
                           unratedColor: Colors.grey,
                           ratingWidget: RatingWidget(
@@ -286,7 +278,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                       ),
                                     ),
-                                imageUrl: (images[i]),
+                                imageUrl: images[i],
                               ),
                             );
                           },
@@ -356,7 +348,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(
                     width: Get.width * 0.6,
                     child: RichText(
-                      textAlign: TextAlign.start,
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
@@ -408,7 +399,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             color: AppColor.white,
                           ),
                         ),
-                        Gap(8),
+                        const Gap(8),
                         Image.asset('assets/images/custo.png', height: 3.0.hp),
                       ],
                     ),
@@ -480,10 +471,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   .value[0]
                                                   .rating,
                                             ),
-                                            direction: Axis.horizontal,
                                             ignoreGestures: true,
                                             allowHalfRating: true,
-                                            itemCount: 5,
                                             itemSize: 15,
                                             unratedColor: Colors.grey,
                                             ratingWidget: RatingWidget(
@@ -530,8 +519,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
                                               'Helpful',
@@ -565,7 +552,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           HomeController.to.reviewList.length > 1
                               ? Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8),
                                 child: Container(
                                   width: screenWidth,
                                   decoration: BoxDecoration(
@@ -623,7 +610,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Obx(
                     () =>
                         HomeController.to.tailorLoading.value
-                            ? CommonLoading()
+                            ? const CommonLoading()
                             : Container(
                               width: screenWidth,
                               //  margin: EdgeInsets.symmetric(vertical: screenHeight * 0.022),
@@ -634,7 +621,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     color: Colors.black.withOpacity(0.3),
                                     offset: const Offset(0, 1),
                                     blurRadius: 5,
-                                    spreadRadius: 0,
                                   ),
                                 ],
                               ),
@@ -671,9 +657,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                     .value[0]
                                                     .avgRate
                                                     .toDouble(),
-                                            direction: Axis.horizontal,
                                             allowHalfRating: true,
-                                            itemCount: 5,
                                             itemSize: 12,
                                             ignoreGestures: true,
                                             unratedColor: Colors.grey,
@@ -796,16 +780,16 @@ class RatingsWidget extends StatelessWidget {
   final List<dynamic> ratingCounts;
   final dynamic rating;
   const RatingsWidget({
-    Key? key,
+    super.key,
     required this.totalRatings,
     required this.ratingCounts,
     this.rating,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -814,7 +798,7 @@ class RatingsWidget extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    '${rating}',
+                    '$rating',
                     style: GoogleFonts.dmSans(
                       fontWeight: FontWeight.w400,
                       fontSize: 38.00.sp,
@@ -831,13 +815,13 @@ class RatingsWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (int i = 0; i <= 4; i++)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      padding: const EdgeInsets.symmetric(vertical: 2),
                       child: Row(
                         children: [
                           SizedBox(

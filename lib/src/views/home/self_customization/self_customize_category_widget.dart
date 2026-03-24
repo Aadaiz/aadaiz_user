@@ -63,10 +63,10 @@ class _CategorySelectionScreenState extends State<CategorySelectionScreen> {
                   .asMap()
                   .entries
                   .map((entry) {
-                int index = entry.key + 1;
-                var e = entry.value;
-                bool prime = isPrime(index);
-                int value = customFunction(index);
+                final int index = entry.key + 1;
+                final e = entry.value;
+                final bool prime = isPrime(index);
+                final int value = customFunction(index);
                 double bottomLeft;
                 double bottomRight;
                 double topRight;
@@ -210,7 +210,7 @@ class CategoryWidget extends StatelessWidget {
                                   )),
                             ),
                         imageUrl:
-                        (image)),
+                        image),
                   ),
                   Positioned(
                     right: width * 0.05,
@@ -282,7 +282,7 @@ class CategoryWidget extends StatelessWidget {
                                   )),
                             ),
                         imageUrl:
-                        (image)),
+                        image),
                   ),
                   Positioned(
                     top: height / 4,
@@ -373,7 +373,7 @@ class SpecialCategoryWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final data = HomeController
                         .to.categoryData.value.specialPatterns![index];
-                    List imageUrl = data.imageUrl.split(',');
+                    final List imageUrl = data.imageUrl.split(',');
                     return Container(
                       width: Get.width * 0.5, // Set a fixed width for each item
                       padding: const EdgeInsets.all(8),
@@ -388,7 +388,6 @@ class SpecialCategoryWidget extends StatelessWidget {
                         ],
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           data.imageUrl != null || data.imageUrl != ''
                               ? CachedNetworkImage(
@@ -416,7 +415,7 @@ class SpecialCategoryWidget extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  imageUrl: (imageUrl[0]),
+                                  imageUrl: imageUrl[0],
                                 )
                               : Shimmer.fromColors(
                                   baseColor: Colors.grey[300]!,

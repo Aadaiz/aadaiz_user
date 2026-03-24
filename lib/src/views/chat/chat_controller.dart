@@ -1,11 +1,10 @@
 import 'dart:io';
 
+import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
-
-import '../profile/controller/profile_controller.dart';
 
 class ChatController extends GetxController {
   late IO.Socket socket;
@@ -19,7 +18,7 @@ class ChatController extends GetxController {
   //   super.onInit();
   //   connectSocket();
   // }
-  getOtherUser(receiverId) {
+  void getOtherUser(receiverId) {
     _otherUser =  types.User(id: '$receiverId');
   }
 

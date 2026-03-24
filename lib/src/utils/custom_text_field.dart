@@ -1,9 +1,7 @@
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class CustomTextField extends StatefulWidget {
   final String hintText;
@@ -13,13 +11,13 @@ class CustomTextField extends StatefulWidget {
   final TextInputType keyboardType; // ✅ added
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.controller,
     this.enabled = true,
     this.width,
     this.keyboardType = TextInputType.text, // ✅ default
-  }) : super(key: key);
+  });
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -61,7 +59,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: Container(
         width: widget.width?? Get.width,
        // margin: EdgeInsets.fromLTRB(12, 2, 12, 2),
-        padding: EdgeInsets.fromLTRB(2, 13, 2, 0),
+        padding: const EdgeInsets.fromLTRB(2, 13, 2, 0),
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(4),
@@ -85,21 +83,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
           controller: _controller,
           decoration: InputDecoration(
 
-            label: Text(widget.hintText, style: TextStyle(color: Colors.grey)),
+            label: Text(widget.hintText, style: const TextStyle(color: Colors.grey)),
             hintText: widget.hintText,
             hintStyle: const TextStyle(color: Colors.grey),
-            border: OutlineInputBorder(),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(1.0)),
-              borderSide: BorderSide(color: Colors.transparent, width: 1.0),
+            border: const OutlineInputBorder(),
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(1)),
+              borderSide: BorderSide(color: Colors.transparent),
             ),
             focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              borderSide: BorderSide(color: Colors.transparent, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderSide: BorderSide(color: Colors.transparent),
             ),
             disabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              borderSide: BorderSide(color: Colors.transparent, width: 1.0),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderSide: BorderSide(color: Colors.transparent),
             ),
           ),
         ),

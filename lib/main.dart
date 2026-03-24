@@ -1,24 +1,17 @@
 import 'dart:developer';
 
+import 'package:aadaiz_customer_crm/firebase_options.dart';
 import 'package:aadaiz_customer_crm/src/res/Firebase/firebase.dart';
 import 'package:aadaiz_customer_crm/src/services/app_bindings.dart';
 import 'package:aadaiz_customer_crm/src/utils/routes/routes.dart';
 import 'package:aadaiz_customer_crm/src/utils/routes/routes_name.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatMessageController.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatSocketController.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
-import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -46,7 +39,6 @@ Future<void> main() async {
   ]);
 
   runApp( DevicePreview(
-      enabled: !kReleaseMode,
       builder: (context) =>MyApp(navigatorKey: navigatorKey)));
 }
 

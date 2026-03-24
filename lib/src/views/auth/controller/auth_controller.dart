@@ -1,22 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/model/signup_model.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/model/verify_otp_model.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/repository/auth_repository.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/ui/otp_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/auth/ui/register_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/dashboard/controller.dart';
-import 'package:aadaiz_customer_crm/src/views/home/home_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/dashboard/dashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../res/components/common_toast.dart';
-import '../../customer_crm/screens/customer_dashboard.dart';
-import '../../dashboard/dashboard.dart';
 
 class AuthController extends GetxController{
   static AuthController get to => Get.put(AuthController());
@@ -42,7 +39,7 @@ class AuthController extends GetxController{
       "age": age.text,
       "gender": genderValue.value,
     };
-    SignUpRes res = await repo.signUp(body: jsonEncode(body));
+    final SignUpRes res = await repo.signUp(body: jsonEncode(body));
     signUpLoading(false);
     if(res.success==true){
       otpToken.value= res.data!.otpToken;
@@ -60,9 +57,9 @@ class AuthController extends GetxController{
 
   Future<dynamic> verifyOtp(context) async {
     verifyLoading(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var fcmToken= prefs.getString('fcm_token');
-    Map body = {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final fcmToken= prefs.getString('fcm_token');
+    final Map body = {
       "username": name.text,
       "mobile_number": mobile.text,
       "email": email.text,
@@ -72,7 +69,7 @@ class AuthController extends GetxController{
       "otp_code": otp.text,
       'fcm_token':fcmToken
     };
-    VerifyOtpRes res = await repo.verifyOtp(body: jsonEncode(body));
+    final VerifyOtpRes res = await repo.verifyOtp(body: jsonEncode(body));
     verifyLoading(false);
 
     if (res.success == true) {
@@ -85,7 +82,7 @@ class AuthController extends GetxController{
       await prefs.setString('user_id', res.data!.id.toString());
 
       log("User ID after save: ${prefs.getString('user_id')}");
-      Get.offAll(() => Dashboard());
+      Get.offAll(() => const Dashboard());
 
 
       name.clear();
@@ -108,13 +105,13 @@ class AuthController extends GetxController{
   Future<dynamic> login({required dynamic mobile}) async {
     loginLoading(true);
     final Map<String, dynamic> body = <String, dynamic>{
-      "mobile_number": "${loginMobile.text}"
+      "mobile_number": loginMobile.text
     };
-    SignUpRes res = await repo.signIn(body: jsonEncode(body));
+    final SignUpRes res = await repo.signIn(body: jsonEncode(body));
     loginLoading(false);
     if(res.success==true){
       otpToken.value= res.data!.otpToken;
-      await Get.to(()=>const OtpScreen(isLogin: true,));
+      await Get.to(()=>const OtpScreen());
     }else{
       // if(res.data!.email!=null) {
       CommonToast.show(msg: "${res.message}");
@@ -151,7 +148,7 @@ class AuthController extends GetxController{
       log("User ID saved: ${prefs.getString('user_id')}");
 
       // Clear stack & go to Dashboard
-      Get.offAll(() => Dashboard());
+      Get.offAll(() => const Dashboard());
 
       // Clear controllers AFTER navigation
       loginMobile.clear();
@@ -170,7 +167,7 @@ class AuthController extends GetxController{
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
     if (isLoggedIn) {
-      Get.offAll(() => Dashboard());
+      Get.offAll(() => const Dashboard());
     } else {
       Get.offAll(() => const RegisterScreen());
     }
@@ -180,7 +177,7 @@ class AuthController extends GetxController{
   ///Logout
   Future<dynamic> logOut() async {
     DashboardController.to.tabSelected.value=0;
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.clear();
     final fCMToken = await firebaseMessaging.getToken();
     final SharedPreferences prefs = await SharedPreferences.getInstance();

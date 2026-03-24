@@ -1,22 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:aadaiz_customer_crm/main.dart';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/model/notification_model.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/model/notification_model.dart'
     as notification;
-import 'package:aadaiz_customer_crm/src/views/customer_crm/repository/customer_repository.dart';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/notification_model.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/repository/customer_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../../../utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerController extends GetxController {
   final CustomerRepository repo = CustomerRepository();
@@ -53,20 +46,20 @@ class CustomerController extends GetxController {
     if (res.status == true) {
       if (isLoadMore) {
         if (isNewOrder) {
-          if (res.data?.newOrders?.data?.isEmpty ?? true) {
+          if (res.data?.newOrders?.data.isEmpty ?? true) {
             hasMoreNew = false;
           } else {
             orderDatas.value.data?.newOrders?.data
-                ?.addAll(res.data!.newOrders!.data!);
+                .addAll(res.data!.newOrders!.data);
 
             currentPageNew++;
           }
         } else {
-          if (res.data?.existingOrders?.data?.isEmpty ?? true) {
+          if (res.data?.existingOrders?.data.isEmpty ?? true) {
             hasMoreExisting = false;
           } else {
             orderDatas.value.data?.existingOrders?.data
-                ?.addAll(res.data!.existingOrders!.data!);
+                .addAll(res.data!.existingOrders!.data);
             currentPageExisting++;
           }
         }
@@ -161,10 +154,10 @@ class CustomerController extends GetxController {
     }
   }
 
-  ratings(dynamic id, dynamic ratings, String comments) async {
+  Future<void> ratings(dynamic id, dynamic ratings, String comments) async {
     isLoading.value = true;
     try {
-      Map<String, dynamic> request = {
+      final Map<String, dynamic> request = {
         "ratings": rating.value,
         "comments": comments,
       };

@@ -1,25 +1,25 @@
 import 'dart:convert';
+
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
+import 'package:aadaiz_customer_crm/src/services/http_services.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/add_address_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/add_cart_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/add_favorite_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/addresslist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/banner_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/cartlist_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/category_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/couponlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/favoritelist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/filter_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/gender_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/my_order_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/order.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/review_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/home/model/tailor_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/material/model/material_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../services/api_service.dart';
-import '../../../services/http_services.dart';
-import '../model/add_address_model.dart';
-import '../model/addresslist_model.dart';
-import '../model/category_model.dart';
-import '../model/gender_model.dart';
-import '../model/order.dart';
-import '../../profile/model/profile_model.dart';
-import '../model/tailor_list_model.dart';
 
 class HomeRepository {
   static final HttpHelper _http = HttpHelper();
@@ -90,14 +90,14 @@ class HomeRepository {
   }
 
   Future<dynamic> addressList(body) async {
-    final response = await _http.post("${Api.address}", body, contentType: true);
+    final response = await _http.post(Api.address, body);
     final AddressListRes res = AddressListRes.fromMap(jsonDecode(response));
     return res;
   }
 
   ///add, update and delete address
   Future<dynamic> address(body) async {
-    final response = await _http.post(Api.address, body, contentType: true);
+    final response = await _http.post(Api.address, body);
     final AddAddressRes res = AddAddressRes.fromMap(jsonDecode(response));
     return res;
   }
@@ -111,20 +111,20 @@ class HomeRepository {
   }
 
   Future<dynamic> addFavorite(body) async {
-    final response = await _http.post(Api.favorite, body, contentType: true);
+    final response = await _http.post(Api.favorite, body);
     final AddFavoriteRes res = AddFavoriteRes.fromMap(jsonDecode(response));
     return res;
   }
 
   Future<dynamic> cartList(body) async {
-    final response = await _http.post(Api.cart, body, contentType: true);
+    final response = await _http.post(Api.cart, body);
     final CartListRes res = CartListRes.fromMap(jsonDecode(response));
     return res;
   }
 
   ///add, update and delete cart
   Future<dynamic> addCart(body) async {
-    final response = await _http.post(Api.cart, body, contentType: true);
+    final response = await _http.post(Api.cart, body);
     final AddCartRes res = AddCartRes.fromMap(jsonDecode(response));
     return res;
   }
@@ -140,7 +140,7 @@ class HomeRepository {
   Future<dynamic> myOrders(status, page) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
-    String formattedStatus =
+    final String formattedStatus =
     status.isNotEmpty ? status[0].toUpperCase() + status.substring(1) : status;
     final response = await _http.get(
       "${Api.myOrder}?status=$formattedStatus&token=$token&page=$page",
@@ -150,13 +150,13 @@ class HomeRepository {
   }
 
   Future<dynamic> cancelOrder(body) async {
-    final response = await _http.post(Api.cancelOrder, body, contentType: true);
+    final response = await _http.post(Api.cancelOrder, body);
     final OrderRes res = OrderRes.fromMap(jsonDecode(response));
     return res;
   }
 
   Future<dynamic> placeOrder(body) async {
-    final response = await _http.post(Api.placeOrder, body, contentType: true);
+    final response = await _http.post(Api.placeOrder, body);
     final OrderRes res = OrderRes.fromMap(jsonDecode(response));
     return res;
   }
@@ -172,7 +172,7 @@ class HomeRepository {
   }
 
   Future<dynamic> addRating(body) async {
-    final response = await _http.post(Api.rating, body, contentType: true);
+    final response = await _http.post(Api.rating, body);
     final MaterialRes res = MaterialRes.fromMap(jsonDecode(response));
     return res;
   }

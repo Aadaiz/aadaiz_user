@@ -2,21 +2,17 @@ import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../utils/utils.dart';
 
 class Scheduled extends StatefulWidget {
   const Scheduled({super.key});
@@ -61,13 +57,13 @@ class _ScheduledState extends State<Scheduled> {
           child: Obx(
             () =>
                 ConsultingController.to.appointmentLoading.value
-                    ? CommonLoading()
+                    ? const CommonLoading()
                     : ConsultingController.to.appointmentList.isEmpty
-                    ? CommonEmpty(title: 'appointments')
+                    ? const CommonEmpty(title: 'appointments')
                     : ListView.builder(
                       itemCount: ConsultingController.to.appointmentList.length,
                       itemBuilder: (context, index) {
-                        var data =
+                        final data =
                             ConsultingController.to.appointmentList[index];
                         print('dadfas ${data.designerName}');
                         return Padding(
@@ -146,7 +142,7 @@ class _ScheduledState extends State<Scheduled> {
                                                           ),
                                                     ),
                                                   ),
-                                              imageUrl: (data.profileImage!),
+                                              imageUrl: data.profileImage!,
                                             ),
                                           ),
                                         )
@@ -317,7 +313,7 @@ class _ScheduledState extends State<Scheduled> {
                                     const Spacer(),
                                   ],
                                 ),
-                                Gap(8),
+                                const Gap(8),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -349,8 +345,6 @@ class _ScheduledState extends State<Scheduled> {
                                       press: () {
                                         attendMeeting(data.zoomJoinUrl);
                                       },
-                                      loading: false,
-                                      borderRadius: 8.0,
                                     ),
                                   ],
                                 ),
@@ -367,7 +361,7 @@ class _ScheduledState extends State<Scheduled> {
   }
 }
 
-void attendMeeting(String? meetingUrl) async {
+Future<void> attendMeeting(String? meetingUrl) async {
   print(meetingUrl);
   final Uri url = Uri.parse("$meetingUrl");
   if (!await launchUrl(url)) {

@@ -1,19 +1,19 @@
 import 'dart:developer';
-import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
-import 'package:intl/intl.dart';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/aadaiz_button.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/expandInfo.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/chat_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/controller/customer_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/model/customer_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
-
-import '../app_components/aadaiz_button.dart';
-import '../app_components/expandInfo.dart';
-import '../chat/screens/chat_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -39,7 +39,7 @@ class OrderDetails extends StatefulWidget {
   final String customerImage;
   final List<OrderProduct> products;
 
-  OrderDetails({
+  const OrderDetails({
     super.key,
     required this.order_name,
     required this.status,
@@ -80,7 +80,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         leading: InkWell(
           onTap: () => Get.back(),
           child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               "assets/images/bac1.png",
               height: 39.h,
@@ -123,9 +123,8 @@ class _OrderDetailsState extends State<OrderDetails> {
           children: [
             SizedBox(height: 20.h),
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
@@ -137,7 +136,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         color: AppColors.blackColor.withAlpha(20),
                       ),
                     ),
-                    child: (widget.customerImage == null || widget.customerImage!.isEmpty)
+                    child: (widget.customerImage.isEmpty)
                         ? Center(
                       child: Icon(
                         Icons.person,
@@ -148,7 +147,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                         : ClipRRect(
                       borderRadius: BorderRadius.circular(Get.width * 0.025),
                       child: Image.network(
-                        widget.customerImage!,
+                        widget.customerImage,
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.cover,
@@ -166,7 +165,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -224,7 +222,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             SizedBox(height: 30.h),
             Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -258,7 +256,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             // Rating Section
             if (widget.isCompleted == true)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -284,9 +282,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       () => RatingBar.builder(
                         initialRating: con.rating.value,
                         minRating: 1,
-                        direction: Axis.horizontal,
                         allowHalfRating: true,
-                        itemCount: 5,
                         itemSize: 35,
                         unratedColor: Colors.grey.shade300,
                         itemBuilder:
@@ -341,7 +337,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
         child: AadaizButton(
           title: "Chat with team",
           onTap: () async {
@@ -374,7 +370,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     if (date.isEmpty) return '--';
 
     try {
-      DateTime parsedDate = DateTime.parse(date);
+      final DateTime parsedDate = DateTime.parse(date);
       return DateFormat('dd/MM/yyyy').format(parsedDate);
     } catch (e) {
       return date; // fallback if parsing fails

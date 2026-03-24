@@ -1,13 +1,11 @@
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
-import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/active_orders.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/cancelled_orders.dart';
 import 'package:aadaiz_customer_crm/src/views/my_orders/completed_orders.dart';
 import 'package:flutter/material.dart';
-
-import '../../res/widgets/common_app_bar.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({super.key});

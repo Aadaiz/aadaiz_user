@@ -1,17 +1,24 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:io';
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
-import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_data_model.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/model/job_filter_list_model.dart'
     as filter;
+import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_data_model.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/model/job_list_type_model.dart'
     as type;
 import 'package:aadaiz_customer_crm/src/views/jobs/repository/job_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:get/get.dart';
+import 'package:file_picker/file_picker.dart';
 
 class JobsController extends GetxController {
   var featureSelected = true.obs;
@@ -22,6 +29,7 @@ class JobsController extends GetxController {
   Rx<TimeOfDay?> contactFromTime = Rx<TimeOfDay?>(null);
   Rx<TimeOfDay?> contactToTime = Rx<TimeOfDay?>(null);
   RxList<String> genders = ["Any", "Male", "Female"].obs;
+  final ImagePicker _picker = ImagePicker();
 
   RxList<String> qualifications =
       [
@@ -32,8 +40,8 @@ class JobsController extends GetxController {
         "Graduate",
         "Post Graduate",
       ].obs;
-  RxList<String> jobTypes =
-      ['Full Time', 'Part Time', 'Internship', 'Remote'].obs;
+  RxList<String> jobTypes = ['Full Time', 'Part Time', 'Internship'].obs;
+  RxList<String> jobMode = ['Work From Home', 'Office'].obs;
 
   TextEditingController contactTo = TextEditingController();
   TextEditingController contactFrom = TextEditingController();
@@ -42,22 +50,21 @@ class JobsController extends GetxController {
   TextEditingController benefitsController = TextEditingController();
   TextEditingController skillsController = TextEditingController();
   TextEditingController workingDaysController = TextEditingController();
+  final TextEditingController infoController = TextEditingController();
   TextEditingController hrNumber = TextEditingController();
-
-  RxList<String> benefits =
-      <String>["Cab", "Meal", "Insurance", "PF", "Medical Benefits"].obs;
 
   RxList<String> skills = <String>[].obs;
   RxList<String> otherRequirement = <String>[].obs;
-
+  RxList<String> benefits = <String>[].obs;
   var benefitSelected = <bool>[].obs;
   var skillSelected = <bool>[].obs;
   var workingDaySelected = <bool>[].obs;
   var otherRequirementSelected = <bool>[].obs;
 
-  List<String> workingDays = ["5 Days Working", "6 Days Working", "Others"];
+  List<String> workingDays = ["5 Days Working", "6 Days Working"];
 
   var workingDayIndex = (-1).obs;
+  var workingDaysText = ''.obs;
 
   @override
   void onInit() {
@@ -66,6 +73,7 @@ class JobsController extends GetxController {
     getJobs();
     getJobData(true);
     getJobFilter();
+    selectedJobType = 'recent_jobs'.obs;
   }
 
   void initializeSelectedLists() {
@@ -153,15 +161,19 @@ class JobsController extends GetxController {
 
   var createJobLoading = false.obs;
   final TextEditingController jobTitleController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController openingsController = TextEditingController();
+  final TextEditingController jobDescriptionController =
+      TextEditingController();
   var selectedJobType = ''.obs;
+  var selectedJobMode = ''.obs;
   final TextEditingController countryController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController areaController = TextEditingController();
   final TextEditingController pincodeController = TextEditingController();
-  var selectedGender = 'recent_jobs'.obs;
+  var selectedGender = ''.obs;
   var selectedQualification = ''.obs;
   var onlyFreshers = false.obs;
   TextEditingController minExpController = TextEditingController();
@@ -175,8 +187,10 @@ class JobsController extends GetxController {
   var selectedWorkingDays = <String>[].obs;
 
   void clearAllFields() {
+    companyNameController.clear();
     jobTitleController.clear();
     categoryController.clear();
+    jobDescriptionController.clear();
     openingsController.clear();
     selectedJobType.value = '';
     countryController.clear();
@@ -199,17 +213,28 @@ class JobsController extends GetxController {
     contactTo.clear();
     contactFrom.clear();
     communicationPref.value = false;
+    selectedJobMode.value = '';
+    benefits.clear();
+    skills.clear();
+    otherRequirement.clear();
+    selectedWorkingDays.clear();
   }
 
-  Future<void> createJob() async {
+  Future<void> createJob(bool? type, dynamic id) async {
     try {
       createJobLoading.value = true;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
+      final fromTime = DateFormat('hh:mm a').parse(from.text);
+      final toTime = DateFormat('hh:mm a').parse(to.text);
+      final startTime = DateFormat('HH:mm').format(fromTime);
+      final endTime = DateFormat('HH:mm').format(toTime);
       final Map<String, dynamic> data = {
         "token": token,
 
         "job_details": {
+          'company_name': companyNameController.text,
+
           "job_title": jobTitleController.text,
           "job_category": categoryController.text,
           "job_type":
@@ -222,6 +247,11 @@ class JobsController extends GetxController {
                   : selectedJobType.value == 'Remote'
                   ? 'remote'
                   : '',
+          'job_mode':
+              selectedJobMode.value == 'Work From Home'
+                  ? 'work_from_home'
+                  : 'office',
+
           "number_of_openings": int.tryParse(openingsController.text) ?? 0,
           "job_city": cityController.text,
           "job_country": countryController.text,
@@ -235,7 +265,7 @@ class JobsController extends GetxController {
           "max_exp": int.tryParse(maxExpController.text) ?? 0,
           "salary_from": int.tryParse(minSalaryController.text) ?? 0,
           "salary_to": int.tryParse(maxSalaryController.text) ?? 0,
-          "job_description": "Need experienced tailor for stitching",
+          "job_description": jobDescriptionController.text,
         },
 
         "job_benefits": selectedJobBenefits.map((e) => {"name": e}).toList(),
@@ -245,17 +275,20 @@ class JobsController extends GetxController {
         "job_requirements":
             otherRequirement.map((e) => {"requirements": e}).toList(),
 
-        "job_timings": {"start_time": from.text, "end_time": to.text},
+        "job_timings": {"start_time": startTime, "end_time": endTime},
 
-        "working_days": {"working_days": selectedWorkingDays.join(", ")},
+        "working_days": {'working_days': selectedWorkingDays.map((e) => e)},
         'communication':
             "Allow Candidates To Call Between\n${contactFrom.text} – ${contactTo.text} on ${hrNumber.text}",
       };
-      final res = await repo.createJob(token!, jsonEncode(data));
+      final res = await repo.createJob(token!, jsonEncode(data), type, id);
       if (res['status'] == true) {
         CommonToast.show(msg: res['message']);
         Get.back();
         Get.back();
+        clearAllFields();
+        selectedJobType = 'our_jobs'.obs;
+        await getJobData(true);
       } else {
         CommonToast.show(msg: res['message']);
       }
@@ -348,22 +381,139 @@ class JobsController extends GetxController {
       refreshController.refreshCompleted();
     }
   }
+
   var jobDeleteLoading = false.obs;
+  var deletingJobId = Rxn<int>();
   Future<void> deleteJob(dynamic id) async {
     try {
-      jobDeleteLoading.value = true;
+      deletingJobId.value = id;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
       final res = await repo.deleteJob(token!, id);
       if (res['status'] == true) {
         CommonToast.show(msg: res['message']);
-        await getJobData(false);
+        await getJobData(true);
       } else {
         CommonToast.show(msg: res['message']);
       }
     } catch (e) {
     } finally {
-      jobDeleteLoading.value = false;
+      deletingJobId.value = null;
+    }
+  }
+
+  Rx<File?> resumeFile = Rx<File?>(null);
+  RxString resumeFileName = ''.obs;
+
+  Future<void> pickResume() async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'],
+    );
+
+    if (result != null) {
+      final file = File(result.files.single.path!);
+      resumeFile.value = file;
+      resumeFileName.value = result.files.single.name;
+    }
+  }
+
+  var jobApplyLoading = false.obs;
+  Future<void> appJob(bool? isEdit, dynamic id, BuildContext context) async {
+    try {
+      jobApplyLoading.value = true;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      final uri = Uri.parse("${Api.applyJob}/$id");
+
+      final request = http.MultipartRequest('POST', uri);
+
+      request.fields['token'] = token ?? '';
+
+      request.fields['information'] = infoController.text;
+
+      if (resumeFile.value != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('resume', resumeFile.value!.path),
+        );
+      }
+
+      final response = await request.send();
+      final responseData = await http.Response.fromStream(response);
+
+      final res = jsonDecode(responseData.body);
+
+      if (res['stauts'] == true) {
+        jobApplyLoading.value = false;
+        Get.back();
+        await showDialog(
+          context: context,
+
+          barrierDismissible: false,
+          builder: (context) {
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.pop(context);
+            });
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/images/apply_success.png', height: 80),
+
+                    const SizedBox(height: 16),
+
+                    Text(
+                      'Successful',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Text(
+                      'Congratulations, your application has been sent',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.dmSans(
+                        fontSize: 13,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        Get.back();
+        selectedJobType = 'recent_jobs'.obs;
+        await getJobData(false);
+        infoController.clear();
+
+      } else {
+        log(res.toString());
+      }
+    } catch (e) {
+      CommonToast.show(msg: e.toString());
+      log(e.toString());
+    } finally {
+      jobApplyLoading.value = false;
     }
   }
 

@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 import 'dart:typed_data';
-import 'package:aadaiz_customer_crm/src/res/components/comming_soon.dart';
+import 'dart:ui' as ui;
+
 import 'package:aadaiz_customer_crm/src/res/components/common_button.dart';
+import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
-import 'package:aadaiz_customer_crm/src/views/consulting/contact.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:aadaiz_customer_crm/src/views/home/model/productlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/home/self_customization/order/select_sellers.dart';
@@ -12,8 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../../../res/widgets/common_app_bar.dart';
 
 class SelfCustomize extends StatefulWidget {
   const SelfCustomize({super.key, this.data});
@@ -89,7 +87,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
 
   Future<void> captureAndSavePng() async {
     try {
-      RenderRepaintBoundary boundary =
+      final RenderRepaintBoundary boundary =
           _globalKey.currentContext!.findRenderObject()
               as RenderRepaintBoundary;
 
@@ -98,7 +96,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
         return captureAndSavePng();
       }
 
-      final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final ui.Image image = await boundary.toImage(pixelRatio: 3);
       final ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
@@ -236,7 +234,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                   scrollDirection: Axis.horizontal,
                   itemCount: maxList[selectedIndex]['categories'].length,
                   itemBuilder: (context, index) {
-                    var data = maxList[selectedIndex]['categories'][index];
+                    final data = maxList[selectedIndex]['categories'][index];
                     return Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: InkWell(
@@ -324,7 +322,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                   scrollDirection: Axis.horizontal,
                   itemCount: maxList.length,
                   itemBuilder: (context, index) {
-                    var data = maxList[index];
+                    final data = maxList[index];
                     return Padding(
                       padding: const EdgeInsets.only(right: 16),
                       child: InkWell(
@@ -342,7 +340,7 @@ class _SelfCustomizeState extends State<SelfCustomize> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8),
                             child: Center(
                               child: Text(
                                 data['name'],

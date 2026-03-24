@@ -1,11 +1,9 @@
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
-import '../../utils/colors.dart';
-import '../../utils/utils.dart';
 
 class CommonAppBar extends StatelessWidget {
   const CommonAppBar({
@@ -76,7 +74,6 @@ class CommonAppBar extends StatelessWidget {
       elevation: 0.2,
 
       shadowColor: AppColor.black,
-      forceMaterialTransparency: false,
     );
   }
 }
