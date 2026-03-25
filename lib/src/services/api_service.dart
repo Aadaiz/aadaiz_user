@@ -84,6 +84,14 @@ class Api {
   static const deleteJob = '${AppConfig.baseUrl}job/deleteJob';
   static const applyJob = '${AppConfig.baseUrl}job/applyJob';
 
+//post
+static const createPost = '${AppConfig.baseUrl}post/createPost';
+static const postList = '${AppConfig.baseUrl}post/postList';
+static const likePost = '${AppConfig.baseUrl}post/likePost';
+static const addComment = '${AppConfig.baseUrl}post/addComment';
+static const myProfile = '${AppConfig.baseUrl}post/myProfile';
+
+
 
 
 }

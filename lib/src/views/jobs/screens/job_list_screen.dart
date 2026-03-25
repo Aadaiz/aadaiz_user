@@ -11,6 +11,7 @@ import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.da
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/create_jobs.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_detail_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/screens/job_filter.dart';
+import 'package:aadaiz_customer_crm/src/views/jobs/screens/my_applicant_view_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -155,11 +156,19 @@ class _JobsScreenState extends State<JobsScreen> {
             SizedBox(height: screenHeight * 0.03),
 
             Obx(() {
-              if (controller.getJobListDataLoading.value) {
+              final isApplicantsTab =
+                  controller.selectedJobType.value == 'my_job_applicants';
+              final isLoading = controller.getJobListDataLoading.value;
+              final bool isEmpty =
+                  isApplicantsTab
+                      ? controller.applicantsData.isEmpty
+                      : controller.jobListData.isEmpty;
+
+              if (isLoading) {
                 return const Expanded(child: ShimmerList());
               }
 
-              if (controller.jobListData.isEmpty) {
+              if (isEmpty) {
                 return const Expanded(
                   child: Center(child: Text('No Data Found')),
                 );
@@ -173,81 +182,88 @@ class _JobsScreenState extends State<JobsScreen> {
                   onLoading: () => controller.getJobData(false),
                   child: ListView.builder(
                     padding: const EdgeInsets.only(top: 2),
-                    itemCount: controller.jobListData.length,
+                    itemCount:
+                        isApplicantsTab
+                            ? controller.applicantsData.length
+                            : controller.jobListData.length,
                     itemBuilder: (context, index) {
-                      final data = controller.jobListData[index];
+                      if (isApplicantsTab) {
+                        final applicant = controller.applicantsData[index];
+                        return ApplicantCard(
+                          name: applicant.user?.username ?? 'User',
+                          role: applicant.job?.jobTitle ?? '',
+                          time: applicant.timeAgo ?? '',
+                          skills: [],
+                          onAccept: () {},
+                          onReject: () {},
+                          onTap: () {
+                            Get.to(
+                              () => MyApplicantViewDetail(data: applicant),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                        );
+                      } else {
+                        final data = controller.jobListData[index];
 
-                      if (controller.selectedJobType.value == 'our_jobs') {
-                        return Obx(()=>
-                         YourJobCard(
-
+                        if (controller.selectedJobType.value == 'our_jobs') {
+                          return Obx(
+                            () => YourJobCard(
+                              title: data.jobTitle ?? '',
+                              subTitle: data.companyName ?? '',
+                              time: data.timeNow ?? '',
+                              jobs: [
+                                _getJobType(data.jobType),
+                                data.qualification ?? '',
+                              ],
+                              isApplied: data.jobStatus ?? '',
+                              deleteOnTap: () {
+                                controller.deleteJob(data.id);
+                              },
+                              editOnTap: () {
+                                Get.to(
+                                  CreateJobScreen(isEdit: true, data: data),
+                                  transition: Transition.rightToLeft,
+                                );
+                              },
+                              isLoading:
+                                  controller.deletingJobId.value == data.id,
+                            ),
+                          );
+                        } else if (controller.selectedJobType.value ==
+                            'recent_jobs') {
+                          return JobsCard(
+                            onTap: () {
+                              Get.to(
+                                () => JobDetailScreen(data: data),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
                             title: data.jobTitle ?? '',
-                            subTitle: '',
+                            subTitle: data.companyName ?? '',
                             time: data.timeNow ?? '',
                             jobs: [
                               _getJobType(data.jobType),
                               data.qualification ?? '',
                             ],
-                            isApplied: data.jobStatus ?? '',
-                            deleteOnTap: () {
-                              controller.deleteJob(data.id);
-                            },
-                            editOnTap: () {
-                              Get.to(
-                                 CreateJobScreen(isEdit:true,data:data),
-                                transition: Transition.rightToLeft,
-                              );
-                            },
-                           isLoading: controller.deletingJobId.value == data.id,
-                          ),
-                        );
-                      } else if (controller.selectedJobType.value ==
-                          'recent_jobs') {
-                        return JobsCard(
-                          onTap: () {
-                            Get.to(
-                              () =>  JobDetailScreen(data:data),
-                              transition: Transition.rightToLeft,
-                            );
-                          },
-                          title: data.jobTitle ?? '',
-                          subTitle: '',
-                          time: data.timeNow ?? '',
-                          jobs: [
-                            _getJobType(data.jobType),
-                            data.qualification ?? '',
-                          ],
-                          isApplied: false,
-                        );
-                      } else if (controller.selectedJobType.value ==
-                          'applied_jobs') {
-                        return AppliedJobCard(
-                          title: data.jobTitle ?? '',
-                          company: data.user?.username ?? '',
-                          time: data.timeNow ?? '',
-                          jobs: [
-                            _getJobType(data.jobType),
-                            data.qualification ?? '',
-                          ],
-                          status: data.jobStatus ?? 'applied',
-                          onTap: () {
-                            Get.to(
-                              () => const JobDetailScreen(),
-                              transition: Transition.rightToLeft,
-                            );
-                          },
-                        );
-                      } else if (controller.selectedJobType.value ==
-                          'my_job_applicants') {
-                        return ApplicantCard(
-                          name: data.user?.username ?? 'User',
-                          role: data.jobTitle ?? '',
-                          time: data.timeNow ?? '',
+                            isApplied: false,
+                          );
+                        } else if (controller.selectedJobType.value ==
+                            'applied_jobs') {
+                          return AppliedJobCard(
+                            title: data.jobTitle ?? '',
+                            company: data.companyName ?? '',
+                            time: data.timeNow ?? '',
+                            jobs: [
+                              _getJobType(data.jobType),
+                              data.qualification ?? '',
+                            ],
+                            status: data.jobStatus ?? 'applied',
+                            onTap: () {
 
-                          skills: [...?data.jobSkill?.map((e) => e.name ?? '')],
-                          onAccept: () {},
-                          onReject: () {},
-                        );
+                            },
+                          );
+                        }
                       }
 
                       return const SizedBox.shrink();

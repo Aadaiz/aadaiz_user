@@ -568,7 +568,6 @@ class _LastStepCreateJobState extends State<LastStepCreateJob> {
                                         .indexOf(element)],
                               )
                               .toList();
-
                     },
                   ),
                 ),

@@ -304,29 +304,36 @@ class JobsController extends GetxController {
   var lastPage = 1.obs;
   RefreshController refreshController = RefreshController();
   var jobListData = <Datum>[].obs;
+  var applicantsData = <Applicant>[].obs;
 
   Future<void> getJobData(
-    bool? isRefresh, {
-    String? jobType,
-    String? jobCategory,
-    String? salary,
-    String? search,
-  }) async {
+      bool? isRefresh, {
+        String? jobType,
+        String? jobCategory,
+        String? salary,
+        String? search,
+      }) async {
     try {
       if (isRefresh == true) {
         currentPage.value = 1;
         refreshController.resetNoData();
+
+        if (selectedJobType.value == 'my_job_applicants') {
+          applicantsData.clear();
+        } else {
+          jobListData.clear();
+        }
       }
 
       if (currentPage.value == 1 && isRefresh != true) {
         getJobListDataLoading.value = true;
       }
 
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? t = prefs.getString('token');
+      final prefs = await SharedPreferences.getInstance();
+      final t = prefs.getString('token')!;
 
-      final JobListResponse res = await repo.getJobListData(
-        t!,
+      final res = await repo.getJobListData(
+        t,
         currentPage.value,
         jobType: jobType,
         jobCategory: jobCategory,
@@ -335,32 +342,42 @@ class JobsController extends GetxController {
       );
 
       if (res.status == true && res.data != null) {
-        AppliedJobs? selectedData;
 
-        switch (selectedJobType.value) {
-          case 'recent_jobs':
-            selectedData = res.data!.recentJobs;
-            break;
-          case 'applied_jobs':
-            selectedData = res.data!.appliedJobs;
-            break;
-          case 'my_job_applicants':
-            selectedData = res.data!.myJobApplicants;
-            break;
-          default:
-            selectedData = res.data!.ourJobs;
-        }
-
-        final jobList = selectedData?.data ?? [];
-        final totalLastPage = selectedData?.lastPage ?? 1;
-
-        if (currentPage.value == 1) {
-          jobListData.assignAll(jobList);
+        if (selectedJobType.value == 'my_job_applicants') {
+          final applicantsPage = res.data!.myJobApplicants;
+          if (applicantsPage != null) {
+            final newApplicants = applicantsPage.data ?? [];
+            if (currentPage.value == 1) {
+              applicantsData.assignAll(newApplicants);
+            } else {
+              applicantsData.addAll(newApplicants);
+            }
+            lastPage.value = applicantsPage.lastPage ?? 1;
+          }
         } else {
-          jobListData.addAll(jobList);
+
+          AppliedJobs? selectedJobs;
+          switch (selectedJobType.value) {
+            case 'recent_jobs':
+              selectedJobs = res.data!.recentJobs;
+              break;
+            case 'applied_jobs':
+              selectedJobs = res.data!.appliedJobs;
+              break;
+            default:
+              selectedJobs = res.data!.ourJobs;
+          }
+          final jobList = selectedJobs?.data ?? [];
+          final totalLastPage = selectedJobs?.lastPage ?? 1;
+
+          if (currentPage.value == 1) {
+            jobListData.assignAll(jobList);
+          } else {
+            jobListData.addAll(jobList);
+          }
+          lastPage.value = totalLastPage;
         }
 
-        lastPage.value = totalLastPage;
 
         if (currentPage.value >= lastPage.value) {
           refreshController.loadNoData();
@@ -445,7 +462,7 @@ class JobsController extends GetxController {
 
       final res = jsonDecode(responseData.body);
 
-      if (res['stauts'] == true) {
+      if (res['status'] == true) {
         jobApplyLoading.value = false;
         Get.back();
         await showDialog(
@@ -505,7 +522,6 @@ class JobsController extends GetxController {
         selectedJobType = 'recent_jobs'.obs;
         await getJobData(false);
         infoController.clear();
-
       } else {
         log(res.toString());
       }

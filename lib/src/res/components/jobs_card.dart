@@ -592,6 +592,8 @@ class ApplicantCard extends StatelessWidget {
   final List<String> skills;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
+  final VoidCallback? onTap;
+
 
   const ApplicantCard({
     super.key,
@@ -601,6 +603,7 @@ class ApplicantCard extends StatelessWidget {
     required this.skills,
     this.onAccept,
     this.onReject,
+    this.onTap,
   });
 
   @override
@@ -608,127 +611,94 @@ class ApplicantCard extends StatelessWidget {
     final screenHeight = Utils.getActivityScreenHeight(context);
     final screenWidth = Utils.getActivityScreenWidth(context);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: screenHeight * 0.02),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(2, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// HEADER
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: AppColor.primary.withAlpha(30),
-                child: const Icon(Icons.person),
-              ),
-
-              SizedBox(width: screenWidth * 0.02),
-
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      role,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 13.sp,
-                        color: AppColor.textFieldLabelColor,
-                      ),
-                    ),
-                  ],
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 4,
+              offset: const Offset(2, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// HEADER
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: AppColor.primary.withAlpha(30),
+                  child: const Icon(Icons.person),
                 ),
-              ),
-            ],
-          ),
 
-          SizedBox(height: screenHeight * 0.01),
+                SizedBox(width: screenWidth * 0.02),
 
-          /// SKILLS
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children:
-                skills.map((e) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColor.jobDetailContainerBg,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(e, style: GoogleFonts.dmSans(fontSize: 12.sp)),
-                  );
-                }).toList(),
-          ),
-
-          SizedBox(height: screenHeight * 0.015),
-
-          /// TIME
-          Text(
-            time,
-            style: GoogleFonts.dmSans(fontSize: 11.sp, color: Colors.grey),
-          ),
-
-          SizedBox(height: screenHeight * 0.015),
-
-          /// ACTIONS
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: onReject,
-                  child: Container(
-                    height: screenHeight * 0.045,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.red),
-                    ),
-                    child: Text(
-                      "Reject",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
+                      Text(
+                        role,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 13.sp,
+                          color: AppColor.textFieldLabelColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
+              ],
+            ),
 
-              SizedBox(width: screenWidth * 0.03),
+            SizedBox(height: screenHeight * 0.01),
 
-              Expanded(
-                child: CommonButton(
-                  height: screenHeight * 0.045,
-                  press: () {
-                    onAccept!();
-                  },
-                  text: "Accept",
-                  borderRadius: 0.0,
-                ),
-              ),
-            ],
-          ),
-        ],
+            /// SKILLS
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children:
+                  skills.map((e) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColor.jobDetailContainerBg,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(e, style: GoogleFonts.dmSans(fontSize: 12.sp)),
+                    );
+                  }).toList(),
+            ),
+
+            SizedBox(height: screenHeight * 0.015),
+
+            /// TIME
+            Text(
+              time,
+              style: GoogleFonts.dmSans(fontSize: 11.sp, color: Colors.grey),
+            ),
+
+            SizedBox(height: screenHeight * 0.015),
+
+
+          ],
+        ),
       ),
     );
   }

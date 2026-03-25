@@ -1,24 +1,28 @@
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/add_comment_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PostCard extends StatefulWidget {
-  final PostModel post;
+  final Datum post;
+  final Function()? onTap;
 
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post,this.onTap});
 
   @override
   State<PostCard> createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
-  bool isLiked = false;
+  PostController postController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -77,11 +81,11 @@ class _PostCardState extends State<PostCard> {
                             ),
                           ),
                         ),
-                    imageUrl: widget.post.profileImage,
+                    imageUrl: widget.post.user!.profileImage ?? '',
                   ),
                 ),
                 Text(
-                  widget.post.name,
+                  widget.post.user!.username ?? '',
                   style: GoogleFonts.dmSans(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -93,9 +97,7 @@ class _PostCardState extends State<PostCard> {
 
           InkWell(
             onDoubleTap: () {
-              setState(() {
-                isLiked = !isLiked;
-              });
+              postController.likePost(widget.post);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -103,7 +105,7 @@ class _PostCardState extends State<PostCard> {
                 height: screenHeight * 0.4,
                 fit: BoxFit.cover,
                 width: screenWidth,
-                imageUrl: widget.post.postImage,
+                imageUrl: widget.post.postImage ?? '',
                 errorWidget:
                     (context, url, error) =>
                         Container(width: screenWidth, color: Colors.black),
@@ -137,27 +139,35 @@ class _PostCardState extends State<PostCard> {
               children: [
                 InkWell(
                   onTap: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                    });
+                    postController.likePost(widget.post);
                   },
                   child: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : Colors.black,
+                    (widget.post.isLiked ?? false)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color:
+                        (widget.post.isLiked ?? false)
+                            ? Colors.red
+                            : Colors.black,
                   ),
                 ),
-                Row(
-                  spacing: 3,
-                  children: [
-                    Image.asset('assets/images/post_comment.png', width: 18),
-                    Text(
-                      widget.post.commentsCount,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+                InkWell(
+                  onTap: widget.onTap,
+
+                  child: Row(
+                    spacing: 3,
+                    children: [
+                      Image.asset('assets/images/post_comment.png', width: 18),
+                      if (widget.post.commentsCount != 0)
+                        Text(
+                          widget.post.commentsCount.toString(),
+                          style: GoogleFonts.dmSans(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Image.asset('assets/images/post_send.png', width: 19),
                 Image.asset('assets/images/post_save.png', width: 16),
@@ -166,24 +176,26 @@ class _PostCardState extends State<PostCard> {
           ),
 
           SizedBox(height: screenHeight * 0.01),
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: Text(
-              widget.post.likesText,
-              style: GoogleFonts.dmSans(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+          if ((widget.post.likesCount ?? 0) != 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                widget.post.likesCount == 1
+                    ? '${widget.post.likesCount} like'
+                    : '${widget.post.likesCount} likes',
+                style: GoogleFonts.dmSans(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
 
           SizedBox(height: screenHeight * 0.01),
 
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: ReadMoreText(
-              widget.post.description,
+              widget.post.caption ?? '',
               trimMode: TrimMode.Line,
               colorClickableText: Colors.black,
               style: GoogleFonts.dmSans(
@@ -192,33 +204,24 @@ class _PostCardState extends State<PostCard> {
               ),
               annotations: [
                 Annotation(
-
                   regExp: RegExp(r'#([a-zA-Z0-9_]+)'),
                   spanBuilder:
                       ({required String text, TextStyle? textStyle}) =>
                           TextSpan(
                             text: text,
-                            style: textStyle?.copyWith(color: Colors.blue,),
-
+                            style: textStyle?.copyWith(color: Colors.blue),
                           ),
-
                 ),
 
                 Annotation(
                   regExp: RegExp(r'<@(\d+)>'),
                   spanBuilder:
-                      ({
-                        required String text,
-                        TextStyle? textStyle,
-                      }) => TextSpan(
-                        text: 'User123',
-                        style: textStyle?.copyWith(color: Colors.green),
-                        recognizer:
-                            TapGestureRecognizer()
-                              ..onTap = () {
-                                // Handle tap, e.g., navigate to a user profile
-                              },
-                      ),
+                      ({required String text, TextStyle? textStyle}) =>
+                          TextSpan(
+                            text: 'User123',
+                            style: textStyle?.copyWith(color: Colors.green),
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          ),
                 ),
               ],
               moreStyle: GoogleFonts.dmSans(
@@ -229,18 +232,18 @@ class _PostCardState extends State<PostCard> {
           ),
 
           SizedBox(height: screenHeight * 0.01),
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: Text(
-              'View all ${widget.post.commentsCount} comments',
-              style: GoogleFonts.dmSans(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
+          if (widget.post.commentsCount != 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Text(
+                'View all ${widget.post.commentsCount} comments',
+                style: GoogleFonts.dmSans(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey,
+                ),
               ),
             ),
-          ),
 
           SizedBox(height: screenHeight * 0.01),
         ],

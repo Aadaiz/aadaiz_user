@@ -5,6 +5,7 @@ import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatS
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/jobs/controller/jobs_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/material/controller/material_controller.dart';
+import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:get/get.dart';
 
@@ -19,6 +20,8 @@ class AppBindings extends Bindings{
     Get.put(CallStateController(), permanent: true);
     Get.put(MaterialController(), permanent: true);
     Get.put(JobsController(), permanent: true);
+    Get.put(PostController(), permanent: true);
+
 
 
 
