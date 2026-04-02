@@ -16,6 +16,9 @@ class SearchField extends StatelessWidget {
 
 
   final bool enableShadow;
+  final bool readOnly;
+  final Function()? onTap;
+
 
   const SearchField({
     super.key,
@@ -26,6 +29,8 @@ class SearchField extends StatelessWidget {
     this.suffixWidget,
     this.showSuffix = false,
     this.enableShadow = true,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -49,6 +54,8 @@ class SearchField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         onChanged: onChanged,
+        readOnly: readOnly,
+        onTap: onTap,
         onFieldSubmitted: onSubmitted,
         style: GoogleFonts.dmSans(
           fontSize: 13,

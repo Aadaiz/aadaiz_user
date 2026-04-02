@@ -6,8 +6,13 @@ import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
-import 'package:aadaiz_customer_crm/src/views/post/model/post_my_profile.dart' as profile;
+import 'package:aadaiz_customer_crm/src/views/post/model/post_my_profile.dart'
+    as profile;
+import 'package:aadaiz_customer_crm/src/views/post/model/post_other_profile.dart'
+    as others;
 import 'package:aadaiz_customer_crm/src/views/post/repository/post_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/post/model/post_view_detail.dart'
+    as viewDetail;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PostController extends GetxController {
   TextEditingController captionController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
   var createPostLoading = false.obs;
   Rx<File?> postImagFile = Rx<File?>(null);
   final ImagePicker _picker = ImagePicker();
@@ -32,6 +38,7 @@ class PostController extends GetxController {
     super.onInit();
     getPostListData(true);
     getProfilePosts(true);
+    searchList();
   }
 
   Future<void> showDialogImage(context, {required int picture}) {
@@ -212,8 +219,9 @@ class PostController extends GetxController {
         CommonToast.show(msg: res['message']);
         captionController.clear();
         postImagFile.value = null;
-
+        await getPostListData(false);
         Get.back();
+        await getProfilePosts(false);
       } else {
         log(res.toString());
       }
@@ -222,6 +230,49 @@ class PostController extends GetxController {
       log(e.toString());
     } finally {
       createPostLoading.value = false;
+    }
+  }
+
+  var addBioLoading = false.obs;
+  Future<void> addBio() async {
+    try {
+      addBioLoading.value = true;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      final Map<String, dynamic> data = {
+        'token': token,
+        'bio': bioController.text,
+      };
+      final res = await repo.addBio(jsonEncode(data));
+
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+        bioController.clear();
+        await getProfilePosts(false);
+        Get.back();
+      }
+    } finally {
+      addBioLoading.value = false;
+    }
+  }
+
+  var searchLoading = false.obs;
+  var searchData = <dynamic>[].obs;
+  Future<void> searchList() async {
+    try {
+      searchLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.searchList(token ?? '');
+
+      if (res['status'] == true) {
+        searchData.value = res['data'];
+      } else {}
+    } finally {
+      searchLoading.value = false;
     }
   }
 
@@ -310,6 +361,42 @@ class PostController extends GetxController {
     } catch (e) {}
   }
 
+  Future<void> savePost(Datum post) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.savePost(token ?? '', post.id);
+
+      if (res.status == true) {
+        post.isSaved = !(post.isSaved ?? false);
+
+        postList.refresh();
+        await getProfilePosts(false);
+      }
+    } catch (e) {}
+  }
+
+  var delePostLoading = false.obs;
+  Future<void> deletePost(id) async {
+    try {
+      delePostLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.deletePost(id, token ?? '');
+
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+        await getProfilePosts(false);
+        await getPostListData(false);
+      }
+    } catch (e) {
+    } finally {
+      delePostLoading.value = false;
+    }
+  }
+
   TextEditingController commentController = TextEditingController();
   var addCommentLoading = false.obs;
   Future<void> addComment(Datum post) async {
@@ -343,23 +430,36 @@ class PostController extends GetxController {
       addCommentLoading.value = false;
     }
   }
+
   var profilePostList = <profile.PostsDatum>[].obs;
+  var savedPostList = <profile.SavedPostsDatum>[].obs;
 
   var profileCurrentPage = 1.obs;
   var profileLastPage = 1.obs;
 
+  var savedCurrentPage = 1.obs;
+  var savedLastPage = 1.obs;
+
   var profilePostLoading = false.obs;
+  var savedPostLoading = false.obs;
+
   var myProfileData = Rxn<profile.MyPostProfile>();
+
   RefreshController profileRefreshController = RefreshController();
+  RefreshController savedRefreshController = RefreshController();
+
   Future<void> getProfilePosts(bool isRefresh) async {
     try {
       if (isRefresh) {
         profileCurrentPage.value = 1;
+        savedCurrentPage.value = 1;
         profileRefreshController.resetNoData();
+        savedRefreshController.resetNoData();
       }
 
       if (profileCurrentPage.value == 1) {
         profilePostLoading.value = true;
+        savedPostLoading.value = true;
       }
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -368,22 +468,29 @@ class PostController extends GetxController {
       final res = await repo.getMyProfile(token ?? '');
 
       if (res.status == true) {
-
-
         myProfileData.value = res;
 
-        final newList = res.data?.posts?.data ?? [];
+        final postList = res.data?.posts?.data ?? [];
+        final savedList = res.data?.savedPosts?.data ?? [];
 
         profileLastPage.value = res.data?.posts?.lastPage ?? 1;
+        savedLastPage.value = res.data?.savedPosts?.lastPage ?? 1;
 
         if (profileCurrentPage.value == 1) {
-          profilePostList.value = newList;
+          profilePostList.value = postList;
         } else {
-          profilePostList.addAll(newList);
+          profilePostList.addAll(postList);
+        }
+
+        if (savedCurrentPage.value == 1) {
+          savedPostList.value = savedList;
+        } else {
+          savedPostList.addAll(savedList);
         }
 
         if (isRefresh) {
           profileRefreshController.refreshCompleted();
+          savedRefreshController.refreshCompleted();
         }
 
         if (profileCurrentPage.value >= profileLastPage.value) {
@@ -392,13 +499,137 @@ class PostController extends GetxController {
           profileCurrentPage.value++;
           profileRefreshController.loadComplete();
         }
+
+        if (savedCurrentPage.value >= savedLastPage.value) {
+          savedRefreshController.loadNoData();
+        } else {
+          savedCurrentPage.value++;
+          savedRefreshController.loadComplete();
+        }
       } else {
         profileRefreshController.loadFailed();
+        savedRefreshController.loadFailed();
       }
     } catch (e) {
       profileRefreshController.loadFailed();
+      savedRefreshController.loadFailed();
     } finally {
       profilePostLoading.value = false;
+      savedPostLoading.value = false;
+    }
+  }
+
+  var otherProfileData = Rxn<others.OtherProfileRes>();
+  var otherProfilePostList = <others.Datum>[].obs;
+
+  var otherProfileLoading = false.obs;
+
+  var otherCurrentPage = 1.obs;
+  var otherLastPage = 1.obs;
+
+  RefreshController otherRefreshController = RefreshController();
+  Future<void> getOtherProfile(String userId, bool isRefresh) async {
+    try {
+      if (isRefresh) {
+        otherCurrentPage.value = 1;
+        otherRefreshController.resetNoData();
+      }
+
+      if (otherCurrentPage.value == 1) {
+        otherProfileLoading.value = true;
+      }
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.getOtherProfile(userId, token ?? '');
+
+      if (res.status == true) {
+        otherProfileData.value = res;
+
+        final postList = res.data?.posts?.data ?? [];
+
+        otherLastPage.value = res.data?.posts?.lastPage ?? 1;
+
+        if (otherCurrentPage.value == 1) {
+          otherProfilePostList.value = postList;
+        } else {
+          otherProfilePostList.addAll(postList);
+        }
+
+        if (isRefresh) {
+          otherRefreshController.refreshCompleted();
+        }
+
+        if (otherCurrentPage.value >= otherLastPage.value) {
+          otherRefreshController.loadNoData();
+        } else {
+          otherCurrentPage.value++;
+          otherRefreshController.loadComplete();
+        }
+      } else {
+        otherRefreshController.loadFailed();
+      }
+    } catch (e) {
+      otherRefreshController.loadFailed();
+    } finally {
+      otherProfileLoading.value = false;
+    }
+  }
+
+  var followOthersLoading = false.obs;
+  Future<void> followOthers(String id) async {
+    try {
+      followOthersLoading.value = true;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.followOthers(token ?? '', id);
+
+      if (res['status'] == true) {
+        final user = otherProfileData.value?.data?.user;
+
+        if (user != null) {
+          user.isFollowing = !(user.isFollowing ?? false);
+
+          if (user.isFollowing == true) {
+            user.followersCount = (user.followersCount ?? 0) + 1;
+          } else {
+            user.followersCount = (user.followersCount ?? 0) - 1;
+          }
+
+          otherProfileData.refresh();
+        }
+
+        await getOtherProfile(id, true);
+
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      followOthersLoading.value = false;
+    }
+  }
+
+  var getPosViewDetails = Rxn<viewDetail.Data>();
+  var getPosViewDetailsLoading = false.obs;
+
+  Future<void> getPostViewDetails(dynamic id) async {
+    try {
+      getPosViewDetailsLoading.value = true;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.getPostViewDetails(token ?? '', id);
+
+      if (res.status == true) {
+        getPosViewDetails.value = res.data;
+      }
+    } finally {
+      getPosViewDetailsLoading.value = false;
     }
   }
 }

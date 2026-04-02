@@ -7,6 +7,8 @@ import 'package:shimmer/shimmer.dart';
 class CommonToast {
   static Future<bool?> show({String? msg}) {
     return Fluttertoast.showToast(
+
+
       msg: "$msg",
       webShowClose: true,
       textColor: Colors.black,

@@ -26,14 +26,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     ProfileController.to.getProfile();
   }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -43,9 +42,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size(100, 6.0.hp),
-        child:  CommonAppBar(title: 'Profile',leadingclick:(){
-        DashboardController.to.tabSelected.value=0;}
-       ),
+        child: CommonAppBar(
+          title: 'Profile',
+          leadingclick: () {
+            DashboardController.to.tabSelected.value = 0;
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -114,21 +116,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     backgroundImage: AssetImage(
                                       'assets/images/emtpy_profile.png',
                                     ),
-                                // Positioned(
-                                //     bottom: 0,
-                                //     right: 0,
-                                //     child: CircleAvatar(
-                                //         radius: 16,
-                                //         backgroundColor: AppColor.profileBgColor,
-                                //         child: SvgPicture.asset(
-                                //             'assets/svg/ic_edit.svg'
-                                //         )
-                                //     )
-                                // )
+                                    // Positioned(
+                                    //     bottom: 0,
+                                    //     right: 0,
+                                    //     child: CircleAvatar(
+                                    //         radius: 16,
+                                    //         backgroundColor: AppColor.profileBgColor,
+                                    //         child: SvgPicture.asset(
+                                    //             'assets/svg/ic_edit.svg'
+                                    //         )
+                                    //     )
+                                    // )
                                     backgroundColor: Colors.transparent,
                                     radius: 55,
                                   ),
-
                             ],
                           ),
                         ),
@@ -165,8 +166,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                               child: customWidget(
                                 const Icon(
-                                    Icons.favorite_border,
-                                    color: AppColor.textColor),
+                                  Icons.favorite_border,
+                                  color: AppColor.textColor,
+                                ),
                                 'Wishlist',
                               ),
                             ),
@@ -358,7 +360,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: AppColor.exitTextColor,
                             ),
                           ),
-                        ), ListTile(
+                        ),
+                        ListTile(
                           onTap: () {
                             showDialog(
                               context: context,

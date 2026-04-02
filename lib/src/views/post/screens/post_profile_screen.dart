@@ -7,6 +7,7 @@ import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/saved_post_list.dart';
 import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -25,15 +26,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final PostController controller = Get.find();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.getProfilePosts(true);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +51,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         }
 
-        final user = controller.myProfileData.value!.data!.user!;
+        final user = controller.myProfileData.value?.data?.user!;
         final posts = controller.profilePostList;
-
+        String imageUrl = user?.profileImage ?? '';
         return SmartRefresher(
           controller: controller.profileRefreshController,
           enablePullDown: true,
@@ -83,11 +75,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Stack(
                               children: [
                                 FadeInImage(
-                                  image: NetworkImage(user.profileImage ?? ''),
+                                  image:
+                                      (user?.profileImage != null &&
+                                              user!.profileImage!.isNotEmpty &&
+                                              user.profileImage!.startsWith(
+                                                'http',
+                                              ))
+                                          ? NetworkImage(user.profileImage!)
+                                          : const AssetImage(
+                                                'assets/images/profile_placeholder.png',
+                                              )
+                                              as ImageProvider,
                                   placeholder: MemoryImage(kTransparentImage),
                                   height: 133,
                                   width: screenWidth,
                                   fit: BoxFit.cover,
+                                  imageErrorBuilder: (
+                                    context,
+                                    error,
+                                    stackTrace,
+                                  ) {
+                                    return Container(
+                                      height: 133,
+                                      width: screenWidth,
+                                      color: Colors.grey[200],
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 Positioned.fill(
                                   child: BackdropFilter(
@@ -111,15 +128,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       bottom: 0,
                       left: 0,
                       right: 0,
-
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: _countWidget(
-                                "${user.followersCount ?? 0}",
+                                "${user?.followersCount ?? 0}",
                                 "Followers",
                               ),
                             ),
@@ -129,10 +146,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.network(
-                                user.profileImage ?? '',
+                                user?.profileImage ?? '',
                                 height: 80,
                                 width: 80,
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    height: 80,
+                                    width: 80,
+                                    color: Colors.grey[200],
+                                    child: const Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -140,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Align(
                               alignment: Alignment.bottomLeft,
                               child: _countWidget(
-                                "${user.followingCount ?? 0}",
+                                "${user?.followingCount ?? 0}",
                                 "Following",
                               ),
                             ),
@@ -150,19 +178,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: screenHeight * 0.01),
-
                 Text(
-                  user.username?.name ?? "",
+                  user?.username ?? "",
                   style: GoogleFonts.dmSans(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 SizedBox(height: screenHeight * 0.02),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Align(
@@ -176,20 +200,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      user.bio ?? "",
+                      user?.bio ?? "",
                       style: GoogleFonts.dmSans(fontSize: 12.sp),
                     ),
                   ),
                 ),
-
                 SizedBox(height: screenHeight * 0.02),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -203,15 +224,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(width: screenWidth * 0.02),
-                      Expanded(child: _button("Edit Bio", false)),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            controller.bioController.text = user?.bio ?? '';
+                            _showBioBottomSheet(context);
+                          },
+                          child: _button("Edit Bio", false),
+                        ),
+                      ),
                       SizedBox(width: screenWidth * 0.02),
-                      Expanded(child: _button("Saved", false)),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            Get.to(
+                              () => const SavedPostList(),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          child: _button("Saved", false),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-
                 SizedBox(height: screenHeight * 0.025),
-
                 GridView.builder(
                   itemCount: posts.length,
                   shrinkWrap: true,
@@ -226,21 +263,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   itemBuilder: (context, index) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(2.r),
-                      child:FadeInImage(
-                        image: NetworkImage(posts[index].postImage ?? ''),
+                      child: FadeInImage(
+                        image:
+                            (posts[index].postImage != null &&
+                                    posts[index].postImage!.isNotEmpty &&
+                                    posts[index].postImage!.startsWith('http'))
+                                ? NetworkImage(posts[index].postImage!)
+                                : const AssetImage(
+                                      'assets/images/image_placeholder.png',
+                                    )
+                                    as ImageProvider,
                         placeholder: MemoryImage(kTransparentImage),
                         fit: BoxFit.cover,
                         imageErrorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: Colors.grey[200],
-                            child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                            child: const Icon(
+                              Icons.broken_image,
+                              color: Colors.grey,
+                            ),
                           );
                         },
-                      )
+                      ),
                     );
                   },
                 ),
-
                 SizedBox(height: screenHeight * 0.02),
               ],
             ),
@@ -477,6 +524,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         controller.createPost();
                       },
                       text: 'Publish',
+                      height: 45.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showBioBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+
+      backgroundColor: Colors.white,
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Add Bio',
+                        style: GoogleFonts.dmSans(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: AppColor.red, width: 2),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            size: 15,
+                            color: AppColor.red,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 35),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08), // soft shadow
+                          blurRadius: 10,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 4), // bottom shadow
+                        ),
+                      ],
+                    ),
+
+                    child: TextFormField(
+                      controller: controller.bioController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        hintText: 'Add Bio',
+
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Obx(
+                    () => CommonButton(
+                      loading: controller.addBioLoading.value,
+                      press: () {
+                        controller.addBio();
+                      },
+                      text: 'Update',
                       height: 45.0,
                     ),
                   ),

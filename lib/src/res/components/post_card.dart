@@ -1,3 +1,4 @@
+import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
@@ -14,8 +15,11 @@ import 'package:shimmer/shimmer.dart';
 class PostCard extends StatefulWidget {
   final Datum post;
   final Function()? onTap;
+  final Function()? saveOnTap;
+  final Function()? profileTap;
 
-  const PostCard({super.key, required this.post,this.onTap});
+
+  const PostCard({super.key, required this.post, this.onTap, this.saveOnTap, this.profileTap});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -49,39 +53,42 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               spacing: 8,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    height: 40,
-                    width: 40,
-                    errorWidget:
-                        (context, url, error) => Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
+                InkWell(
+                  onTap: widget.profileTap,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      height: 40,
+                      width: 40,
+                      errorWidget:
+                          (context, url, error) => Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
-                        ),
-                    progressIndicatorBuilder:
-                        (context, url, progress) => Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
+                      progressIndicatorBuilder:
+                          (context, url, progress) => Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
-                        ),
-                    imageUrl: widget.post.user!.profileImage ?? '',
+                      imageUrl: widget.post.user?.profileImage ?? '',
+                    ),
                   ),
                 ),
                 Text(
@@ -170,7 +177,16 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 Image.asset('assets/images/post_send.png', width: 19),
-                Image.asset('assets/images/post_save.png', width: 16),
+                InkWell(
+                  onTap: widget.saveOnTap,
+                  child:
+                      (widget.post.isSaved ?? false)
+                          ? const Icon(Icons.bookmark, color: Colors.black)
+                          : const Icon(
+                            Icons.bookmark_border,
+                            color: Colors.black,
+                          ),
+                ),
               ],
             ),
           ),
@@ -235,12 +251,16 @@ class _PostCardState extends State<PostCard> {
           if (widget.post.commentsCount != 0)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Text(
-                'View all ${widget.post.commentsCount} comments',
-                style: GoogleFonts.dmSans(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey,
+              child: InkWell(
+                onTap: widget.onTap,
+
+                child: Text(
+                  'View all ${widget.post.commentsCount} comments',
+                  style: GoogleFonts.dmSans(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ),

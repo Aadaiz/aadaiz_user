@@ -3,10 +3,15 @@ import 'package:aadaiz_customer_crm/src/res/components/search_field.dart';
 import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/home/self_customization/product/search_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
 import 'package:aadaiz_customer_crm/src/views/post/screens/add_comment_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/chat_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/post_other_profile_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/post/screens/post_profile_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/search_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,11 +73,27 @@ class _PostListState extends State<PostList> {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: PostCard(
+                  profileTap: () {
+                    (ProfileController.to.profileData.value.id != post.user!.id)
+                        ? Get.to(
+                          () => OthersProfileScreen(userId: post.userId),
+                          transition: Transition.rightToLeft,
+                        )
+                        : Get.to(
+                          () => const ProfileScreen(),
+                          transition: Transition.rightToLeft,
+                        );
+                  },
+
                   post: post,
+                  saveOnTap: () {
+                    controller.savePost(post);
+                  },
                   onTap: () {
                     Get.to(
-                      () =>  AddCommentScreen(post:post),
-                      transition: Transition.downToUp,duration: const Duration(milliseconds: 600),
+                      () => AddCommentScreen(post: post),
+                      transition: Transition.downToUp,
+                      duration: const Duration(milliseconds: 600),
                     );
                   },
                 ),
@@ -130,26 +151,42 @@ class _PostListState extends State<PostList> {
                       ),
                     ),
                   ),
-              imageUrl:
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7nstASo8BdadWs3X-ji8e1O0hd5AMByZdGQ&s',
+              imageUrl: ProfileController.to.profileData.value.profileImage,
             ),
           ),
         ),
 
-        const Expanded(
-          child: SearchField(hintText: "Search Jobs", showSuffix: true),
+        Expanded(
+          child: SearchField(
+            hintText: "Search ",
+            showSuffix: true,
+            onTap: () {
+              Get.to(
+                () => const SearchImageScreen(),
+                transition: Transition.rightToLeft,
+              );
+            },
+            readOnly: true,
+          ),
         ),
-        Column(
-          children: [
-            Image.asset('assets/images/message.png', width: 25),
-            Text(
-              'Chat',
-              style: GoogleFonts.dmSans(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
+        InkWell(
+          onTap: () {
+
+
+          }
+          ,
+          child: Column(
+            children: [
+              Image.asset('assets/images/message.png', width: 25),
+              Text(
+                'Chat',
+                style: GoogleFonts.dmSans(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

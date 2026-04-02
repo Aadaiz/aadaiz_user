@@ -93,13 +93,7 @@ class _UserProfileState extends State<UserProfile> {
                               height: 15.0.hp,
                               width: 15.0.hp,
                               errorWidget:
-                                  (context, url, error) => const CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                      'assets/images/emtpy_profile.png',
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    radius: 55,
-                                  ),
+                                  (context, url, error) =>SizedBox(),
                               progressIndicatorBuilder:
                                   (context, url, progress) =>
                                       Shimmer.fromColors(

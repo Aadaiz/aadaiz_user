@@ -88,8 +88,17 @@ class Api {
 static const createPost = '${AppConfig.baseUrl}post/createPost';
 static const postList = '${AppConfig.baseUrl}post/postList';
 static const likePost = '${AppConfig.baseUrl}post/likePost';
+static const savePost = '${AppConfig.baseUrl}post/savePost';
+static const deletePost = '${AppConfig.baseUrl}post/savePostDelete';
 static const addComment = '${AppConfig.baseUrl}post/addComment';
 static const myProfile = '${AppConfig.baseUrl}post/myProfile';
+static const otherProfile = '${AppConfig.baseUrl}post/individualUser';
+static const followOthers = '${AppConfig.baseUrl}post/followUser';
+static const addBio = '${AppConfig.baseUrl}post/addBio';
+static const searchList = '${AppConfig.baseUrl}post/postSearchList';
+static const viewDetail = '${AppConfig.baseUrl}post/individualPost';
+
+
 
 
 
