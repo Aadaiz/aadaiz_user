@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/services/http_services.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/like_post_model.dart';
+import 'package:aadaiz_customer_crm/src/views/post/model/post_chat_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_my_profile.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_other_profile.dart';
@@ -45,9 +46,30 @@ class PostRepository {
     return jsonDecode(res);
   }
 
+  Future<Map<String, dynamic>> createConversation(
+    String token,
+    dynamic data,
+  ) async {
+    final res = await _http.post(
+      "${Api.createConversation}?token=$token",
+      data,
+    );
+    return jsonDecode(res);
+  }
+
+  Future<Map<String, dynamic>> sharePost(dynamic data, dynamic id) async {
+    final res = await _http.post("${Api.sharePost}/$id", data);
+    return jsonDecode(res);
+  }
+
   Future<MyPostProfile> getMyProfile(String token) async {
     final res = await _http.get("${Api.myProfile}?token=$token");
     return MyPostProfile.fromJson(res);
+  }
+
+  Future<PostChatList> getChatList(String token) async {
+    final res = await _http.get("${Api.postChatList}?token=$token");
+    return PostChatList.fromJson(res);
   }
 
   Future<PostViewDetail> getPostViewDetails(String token, dynamic id) async {

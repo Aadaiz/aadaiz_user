@@ -738,10 +738,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       if (widget.isEdit == false) {
         CommonToast.show(msg: 'Please select attachment');
       } else {
-        controller.createEvent(widget.isEdit, widget.data!.id);
+        controller.createEvent(widget.isEdit, widget.data?.id);
       }
     } else {
-      controller.createEvent(widget.isEdit, widget.data!.id);
+      controller.createEvent(widget.isEdit, widget.data?.id);
     }
   }
 

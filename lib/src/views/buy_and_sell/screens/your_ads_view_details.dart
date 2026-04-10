@@ -39,6 +39,12 @@ class YourAdsViewDetails extends StatefulWidget {
 
 class _YourAdsViewDetailsState extends State<YourAdsViewDetails> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("imageUrls : ${widget.imageUrls}");
+  }
+  @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     final double screenWidth = Utils.getActivityScreenWidth(context);

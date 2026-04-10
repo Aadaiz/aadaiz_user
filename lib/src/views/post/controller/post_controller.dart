@@ -1,21 +1,24 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
+
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/post/model/post_chat_list_model.dart'
+    as postchatlist;
+import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_my_profile.dart'
     as profile;
 import 'package:aadaiz_customer_crm/src/views/post/model/post_other_profile.dart'
     as others;
-import 'package:aadaiz_customer_crm/src/views/post/repository/post_repository.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_view_detail.dart'
     as viewDetail;
-import 'package:flutter/cupertino.dart';
+import 'package:aadaiz_customer_crm/src/views/post/repository/post_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/post/screens/chat_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +42,7 @@ class PostController extends GetxController {
     getPostListData(true);
     getProfilePosts(true);
     searchList();
+    getChatList();
   }
 
   Future<void> showDialogImage(context, {required int picture}) {
@@ -630,6 +634,91 @@ class PostController extends GetxController {
       }
     } finally {
       getPosViewDetailsLoading.value = false;
+    }
+  }
+
+  Future<Map<String, dynamic>?> createConversation({
+    required String receiverId,
+    required String token,
+  }) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      final Map<String, dynamic> data = {
+        'receiver_id': receiverId,
+        'message': '',
+      };
+
+      final response = await repo.createConversation(token!, jsonEncode(data));
+      if (response['status'] == true) {
+        return response['data'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("Create conversation error: $e");
+    } finally {}
+    return null;
+  }
+
+  var getChatListLoading = false.obs;
+  var chatList = <postchatlist.Datum>[].obs;
+  Future<void> getChatList() async {
+    try {
+      getChatListLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      final res = await repo.getChatList(token ?? '');
+
+      if (res.status == true) {
+        chatList.value = res.data ?? [];
+      }
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      getChatListLoading.value = false;
+    }
+  }
+
+  var sharePostLoading = false.obs;
+  var conversationId = ''.obs;
+  Future<void> sharePost(
+    dynamic receiverId,
+    dynamic postId,
+    String receiverName,
+    String profileImage,
+  ) async {
+    try {
+      sharePostLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+      final Map<String, dynamic> data = {
+        'token': token,
+        'receiver_id': receiverId,
+      };
+      final res = await repo.sharePost(jsonEncode(data), postId);
+
+      if (res['status'] == true) {
+        conversationId.value = res['data']['conversation_id'].toString();
+        await CommonToast.show(msg: res['message']);
+        await Get.to(
+          () => PostChatScreen(
+            conversationId: conversationId.value,
+            receiverId: receiverId.toString(),
+            token: token!,
+            currentUserId: ProfileController.to.profileData.value.id.toString(),
+            profileName: receiverName,
+            profileImage: profileImage,
+          ),
+        );
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+    } finally {
+      sharePostLoading.value = false;
     }
   }
 }

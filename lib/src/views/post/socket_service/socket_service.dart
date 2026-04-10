@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-
-
 class SocketService {
   late IO.Socket socket;
 
@@ -30,7 +28,9 @@ class SocketService {
     });
   }
 
-  void sendMessage({
+  void
+
+  sendMessage({
     required String conversationId,
     required String receiverId,
     required String senderId,

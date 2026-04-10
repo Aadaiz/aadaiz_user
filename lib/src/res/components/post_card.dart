@@ -2,7 +2,6 @@ import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/post/controller/post_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/post/model/post_model.dart';
-import 'package:aadaiz_customer_crm/src/views/post/screens/add_comment_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,16 @@ class PostCard extends StatefulWidget {
   final Function()? onTap;
   final Function()? saveOnTap;
   final Function()? profileTap;
+  final Function()? shareTap;
 
-
-  const PostCard({super.key, required this.post, this.onTap, this.saveOnTap, this.profileTap});
+  const PostCard({
+    super.key,
+    required this.post,
+    this.onTap,
+    this.saveOnTap,
+    this.profileTap,
+    this.shareTap,
+  });
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -105,6 +111,9 @@ class _PostCardState extends State<PostCard> {
           InkWell(
             onDoubleTap: () {
               postController.likePost(widget.post);
+              setState(() {
+
+              });
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
@@ -147,6 +156,9 @@ class _PostCardState extends State<PostCard> {
                 InkWell(
                   onTap: () {
                     postController.likePost(widget.post);
+                    setState(() {
+
+                    });
                   },
                   child: Icon(
                     (widget.post.isLiked ?? false)
@@ -176,7 +188,10 @@ class _PostCardState extends State<PostCard> {
                     ],
                   ),
                 ),
-                Image.asset('assets/images/post_send.png', width: 19),
+                InkWell(
+                  onTap: widget.shareTap,
+                  child: Image.asset('assets/images/post_send.png', width: 19),
+                ),
                 InkWell(
                   onTap: widget.saveOnTap,
                   child:

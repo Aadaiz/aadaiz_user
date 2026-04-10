@@ -212,6 +212,7 @@ class User {
   int? followingCount;
   bool? isFollowing;
   String? bio;
+  dynamic conversationId;
 
 
   User({
@@ -222,6 +223,7 @@ class User {
     this.followingCount,
     this.isFollowing,
     this.bio,
+    this.conversationId,
   });
 
   factory User.fromJson(String str) => User.fromMap(json.decode(str));
@@ -236,6 +238,7 @@ class User {
     followingCount: json["following_count"],
     isFollowing: json["is_following"],
     bio: json["bio"],
+    conversationId: json["conversation_id"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -246,5 +249,7 @@ class User {
     "following_count": followingCount,
     "is_following": isFollowing,
     "bio": bio,
+    "conversation_id": conversationId,
+
   };
 }

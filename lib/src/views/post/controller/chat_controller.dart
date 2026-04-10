@@ -1,35 +1,24 @@
 import 'dart:developer';
 
+import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/views/post/socket_service/socket_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
-
-
-
-
-
-
-
-
-
-
 class PostChatController extends GetxController {
   final SocketService socketService = SocketService();
   final Dio _dio = Dio();
 
-  var messages = <types.Message>[].obs;
+  // ✅ typed as CustomMessage throughout
+  var messages = <types.CustomMessage>[].obs;
   var isLoading = true.obs;
 
   final String currentUserId;
   final String conversationId;
   final String receiverId;
   final String token;
-
-  static const String _baseUrl =
-      "https://aadaizcrm.aadaiz.com/aadaiz-new/public/index.php/api";
 
   PostChatController({
     required this.currentUserId,
@@ -48,17 +37,15 @@ class PostChatController extends GetxController {
   }
 
   // ─────────────────────────────────────────
-  // 📥 Fetch message history from Laravel API
+  // 📥 Fetch messages from REST
   // ─────────────────────────────────────────
   Future<void> _fetchMessages() async {
     try {
       isLoading.value = true;
 
       final response = await _dio.get(
-        "$_baseUrl/post/messages/$conversationId",
-        options: Options(
-          headers: {"Authorization": "Bearer $token"},
-        ),
+        "${Api.conversationData}/$conversationId",
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
 
       final body = response.data;
@@ -70,17 +57,17 @@ class PostChatController extends GetxController {
             .where((e) =>
         e['message'] != null &&
             (e['message'] as String).trim().isNotEmpty)
-            .map<types.TextMessage>((e) {
-          return types.TextMessage(
-            id: e['id'].toString(),
-            author: types.User(
-              id: e['sender_id'].toString(),
-            ),
-            text: e['message'] as String,
-            createdAt:
-            DateTime.parse(e['created_at']).millisecondsSinceEpoch,
-          );
-        }).toList();
+            .map<types.CustomMessage>((e) => _buildCustomMessage(
+          id: e['id'].toString(),
+          senderId: e['sender_id'].toString(),
+          text: e['message'],
+          createdAt: DateTime.parse(e['created_at']),
+          postId: e['post_id'],
+          postUserName: e['post_user_name'],
+          postUserProfile: e['post_user_profile'],
+          postCaption: e['post_caption'],
+        ))
+            .toList();
 
         // API: oldest→newest | Chat UI: newest→oldest
         messages.value = loaded.reversed.toList();
@@ -105,14 +92,13 @@ class PostChatController extends GetxController {
           .where((e) =>
       e['message'] != null &&
           (e['message'] as String).trim().isNotEmpty)
-          .map<types.TextMessage>((e) {
-        return types.TextMessage(
-          id: e['id'].toString(),
-          author: types.User(id: e['sender_id'].toString()),
-          text: e['message'] as String,
-          createdAt: DateTime.parse(e['created_at']).millisecondsSinceEpoch,
-        );
-      }).toList();
+          .map<types.CustomMessage>((e) => _buildCustomMessage(
+        id: e['id'].toString(),
+        senderId: e['sender_id'].toString(),
+        text: e['message'],
+        createdAt: DateTime.parse(e['created_at']),
+      ))
+          .toList();
 
       messages.value = loaded.reversed.toList();
     });
@@ -125,20 +111,32 @@ class PostChatController extends GetxController {
 
       if (text.isEmpty || msgId == null) return;
 
-      // ✅ IMPORTANT: skip if already exists
+      // ✅ Skip if already exists (dedup with tempId)
       final alreadyExists = messages.any((m) => m.id == msgId);
       if (alreadyExists) return;
 
-      final msg = types.TextMessage(
-        id: msgId,
-        author: types.User(id: senderId),
-        text: text,
-        createdAt: DateTime.parse(data['created_at']).millisecondsSinceEpoch,
+      // ✅ Replace temp message sent by me, or insert new one
+      final tempIndex = messages.indexWhere(
+            (m) => m.metadata?['temp'] == true && m.author.id == senderId,
       );
 
-      messages.insert(0, msg);
-    });
+      final incoming = _buildCustomMessage(
+        id: msgId,
+        senderId: senderId,
+        text: text,
+        createdAt: DateTime.parse(data['created_at']),
+        postId: data['post_id'],
+        postUserName: data['post_user_name'],
+        postUserProfile: data['post_user_profile'],
+        postCaption: data['post_caption'],
+      );
 
+      if (tempIndex != -1 && senderId == currentUserId) {
+        messages[tempIndex] = incoming;
+      } else {
+        messages.insert(0, incoming);
+      }
+    });
 
     socketService.socket.on("typing", (data) {
       // TODO: show typing indicator
@@ -150,22 +148,22 @@ class PostChatController extends GetxController {
   }
 
   // ─────────────────────────────────────────
-  // ✉ Send message
+  // ✉ Send text message
   // ─────────────────────────────────────────
   void sendMessage(String text) {
     if (text.trim().isEmpty) return;
 
     final tempId = const Uuid().v4();
 
-
-
+    // ✅ Insert as CustomMessage with temp flag
     messages.insert(
       0,
-      types.TextMessage(
+      _buildCustomMessage(
         id: tempId,
-        author: types.User(id: currentUserId),
+        senderId: currentUserId,
         text: text,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime.now(),
+        isTemp: true,
       ),
     );
 
@@ -175,21 +173,24 @@ class PostChatController extends GetxController {
       senderId: currentUserId,
       message: text,
       token: token,
-      tempId: tempId, // ✅ ADD THIS
+      tempId: tempId,
     );
   }
 
+  // ─────────────────────────────────────────
   // 📎 Send file
+  // ─────────────────────────────────────────
   void sendFile(String fileUrl) {
     final tempId = const Uuid().v4();
 
     messages.insert(
       0,
-      types.TextMessage(
+      _buildCustomMessage(
         id: tempId,
-        author: types.User(id: currentUserId),
-        text: "[File]",
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        senderId: currentUserId,
+        text: fileUrl,
+        createdAt: DateTime.now(),
+        isTemp: true,
       ),
     );
 
@@ -199,6 +200,35 @@ class PostChatController extends GetxController {
       senderId: currentUserId,
       file: fileUrl,
       token: token,
+    );
+  }
+
+  // ─────────────────────────────────────────
+  // 🏗 Central factory — always CustomMessage
+  // ─────────────────────────────────────────
+  types.CustomMessage _buildCustomMessage({
+    required String id,
+    required String senderId,
+    required String text,
+    required DateTime createdAt,
+    dynamic postId,
+    String? postUserName,
+    String? postUserProfile,
+    String? postCaption,
+    bool isTemp = false,
+  }) {
+    return types.CustomMessage(
+      id: id,
+      author: types.User(id: senderId),
+      createdAt: createdAt.millisecondsSinceEpoch,
+      metadata: {
+        'text': text,
+        if (postId != null) 'post_id': postId,
+        if (postUserName != null) 'post_user_name': postUserName,
+        if (postUserProfile != null) 'post_user_profile': postUserProfile,
+        if (postCaption != null) 'post_caption': postCaption,
+        if (isTemp) 'temp': true,
+      },
     );
   }
 

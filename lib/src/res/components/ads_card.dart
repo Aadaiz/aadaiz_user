@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class YourAdsItemCard extends StatelessWidget {
-  final String image;
+  final List<String> imageUrls;
   final String title;
   final String subtitle;
   final String size;
@@ -18,11 +18,12 @@ class YourAdsItemCard extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onTap;
+  final bool onDeleteLoading;
 
 
   const YourAdsItemCard({
     super.key,
-    required this.image,
+    required this.imageUrls,
     required this.title,
     required this.subtitle,
     required this.size,
@@ -30,7 +31,8 @@ class YourAdsItemCard extends StatelessWidget {
     required this.status,
     this.onEdit,
     this.onDelete,
-    this.onTap
+    this.onTap,
+    this.onDeleteLoading = false,
   });
 
   @override
@@ -38,8 +40,7 @@ class YourAdsItemCard extends StatelessWidget {
     final double screenHeight = Utils.getActivityScreenHeight(context);
     final double screenWidth = Utils.getActivityScreenWidth(context);
 
-    final List<String> imageUrls =
-    image.split(',').map((url) => url.trim()).toList();
+
 
     return InkWell(
       onTap: onTap,
@@ -181,9 +182,12 @@ class YourAdsItemCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 CommonButton(
+                  loading: onDeleteLoading,
                   height: screenHeight * 0.045,
                   width: screenWidth * 0.4,
-                  press: (){},
+                  press: (){
+                    onDelete!();
+                  },
                   text: 'Delete Ad',
                   borderRadius: 0.0,
                 ),

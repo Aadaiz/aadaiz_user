@@ -84,22 +84,29 @@ class Api {
   static const deleteJob = '${AppConfig.baseUrl}job/deleteJob';
   static const applyJob = '${AppConfig.baseUrl}job/applyJob';
 
-//post
-static const createPost = '${AppConfig.baseUrl}post/createPost';
-static const postList = '${AppConfig.baseUrl}post/postList';
-static const likePost = '${AppConfig.baseUrl}post/likePost';
-static const savePost = '${AppConfig.baseUrl}post/savePost';
-static const deletePost = '${AppConfig.baseUrl}post/savePostDelete';
-static const addComment = '${AppConfig.baseUrl}post/addComment';
-static const myProfile = '${AppConfig.baseUrl}post/myProfile';
-static const otherProfile = '${AppConfig.baseUrl}post/individualUser';
-static const followOthers = '${AppConfig.baseUrl}post/followUser';
-static const addBio = '${AppConfig.baseUrl}post/addBio';
-static const searchList = '${AppConfig.baseUrl}post/postSearchList';
-static const viewDetail = '${AppConfig.baseUrl}post/individualPost';
+  //post
+  static const createPost = '${AppConfig.baseUrl}post/createPost';
+  static const postList = '${AppConfig.baseUrl}post/postList';
+  static const likePost = '${AppConfig.baseUrl}post/likePost';
+  static const savePost = '${AppConfig.baseUrl}post/savePost';
+  static const deletePost = '${AppConfig.baseUrl}post/savePostDelete';
+  static const addComment = '${AppConfig.baseUrl}post/addComment';
+  static const myProfile = '${AppConfig.baseUrl}post/myProfile';
+  static const otherProfile = '${AppConfig.baseUrl}post/individualUser';
+  static const followOthers = '${AppConfig.baseUrl}post/followUser';
+  static const addBio = '${AppConfig.baseUrl}post/addBio';
+  static const searchList = '${AppConfig.baseUrl}post/postSearchList';
+  static const viewDetail = '${AppConfig.baseUrl}post/individualPost';
+  static const createConversation = '${AppConfig.baseUrl}post/store';
+  static const postChatList = '${AppConfig.baseUrl}post/chatPostList';
+  static const conversationData = '${AppConfig.baseUrl}post/messages';
+  static const sharePost = '${AppConfig.baseUrl}post/sharePost';
 
-
-
+  //Buy and Sell
+  static const addBuyAndSell = '${AppConfig.baseUrl}buy/addSellProduct';
+  static const updateBuyAndSell = '${AppConfig.baseUrl}buy/updateSellProduct';
+  static const getBuyAndSellList = '${AppConfig.baseUrl}buy/sellProductList';
+  static const deleteBuyAndSell = '${AppConfig.baseUrl}buy/deleteSellProduct';
 
 
 

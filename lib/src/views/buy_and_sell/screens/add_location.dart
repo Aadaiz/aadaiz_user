@@ -19,13 +19,12 @@ class AddLocation extends StatefulWidget {
 }
 
 class _AddLocationState extends State<AddLocation> {
-  bool _isLoading = false;
-  bool _isLocationFetched = false;
+
   BuyAndSellController controller = Get.find<BuyAndSellController>();
 
   bool _validateFields() {
-    if (controller.no.text.isEmpty) {
-      CommonToast.show(msg: "Please enter House number");
+    if (controller.country.text.isEmpty) {
+      CommonToast.show(msg: "Please enter Country Name");
       return false;
     }
     if (controller.st.text.isEmpty) {
@@ -47,89 +46,7 @@ class _AddLocationState extends State<AddLocation> {
     return true;
   }
 
-  Future<void> _useCurrentLocation() async {
-    setState(() {
-      _isLoading = true;
-      _isLocationFetched = false;
-    });
 
-    try {
-      final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        CommonToast.show(msg: "Location services are disabled.");
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          CommonToast.show(msg: "Location permission denied.");
-          setState(() {
-            _isLoading = false;
-          });
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        CommonToast.show(msg: "Location permission permanently denied.");
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      final Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      controller.latitude.value = position.latitude;
-      controller.longitude.value = position.longitude;
-
-      final List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        final Placemark placemark = placemarks.first;
-        String? houseNumber;
-        final RegExp regExp = RegExp(r'^(\d+)');
-        Match? match = regExp.firstMatch(placemark.street ?? '');
-        if (match != null) {
-          houseNumber = match.group(1);
-        } else {
-          match = regExp.firstMatch(placemark.name ?? '');
-          if (match != null) {
-            houseNumber = match.group(1);
-          }
-        }
-
-        controller.no.text = houseNumber ?? '';
-        controller.st.text = placemark.subLocality ?? '';
-        controller.pin.text = placemark.postalCode ?? '';
-        controller.city.text = placemark.locality ?? '';
-        controller.land.text = placemark.street ?? '';
-
-        setState(() {
-          _isLocationFetched = true;
-        });
-      } else {
-        CommonToast.show(msg: "Unable to fetch address details.");
-      }
-    } catch (e) {
-      CommonToast.show(msg: "Error fetching location: $e");
-      print('error : ${e.toString()}');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,9 +89,48 @@ class _AddLocationState extends State<AddLocation> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
-                        controller: controller.no,
+                        controller: controller.country,
                         decoration: InputDecoration(
-                          labelText: 'House No',
+                          labelText: 'country',
+                          labelStyle: GoogleFonts.dmSans(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16), TextFormField(
+                        controller: controller.state,
+                        decoration: InputDecoration(
+                          labelText: 'state',
+                          labelStyle: GoogleFonts.dmSans(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                            fontSize: 16,
+                          ),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+
+                      TextFormField(
+                        controller: controller.city,
+                        decoration: InputDecoration(
+                          labelText: 'City',
                           labelStyle: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w400,
                             color: Colors.grey,
@@ -223,105 +179,11 @@ class _AddLocationState extends State<AddLocation> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      TextFormField(
-                        controller: controller.city,
-                        decoration: InputDecoration(
-                          labelText: 'City',
-                          labelStyle: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
 
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        controller: controller.land,
-                        decoration: InputDecoration(
-                          labelText: 'Landmark',
-                          labelStyle: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
 
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-                          ),
-                        ),
-                      ),
                       const SizedBox(height: 16),
-                      const Text(
-                        "( Or )",
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                      ),
-                      const SizedBox(height: 16),
-                      GestureDetector(
-                        onTap:
-                            _isLoading
-                                ? null
-                                : _useCurrentLocation,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColor.greyTitleColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _isLoading
-                                  ? SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: AppColor.black,
-                                    ),
-                                  )
-                                  : const Icon(
-                                    Icons.my_location,
-                                    color: Colors.black,
-                                  ),
-                              const SizedBox(width: 8),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Use My Current Location',
-                                    style: GoogleFonts.dmSans(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColor.black,
-                                    ),
-                                  ),
-                                  if (_isLocationFetched) ...[
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                      size: 24,
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+
                     ],
                   ),
                 ),
@@ -341,7 +203,9 @@ class _AddLocationState extends State<AddLocation> {
         },
         child: CommonButton(
           borderRadius: 0.0,
-          press: () {},
+          press: () {
+            Get.back();
+          },
           text: 'Next',
           width: screenWidth * 0.9,
           height: screenHeight * 0.055,

@@ -35,38 +35,6 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
     controller.getOtherProfile(widget.userId, true);
   }
 
-  Future<Map<String, dynamic>?> createConversation({
-    required String receiverId,
-    required String token,
-  }) async {
-    try {
-      final response = await http.post(
-        Uri.parse(
-          "https://aadaizcrm.aadaiz.com/aadaiz-new/public/index.php/api/post/store",
-        ),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode({
-          "receiver_id": receiverId,
-          "message": "", // 👈 empty or "Hi"
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
-        /// 🔥 IMPORTANT: backend must return conversation_id
-        return data['data'];
-      }
-    } catch (e) {
-      log("Create conversation error: $e");
-    }
-
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final double screenHeight = Utils.getActivityScreenHeight(context);
@@ -285,22 +253,21 @@ class _OthersProfileScreenState extends State<OthersProfileScreen> {
 
                             final token = prefs.getString("token");
 
-                            final response = await createConversation(
-                              receiverId: user!.id.toString(),
-                              token: token!,
-                            );
-
-                            if (response == null) {
-                              CommonToast.show(msg: 'Something went wrong');
-                              return;
-                            }
+                            // final response = await controller.createConversation(
+                            //   receiverId: user!.id.toString(),
+                            //   token: token!,
+                            // );
+                            //
+                            // if (response == null) {
+                            //   CommonToast.show(msg: 'Something went wrong');
+                            //   return;
+                            // }
 
                             await Get.to(
                               () => PostChatScreen(
-                                conversationId:
-                                    response['conversation_id'].toString(),
-                                receiverId: user.id.toString(),
-                                token: token,
+                                conversationId: user!.conversationId.toString(),
+                                receiverId: user!.id.toString(),
+                                token: token!,
                                 currentUserId:
                                     ProfileController.to.profileData.value.id
                                         .toString(),

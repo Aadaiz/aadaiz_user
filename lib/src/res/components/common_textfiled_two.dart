@@ -110,6 +110,7 @@ class CommonTextFieldTwo extends StatelessWidget {
 
                 suffixIcon: suffixIcon,
 
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(

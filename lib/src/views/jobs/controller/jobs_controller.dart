@@ -307,12 +307,12 @@ class JobsController extends GetxController {
   var applicantsData = <Applicant>[].obs;
 
   Future<void> getJobData(
-      bool? isRefresh, {
-        String? jobType,
-        String? jobCategory,
-        String? salary,
-        String? search,
-      }) async {
+    bool? isRefresh, {
+    String? jobType,
+    String? jobCategory,
+    String? salary,
+    String? search,
+  }) async {
     try {
       if (isRefresh == true) {
         currentPage.value = 1;
@@ -342,7 +342,6 @@ class JobsController extends GetxController {
       );
 
       if (res.status == true && res.data != null) {
-
         if (selectedJobType.value == 'my_job_applicants') {
           final applicantsPage = res.data!.myJobApplicants;
           if (applicantsPage != null) {
@@ -355,7 +354,6 @@ class JobsController extends GetxController {
             lastPage.value = applicantsPage.lastPage ?? 1;
           }
         } else {
-
           AppliedJobs? selectedJobs;
           switch (selectedJobType.value) {
             case 'recent_jobs':
@@ -377,7 +375,6 @@ class JobsController extends GetxController {
           }
           lastPage.value = totalLastPage;
         }
-
 
         if (currentPage.value >= lastPage.value) {
           refreshController.loadNoData();
