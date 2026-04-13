@@ -10,6 +10,10 @@ import 'package:aadaiz_customer_crm/src/utils/utils.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/controller/buyAndSellController.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/model/buy_and_sell_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/add_buy_and_sell_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_cart_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_filter_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_view_details.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_whishList_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/your_ads_view_details.dart';
 import 'package:aadaiz_customer_crm/src/views/material/filter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,6 +24,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class BuyAndSell extends StatefulWidget {
@@ -38,6 +43,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
     super.initState();
     controller.featureSelected.value = 0;
     controller.getBuyAndSellList(page: 1, isRefresh: true);
+    controller.getWishlist();
   }
 
   @override
@@ -54,6 +60,32 @@ class _BuyAndSellState extends State<BuyAndSell> {
             Get.back();
           },
           title: 'Buy And Sell',
+          isCheck: true,
+          actionButton: Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Get.to(() => const BuyAndSellWishlistScreen(),
+                      transition: Transition.rightToLeft);
+                },
+                icon: Obx(
+                      () => Badge(
+                    isLabelVisible: controller.wishlistProducts.isNotEmpty,
+                    label: Text('${controller.wishlistProducts.length}'),
+                    child: const Icon(Icons.favorite_border_rounded),
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const BuyAndSellCart()));
+                },
+                icon: Image.asset('assets/images/bag.png',
+                    height: screenHeight * 0.02),
+              ),
+            ],
+          ),
         ),
       ),
       body: Obx(
@@ -78,7 +110,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
                         icon: const Icon(Icons.tune),
                         onPressed: () {
                           Get.to(
-                            () => const Filter(),
+                            () => const BuyAndSellFilter(),
                             transition: Transition.rightToLeft,
                           );
                         },
@@ -271,7 +303,28 @@ class _BuyAndSellState extends State<BuyAndSell> {
       itemBuilder: (context, index) {
         final data = controller.featuredProducts[index];
         return InkWell(
-          onTap: () {},
+          onTap: () {
+            Get.to(
+              () => BuyAndSellViewDetails(
+                inCart:data.inCart??false,
+                title: data.category ?? '',
+                imageUrls: [
+                  data.images?.main ?? '',
+                  data.images?.front ?? '',
+                  data.images?.back ?? '',
+                ],
+                price: data.price ?? '',
+                subtitle: data.subProductName ?? '',
+                size: data.size ?? '',
+                address:
+                    '${data.location?.country ?? ''}, ${data.location?.state ?? ''}, ${data.location?.city ?? ''}, ${data.location?.area ?? ''}, ${data.location?.pincode ?? ''}',
+
+                descriptionTitle: 'Description',
+                description: data.description ?? '',
+                id: data.id,
+              ),
+            );
+          },
           child: Container(
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
             child: Column(
@@ -299,15 +352,38 @@ class _BuyAndSellState extends State<BuyAndSell> {
                       Positioned(
                         top: 8,
                         right: 8,
-                        child: InkWell(
-                          onTap: () {},
-                          child: CircleAvatar(
-                            radius: 14,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.favorite_border,
-                              size: 16,
-                              color: AppColor.red,
+                        child: Obx(
+                              () => InkWell(
+                            onTap: () => controller.addToWishlist(data.id),
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: controller.addToWishlistLoadingId.value == data.id
+                                  ? Padding(
+                                padding: const EdgeInsets.all(7),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColor.primary,
+                                ),
+                              )
+                                  : Icon(
+                                controller.wishlistProductIds.contains(data.id)
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                size: 16,
+                                color: AppColor.red,
+                              ),
                             ),
                           ),
                         ),
@@ -422,8 +498,8 @@ class _BuyAndSellState extends State<BuyAndSell> {
         if (data.images?.back != null) {
           images.add(data.images!.back!);
         }
-        return Obx(()=>
-          YourAdsItemCard(
+        return Obx(
+          () => YourAdsItemCard(
             onTap: () {
               Get.to(
                 () => YourAdsViewDetails(
@@ -516,12 +592,18 @@ class _BuyAndSellState extends State<BuyAndSell> {
   ) {
     Color statusColor = AppColor.primary;
 
-    if (data.isCancelled == true) {
-      statusColor = AppColor.red;
-    } else if (data.status?.toLowerCase() == 'delivered') {
+    final String status = data.status?.toLowerCase() ?? '';
+
+    if (status == 'delivered') {
       statusColor = Colors.green;
-    } else if (data.status?.toLowerCase() == 'pending') {
+    } else if (status == 'pending' || status == 'placed') {
       statusColor = Colors.orange;
+    } else if (status == 'shipping' || status == 'track') {
+      statusColor = Colors.blue;
+    } else if (status == 'pickup') {
+      statusColor = Colors.purple;
+    } else {
+      statusColor = AppColor.greyTitleColor;
     }
 
     final List<String> imageUrls = [];
@@ -617,9 +699,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            data.isCancelled == true
-                                ? 'Cancelled'
-                                : (data.status ?? ''),
+                            data.status?.capitalizeFirst ?? '',
                             style: GoogleFonts.dmSans(
                               fontSize: 10.sp,
                               color: statusColor,
@@ -690,6 +770,105 @@ class _BuyAndSellState extends State<BuyAndSell> {
               ),
             ],
           ),
+          const SizedBox(height: 10),
+          Container(height: 1, color: Colors.grey.shade100),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              if (data.isCancelled == true)
+                Expanded(
+                  child: Obx(
+                    () => OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColor.red),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                      ),
+                      onPressed: () {
+                        controller.cancelOrder(data.orderId, 'cancelled');
+                      },
+                      child:
+                          controller.buyAndSellCancelLoadingId.value ==
+                                  data.orderId
+                              ? SizedBox(
+                                height: 03.00.hp,
+                                width: 5.00.hp,
+                                child:
+                                    LoadingAnimationWidget.horizontalRotatingDots(
+                                      color: AppColor.red,
+                                      size: 5.00.hp,
+                                    ),
+                              )
+                              : Text(
+                                'Cancel Order',
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 11.sp,
+                                  color: AppColor.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                    ),
+                  ),
+                ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Obx(
+                  () => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                    onPressed: () async {
+                      await controller.cancelOrder(
+                        data.orderId,
+                        data.status == 'placed'
+                            ? 'shipping'
+                            : data.status == 'shipping'
+                            ? 'pickup'
+                            : data.status == 'pickup'
+                            ? 'track'
+                            : '',
+                      );
+                    },
+                    child:
+                        (controller.buyAndSellCancelLoadingId.value == data.orderId)
+                            ? SizedBox(
+                              height: 03.00.hp,
+                              width: 5.00.hp,
+                              child:
+                                  LoadingAnimationWidget.horizontalRotatingDots(
+                                    color: AppColor.white,
+                                    size: 5.00.hp,
+                                  ),
+                            )
+                            : Text(
+                              data.status?.capitalizeFirst ?? '',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 11.sp,
+                                color: AppColor.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenHeight * 0.01),
+          if (data.isCancelled == true)
+            Text(
+              'Note : You can cancel the order withing 2 hours only',
+              style: GoogleFonts.dmSans(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColor.greyTitleColor,
+              ),
+            ),
         ],
       ),
     );
@@ -701,13 +880,18 @@ class _BuyAndSellState extends State<BuyAndSell> {
     double screenHeight,
   ) {
     Color statusColor = AppColor.primary;
+    final String status = data.status?.toLowerCase() ?? '';
 
-    if (data.isCancelled == true) {
-      statusColor = AppColor.red;
-    } else if (data.status?.toLowerCase() == 'delivered') {
+    if (status == 'delivered') {
       statusColor = Colors.green;
-    } else if (data.status?.toLowerCase() == 'pending') {
+    } else if (status == 'pending' || status == 'placed') {
       statusColor = Colors.orange;
+    } else if (status == 'shipping' || status == 'track') {
+      statusColor = Colors.blue;
+    } else if (status == 'pickup') {
+      statusColor = Colors.purple;
+    } else {
+      statusColor = AppColor.greyTitleColor;
     }
 
     final List<String> imageUrls = [];
@@ -801,9 +985,7 @@ class _BuyAndSellState extends State<BuyAndSell> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            data.isCancelled == true
-                                ? 'Cancelled'
-                                : (data.status ?? ''),
+                            data.status?.capitalizeFirst ?? '',
                             style: GoogleFonts.dmSans(
                               fontSize: 10.sp,
                               color: statusColor,
@@ -855,36 +1037,53 @@ class _BuyAndSellState extends State<BuyAndSell> {
               ),
             ],
           ),
-          if (data.isCancelled == false &&
-              data.status?.toLowerCase() != 'delivered') ...[
-            const SizedBox(height: 12),
-            Container(height: 1, color: Colors.grey.shade100),
-            const SizedBox(height: 12),
-            Row(
-              children: [
+
+          const SizedBox(height: 12),
+          Container(height: 1, color: Colors.grey.shade100),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              if (data.isCancelled == true)
                 Expanded(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColor.red),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  child: Obx(
+                    () => OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColor.red),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      'Cancel Order',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 11.sp,
-                        color: AppColor.red,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      onPressed: () {
+                        controller.cancelOrder(data.orderId, 'cancelled');
+                      },
+                      child:
+                          controller.buyAndSellCancelLoadingId.value ==
+                                  data.orderId
+                              ? SizedBox(
+                                height: 03.00.hp,
+                                width: 5.00.hp,
+                                child:
+                                    LoadingAnimationWidget.horizontalRotatingDots(
+                                      color: AppColor.red,
+                                      size: 5.00.hp,
+                                    ),
+                              )
+                              : Text(
+                                'Cancel Order',
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 11.sp,
+                                  color: AppColor.red,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
+              const SizedBox(width: 10),
+              Expanded(
+                child: Obx(
+                  () => ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.primary,
                       shape: RoundedRectangleBorder(
@@ -892,20 +1091,47 @@ class _BuyAndSellState extends State<BuyAndSell> {
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
-                    onPressed: () {},
-                    child: Text(
-                      'Track Order',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 11.sp,
-                        color: AppColor.white,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    onPressed: () async {
+                      await controller.cancelOrder(data.orderId, 'track');
+
+                      Future.delayed(const Duration(seconds: 3), () {
+                        controller.trackOrder(data.orderId, data.awbCode);
+                      });
+                    },
+                    child:
+                        (controller.trackOrderLoadingId.value == data.orderId)
+                            ? SizedBox(
+                              height: 03.00.hp,
+                              width: 5.00.hp,
+                              child:
+                                  LoadingAnimationWidget.horizontalRotatingDots(
+                                    color: AppColor.white,
+                                    size: 5.00.hp,
+                                  ),
+                            )
+                            : Text(
+                              'Track Order',
+                              style: GoogleFonts.dmSans(
+                                fontSize: 11.sp,
+                                color: AppColor.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(height: screenHeight * 0.01),
+          if (data.isCancelled == true)
+            Text(
+              'Note : You can cancel the order withing 2 hours only',
+              style: GoogleFonts.dmSans(
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColor.greyTitleColor,
+              ),
             ),
-          ],
         ],
       ),
     );

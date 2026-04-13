@@ -5,9 +5,15 @@ import 'dart:io';
 import 'package:aadaiz_customer_crm/src/res/components/common_toast.dart';
 import 'package:aadaiz_customer_crm/src/services/api_service.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/model/buy_and_sell_cart_list_model.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/model/buy_and_sell_list_model.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/model/buy_and_sell_track_model.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/model/buy_and_sell_whishlist_model.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/repository/buy_and_sell_repository.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_cart_screen.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_track_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
+import 'package:aadaiz_customer_crm/src/views/order/payment_success.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -285,12 +291,12 @@ class BuyAndSellController extends GetxController {
   var purchasedLastPage = 1;
   RefreshController refreshController = RefreshController();
 
-  Future<void> getBuyAndSellList({int page = 1, bool isRefresh = false}) async {
+  Future<void> getBuyAndSellList({int page = 1, bool isRefresh = false,String category='' }) async {
     try {
       buyAndSellListLoading.value = true;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
-      final res = await repo.getBuyAndSellList(token!, page);
+      final res = await repo.getBuyAndSellList(token!, page,category);
       if (res.status == true) {
         final model = res;
         if (isRefresh) {
@@ -372,6 +378,211 @@ class BuyAndSellController extends GetxController {
     }
   }
 
+  var addToCartLoading = false.obs;
+  Future<void> addToCart(dynamic id) async {
+    try {
+      addToCartLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final Map<String, dynamic> body = {'token': token};
+      final res = await repo.addToCart(jsonEncode(body), id);
+      if (res['status'] == true) {
+        await CommonToast.show(msg: res['message']);
+        Get.to(() => const BuyAndSellCart());
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+    } finally {
+      addToCartLoading.value = false;
+    }
+  }
+
+  var buyAndSellCartListLoading = false.obs;
+  var buyAndSellCartList = <Datum>[].obs;
+  Future<void> getBuyAndSellCartList() async {
+    try {
+      buyAndSellCartListLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final res = await repo.getBuyAndSellCartList(token!);
+      if (res.status == true) {
+        buyAndSellCartList.value = res.data ?? [];
+      } else {
+        CommonToast.show(msg: res.message ?? '');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      buyAndSellCartListLoading.value = false;
+    }
+  }
+
+  var removeFromCartLoading = false.obs;
+
+  Future<void> removeFromCart(int cartId) async {
+    try {
+      removeFromCartLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final Map<String, dynamic> body = {'token': token};
+      final res = await repo.removeFromCart(jsonEncode(body), cartId);
+      if (res['status'] == true) {
+        buyAndSellCartList.removeWhere((item) => item.id == cartId);
+        CommonToast.show(msg: res['message']);
+        Get.back();
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      removeFromCartLoading.value = false;
+    }
+  }
+
+  var buyAndSellCheckOutLoading = false.obs;
+
+  Future<void> buyAndSellCheckOut(
+    List<dynamic> cartIds,
+    dynamic addressId,
+  ) async {
+    try {
+      buyAndSellCheckOutLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final Map<String, dynamic> body = {
+        'token': token,
+        'address_id': addressId,
+        'cart_item_ids': cartIds,
+      };
+      final res = await repo.buyAndSellCheckOut(jsonEncode(body));
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+        await getBuyAndSellList(isRefresh: true);
+        Get.offAll(() => const PaymentSuccess());
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      buyAndSellCheckOutLoading.value = false;
+    }
+  }
+
+  var buyAndSellCancelLoadingId = Rxn<int>();
+  Future<void> cancelOrder(dynamic orderId, dynamic orderStatus) async {
+    try {
+
+        buyAndSellCancelLoadingId.value = orderId;
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final Map<String, dynamic> body = {
+        'token': token,
+        'order_id': orderId,
+        'status': orderStatus,
+      };
+      final res = await repo.cancelOrder(jsonEncode(body));
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+        await getBuyAndSellList(isRefresh: true);
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+    } finally {
+      buyAndSellCancelLoadingId.value = null;
+    }
+  }
+
+  var trackOrderLoading = false.obs;
+  var trackOrderLoadingId = Rxn<int>();
+  Rxn<TrackData> trackOrderData = Rxn<TrackData>();
+
+  Future<void> trackOrder(dynamic orderId, dynamic awbCode) async {
+    try {
+      trackOrderLoadingId.value = orderId;
+      trackOrderLoading.value = true;
+      trackOrderData.value = null;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final res = await repo.trackOrder(awbCode);
+      if (res.status == true) {
+        trackOrderData.value = res.data;
+        Get.to(
+          () => BuyAndSellTrackOrderScreen(orderId: orderId),
+          transition: Transition.rightToLeft,
+        );
+      } else {
+        CommonToast.show(msg: res.message ?? 'Failed to track order');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      CommonToast.show(msg: 'Something went wrong');
+    } finally {
+      trackOrderLoading.value = false;
+      trackOrderLoadingId.value = null;
+    }
+  }
+
+
+
+  var wishlistLoading = false.obs;
+  var wishlistProducts = <WishlistDatum>[].obs;
+
+  var addToWishlistLoadingId = Rxn<int>();
+  var wishlistProductIds = <int>{}.obs;
+
+  Future<void> getWishlist() async {
+    try {
+      wishlistLoading.value = true;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final res = await repo.getWishlist(token!);
+      if (res.status == true) {
+        wishlistProducts.value = res.products?.data ?? [];
+
+        wishlistProductIds.value =
+            wishlistProducts.map((e) => e.id ?? 0).toSet();
+      } else {
+        CommonToast.show(msg: res.message ?? '');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      wishlistLoading.value = false;
+    }
+  }
+
+  Future<void> addToWishlist(dynamic productId) async {
+    try {
+      addToWishlistLoadingId.value = productId;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final Map<String, dynamic> body = {'token': token};
+      final res = await repo.addToWishlist(jsonEncode(body), productId);
+      if (res['status'] == true) {
+        CommonToast.show(msg: res['message']);
+
+        if (wishlistProductIds.contains(productId)) {
+          wishlistProductIds.remove(productId);
+          wishlistProducts.removeWhere((e) => e.id == productId);
+        } else {
+          wishlistProductIds.add(productId);
+        }
+
+        await getWishlist();
+      } else {
+        CommonToast.show(msg: res['message']);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      addToWishlistLoadingId.value = null;
+    }
+  }
 
   void clearAllFields() {
     productName.text = '';

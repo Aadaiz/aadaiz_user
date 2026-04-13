@@ -3,6 +3,7 @@ import 'package:aadaiz_customer_crm/src/res/widgets/common_app_bar.dart';
 import 'package:aadaiz_customer_crm/src/utils/colors.dart';
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
 import 'package:aadaiz_customer_crm/src/utils/utils.dart';
+import 'package:aadaiz_customer_crm/src/views/buy_and_sell/screens/buy_and_sell_checkout_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/home/controller/home_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/order/checkout.dart';
 import 'package:aadaiz_customer_crm/src/views/order/new_address.dart';
@@ -12,7 +13,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SavedAddress extends StatefulWidget {
-  const SavedAddress({super.key});
+  final bool comesFromBuyAndSell;
+  const SavedAddress({super.key, this.comesFromBuyAndSell = false});
 
   @override
   State<SavedAddress> createState() => _SavedAddressState();
@@ -37,9 +39,12 @@ class _SavedAddressState extends State<SavedAddress> {
       backgroundColor: AppColor.addressBgColor,
       appBar: PreferredSize(
         preferredSize: Size(100, 8.0.hp),
-        child:  CommonAppBar(title: 'Shipping Addresses',leadingclick: (){
-          Get.back();
-        },),
+        child: CommonAppBar(
+          title: 'Shipping Addresses',
+          leadingclick: () {
+            Get.back();
+          },
+        ),
       ),
       body: Obx(
         () =>
@@ -53,13 +58,23 @@ class _SavedAddressState extends State<SavedAddress> {
                     final data = HomeController.to.addressList[index];
                     return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (BuildContext context) => Checkout(data: data),
-                          ),
-                        );
+                        widget.comesFromBuyAndSell == true
+                            ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (BuildContext context) =>
+                                        BuyAndSellCheckout(data: data),
+                              ),
+                            )
+                            : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (BuildContext context) =>
+                                        Checkout(data: data),
+                              ),
+                            );
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -90,10 +105,16 @@ class _SavedAddressState extends State<SavedAddress> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>  NewAddress(data:data,isEdit:true)
-                                        )
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (BuildContext context) =>
+                                                NewAddress(
+                                                  data: data,
+                                                  isEdit: true,
+                                                ),
+                                      ),
                                     );
                                   },
                                   child: Text(

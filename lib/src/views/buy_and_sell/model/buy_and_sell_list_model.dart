@@ -72,6 +72,7 @@ class OrderProductsDatum {
   Buyer? buyer;
   String? status;
   bool? isCancelled;
+  dynamic awbCode;
 
   OrderProductsDatum({
     this.orderId,
@@ -81,6 +82,7 @@ class OrderProductsDatum {
     this.buyer,
     this.status,
     this.isCancelled,
+    this.awbCode,
   });
 
   factory OrderProductsDatum.fromJson(String str) => OrderProductsDatum.fromMap(json.decode(str));
@@ -95,6 +97,7 @@ class OrderProductsDatum {
     buyer: json["buyer"] == null ? null : Buyer.fromMap(json["buyer"]),
     status: json["status"],
     isCancelled: json["is_cancelled"],
+    awbCode: json["awb_code"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -105,6 +108,7 @@ class OrderProductsDatum {
     "buyer": buyer?.toMap(),
     "status": status,
     "is_cancelled": isCancelled,
+    "awb_code": awbCode,
   };
 }
 
@@ -204,6 +208,10 @@ class OurProductsDatum {
   String? size;
   Location? location;
   Images? images;
+  bool? inCart;
+  bool? isWishlisted;
+
+
 
   OurProductsDatum({
     this.id,
@@ -217,6 +225,8 @@ class OurProductsDatum {
     this.size,
     this.location,
     this.images,
+    this.inCart,
+    this.isWishlisted,
   });
 
   factory OurProductsDatum.fromJson(String str) => OurProductsDatum.fromMap(json.decode(str));
@@ -235,6 +245,8 @@ class OurProductsDatum {
     size: json["size"],
     location: json["location"] == null ? null : Location.fromMap(json["location"]),
     images: json["images"] == null ? null : Images.fromMap(json["images"]),
+    inCart: json["in_cart"],
+    isWishlisted: json["is_wishlisted"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -249,6 +261,8 @@ class OurProductsDatum {
     "size": size,
     "location": location?.toMap(),
     "images": images?.toMap(),
+    "in_cart": inCart,
+    "is_wishlisted": isWishlisted,
   };
 }
 

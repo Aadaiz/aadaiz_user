@@ -107,6 +107,14 @@ class Api {
   static const updateBuyAndSell = '${AppConfig.baseUrl}buy/updateSellProduct';
   static const getBuyAndSellList = '${AppConfig.baseUrl}buy/sellProductList';
   static const deleteBuyAndSell = '${AppConfig.baseUrl}buy/deleteSellProduct';
+  static const addToCart = '${AppConfig.baseUrl}buy/addToCart';
+  static const getBuyAndSellCartList = '${AppConfig.baseUrl}buy/viewCart';
+  static const removeFromCart = '${AppConfig.baseUrl}buy/removeFromCart';
+  static const buyAndSellCheckOut = '${AppConfig.baseUrl}buy/placeOrder';
+  static const buyAndSellCancelOrder = '${AppConfig.baseUrl}buy/updateOrderStatus';
+  static const buyAndSellTrackOrder = '${AppConfig.baseUrl}shiprocket/track';
+  static const buyAndSellAddToWishlist = '${AppConfig.baseUrl}buy/addToWishList';
+  static const buyAndSellGetWishlist = '${AppConfig.baseUrl}buy/viewWishList';
 
 
 
