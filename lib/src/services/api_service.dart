@@ -48,14 +48,25 @@ class Api {
   static const consultingCategory =
       "${AppConfig.baseUrl}onlineconsult/category";
   static const consultingDesigner =
-      "${AppConfig.baseUrl}onlineconsult/designers";
+      "${AppConfig.baseUrl}consulting/designerList";
   static const consultingReview = "${AppConfig.baseUrl}onlineconsult/review";
   static const availableSlots =
       "${AppConfig.baseUrl}onlineconsult/available_slots";
+  static const designerDetails =
+      "${AppConfig.baseUrl}consulting/designerDetails";
   static const createAppointment =
-      "${AppConfig.baseUrl}onlineconsult/appointments_create";
+      "${AppConfig.baseUrl}consulting/confirmBooking";
+  static const addPaymentConsultant =
+      "${AppConfig.baseUrl}consulting/addPayment";
+  static const verifyPaymentConsultant =
+      "${AppConfig.baseUrl}consulting/verifyPayment";
   static const consultingAppointment =
-      "${AppConfig.baseUrl}onlineconsult/appointments_list";
+      "${AppConfig.baseUrl}consulting/designerBookedList";
+  static const updateAppointment =
+      "${AppConfig.baseUrl}consulting/updateBooking";
+  static const startVideoCall = "${AppConfig.baseUrl}designer/videoData";
+  static const videoCallStarted = "${AppConfig.baseUrl}designer/videoStarted";
+  static const videoCallEnded = "${AppConfig.baseUrl}designer/videoEnded";
 
   ///crm
   static const crmOrders = "${AppConfig.baseUrl}crm/customerOrders";
@@ -111,11 +122,10 @@ class Api {
   static const getBuyAndSellCartList = '${AppConfig.baseUrl}buy/viewCart';
   static const removeFromCart = '${AppConfig.baseUrl}buy/removeFromCart';
   static const buyAndSellCheckOut = '${AppConfig.baseUrl}buy/placeOrder';
-  static const buyAndSellCancelOrder = '${AppConfig.baseUrl}buy/updateOrderStatus';
+  static const buyAndSellCancelOrder =
+      '${AppConfig.baseUrl}buy/updateOrderStatus';
   static const buyAndSellTrackOrder = '${AppConfig.baseUrl}shiprocket/track';
-  static const buyAndSellAddToWishlist = '${AppConfig.baseUrl}buy/addToWishList';
+  static const buyAndSellAddToWishlist =
+      '${AppConfig.baseUrl}buy/addToWishList';
   static const buyAndSellGetWishlist = '${AppConfig.baseUrl}buy/viewWishList';
-
-
-
 }

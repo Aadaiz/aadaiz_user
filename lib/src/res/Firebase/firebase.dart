@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:aadaiz_customer_crm/main.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/video_call_screen.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/screens/incoming_call.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -177,6 +178,26 @@ class FirebaseNotificationHandler {
   /// Navigate to incoming call screen (SAFE)
   void _navigateToIncomingCall(Map<String, String> data) {
     try {
+      final type = data['type'] ?? '';
+
+      if (type == 'video_call') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (navigatorKey.currentContext != null) {
+            navigatorKey.currentState?.push(
+              MaterialPageRoute(
+                builder: (_) => AgoraVideoCallScreen(
+                  channelName: data['channelName'] ?? '',
+                  token: data['agoraToken'] ?? '',
+                  uid: int.tryParse(data['callerId'] ?? '0') ?? 0,
+                  videoId: int.tryParse(data['id'] ?? '0') ?? 0,
+                ),
+              ),
+            );
+          }
+        });
+        return;
+      }
+
       final callCon = Get.find<CallStateController>();
       final callId = data['id'] ?? '';
 
@@ -259,6 +280,11 @@ class FirebaseApi {
         await _handler.handleMessage(msg);
 
         if (msg.data['type'] == 'incoming_call') {
+          Future.delayed(Duration.zero, () {
+            _handler.navigateDirectly(msg.data);
+          });
+        }
+        else if(msg.data['type'] == 'video_call'){
           Future.delayed(Duration.zero, () {
             _handler.navigateDirectly(msg.data);
           });

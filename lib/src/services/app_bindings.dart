@@ -1,5 +1,6 @@
 import 'package:aadaiz_customer_crm/src/views/Event/controller/event_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/buy_and_sell/controller/buyAndSellController.dart';
+import 'package:aadaiz_customer_crm/src/views/consulting/controller/consulting_controller.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatMessageController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/ChatSocketController.dart';
 import 'package:aadaiz_customer_crm/src/views/customer_crm/chat/controller/call_controller.dart';
@@ -21,6 +22,7 @@ class AppBindings extends Bindings{
     Get.put(MaterialController(), permanent: true);
     Get.put(JobsController(), permanent: true);
     Get.put(PostController(), permanent: true);
+    Get.put(ConsultingController(), permanent: true);
 
 
 

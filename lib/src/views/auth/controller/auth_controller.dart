@@ -59,7 +59,7 @@ class AuthController extends GetxController{
     verifyLoading(true);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final fcmToken= prefs.getString('fcm_token');
-    final Map body = {
+    final Map<String , dynamic>body = {
       "username": name.text,
       "mobile_number": mobile.text,
       "email": email.text,

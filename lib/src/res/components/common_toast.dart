@@ -1,4 +1,5 @@
 import 'package:aadaiz_customer_crm/src/utils/responsive.dart';
+import 'package:aadaiz_customer_crm/src/views/customer_crm/app_components/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -7,16 +8,14 @@ import 'package:shimmer/shimmer.dart';
 class CommonToast {
   static Future<bool?> show({String? msg}) {
     return Fluttertoast.showToast(
-
-
       msg: "$msg",
       webShowClose: true,
       textColor: Colors.black,
 
       webBgColor: "linear-gradient(#334, #000)",
-      webPosition: "center", // message
-      toastLength: Toast.LENGTH_LONG, // length
-      gravity: ToastGravity.BOTTOM, // location
+      webPosition: "center",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
     );
   }
 }
@@ -42,15 +41,64 @@ class CommonEmpty extends StatelessWidget {
 class CommonLoading extends StatelessWidget {
   const CommonLoading({super.key});
 
+  Widget _item() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.greyColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 42,
+            width: 42,
+            decoration: BoxDecoration(
+              color: AppColors.greyColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 12,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  height: 10,
+                  width: 140,
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 10.00.hp,
-      width: Get.width * 0.8,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Container(decoration: const BoxDecoration(color: Colors.white)),
+    return Shimmer.fromColors(
+      baseColor: AppColors.greyColor,
+      highlightColor: AppColors.greyColor.withAlpha(100),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 5,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (_, __) => _item(),
       ),
     );
   }
@@ -105,36 +153,35 @@ class ProfileShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-        children: [
-          _circleShimmer(100),
-          const SizedBox(height: 16),
+    return Column(
+      children: [
+        _circleShimmer(100),
+        const SizedBox(height: 16),
 
-          _rectShimmer(width: 120, height: 16),
-          const SizedBox(height: 32),
+        _rectShimmer(width: 120, height: 16),
+        const SizedBox(height: 32),
 
-          Row(
-            children: [
-              Expanded(child: _cardShimmer()),
-              const SizedBox(width: 12),
-              Expanded(child: _cardShimmer()),
-            ],
-          ),
-          const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(child: _cardShimmer()),
+            const SizedBox(width: 12),
+            Expanded(child: _cardShimmer()),
+          ],
+        ),
+        const SizedBox(height: 12),
 
-          _cardShimmer(),
-          const SizedBox(height: 24),
+        _cardShimmer(),
+        const SizedBox(height: 24),
 
-          _listTileShimmer(),
-          const SizedBox(height: 16),
+        _listTileShimmer(),
+        const SizedBox(height: 16),
 
-          _textRowShimmer(),
-          const SizedBox(height: 12),
+        _textRowShimmer(),
+        const SizedBox(height: 12),
 
-          _textRowShimmer(),
-        ],
-      );
-
+        _textRowShimmer(),
+      ],
+    );
   }
 
   Widget _circleShimmer(double size) {

@@ -57,7 +57,7 @@ class _ReviewDesignerState extends State<ReviewDesigner> {
 
                   Navigator.push(context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => const BookDesigner()
+                          builder: (BuildContext context) => const SizedBox()
                       )
                   );
 

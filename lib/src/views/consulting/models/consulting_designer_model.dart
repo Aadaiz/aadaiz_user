@@ -1,101 +1,129 @@
 import 'dart:convert';
 
 class ConsultingDesignerRes {
-  bool? success;
+  bool? status;
   dynamic message;
-  List<Designer>? data;
+  DesignerPagination? data;
 
   ConsultingDesignerRes({
-    this.success,
+    this.status,
     this.message,
     this.data,
   });
 
-  factory ConsultingDesignerRes.fromJson(String str) => ConsultingDesignerRes.fromMap(json.decode(str));
+  factory ConsultingDesignerRes.fromJson(String str) =>
+      ConsultingDesignerRes.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
+  factory ConsultingDesignerRes.fromMap(Map<String, dynamic> json) =>
+      ConsultingDesignerRes(
+        status: json["status"],
+        message: json["message"],
+        data: json["data"] == null
+            ? null
+            : DesignerPagination.fromMap(json["data"]),
+      );
+}
 
-  factory ConsultingDesignerRes.fromMap(Map<String, dynamic> json) => ConsultingDesignerRes(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"] == null ? [] : List<Designer>.from(json["data"]!.map((x) => Designer.fromMap(x))),
-  );
+class DesignerPagination {
+  dynamic currentPage;
+  List<Designer>? data;
+  dynamic total;
 
-  Map<String, dynamic> toMap() => {
-    "success": success,
-    "message": message,
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toMap())),
-  };
+  DesignerPagination({
+    this.currentPage,
+    this.data,
+    this.total,
+  });
+
+  factory DesignerPagination.fromMap(Map<String, dynamic> json) =>
+      DesignerPagination(
+        currentPage: json["current_page"],
+        data: json["data"] == null
+            ? []
+            : List<Designer>.from(
+          json["data"].map((x) => Designer.fromMap(x)),
+        ),
+        total: json["total"],
+      );
 }
 
 class Designer {
   dynamic id;
-  dynamic categoryId;
-  dynamic designerPreferenceId;
-  dynamic name;
+  dynamic accountType;
   dynamic email;
-  dynamic password;
+  dynamic name;
   dynamic gender;
-  dynamic category;
-  dynamic profileImage;
-  dynamic about;
-  dynamic avgRate;
-  dynamic totalRate;
+  dynamic education;
+  dynamic profilePhoto;
+  dynamic mobileNumber;
+  dynamic experience;
+  dynamic consultationFee;
+  dynamic consultationType;
+  dynamic description;
+  dynamic area;
+  dynamic city;
+  dynamic state;
+  dynamic country;
+  dynamic pincode;
+  dynamic status;
+  dynamic isAvailable;
+  dynamic commissionPercentage;
   DateTime? createdAt;
   DateTime? updatedAt;
 
   Designer({
     this.id,
-    this.categoryId,
-    this.designerPreferenceId,
-    this.name,
+    this.accountType,
     this.email,
-    this.password,
+    this.name,
     this.gender,
-    this.category,
-    this.profileImage,
-    this.about,
-    this.avgRate,
-    this.totalRate,
+    this.education,
+    this.profilePhoto,
+    this.mobileNumber,
+    this.experience,
+    this.consultationFee,
+    this.consultationType,
+    this.description,
+    this.area,
+    this.city,
+    this.state,
+    this.country,
+    this.pincode,
+    this.status,
+    this.isAvailable,
+    this.commissionPercentage,
     this.createdAt,
     this.updatedAt,
   });
 
   factory Designer.fromJson(String str) => Designer.fromMap(json.decode(str));
 
-  String toJson() => json.encode(toMap());
-
   factory Designer.fromMap(Map<String, dynamic> json) => Designer(
     id: json["id"],
-    categoryId: json["category_id"],
-    designerPreferenceId: json["designer_preference_id"],
-    name: json["name"],
+    accountType: json["account_type"],
     email: json["email"],
-    password: json["password"],
+    name: json["name"],
     gender: json["gender"],
-    category: json["category"],
-    profileImage: json["profile_image"],
-    about: json["about"],
-    avgRate: json["avg_rate"],
-    totalRate: json["total_rate"],
-    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
-    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    education: json["education"],
+    profilePhoto: json["profile_photo"],
+    mobileNumber: json["mobile_number"],
+    experience: json["experience"],
+    consultationFee: json["consultation_fee"],
+    consultationType: json["consultation_type"],
+    description: json["description"],
+    area: json["area"],
+    city: json["city"],
+    state: json["state"],
+    country: json["country"],
+    pincode: json["pincode"],
+    status: json["status"],
+    isAvailable: json["is_available"],
+    commissionPercentage: json["commission_percentage"],
+    createdAt: json["created_at"] == null
+        ? null
+        : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null
+        ? null
+        : DateTime.parse(json["updated_at"]),
   );
-
-  Map<String, dynamic> toMap() => {
-    "id": id,
-    "category_id": categoryId,
-    "designer_preference_id": designerPreferenceId,
-    "name": name,
-    "email": email,
-    "password": password,
-    "gender": gender,
-    "category": category,
-    "profile_image": profileImage,
-    "about": about,
-    "avg_rate": avgRate,
-    "total_rate": totalRate,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-  };
 }

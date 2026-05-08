@@ -179,15 +179,10 @@ class HttpHelper {
 
 
 dynamic _returnResponse(http.Response response) async {
-  if(response.statusCode==500 || response.statusCode==502){
-    throw FetchDataException('',500);
-  }
-  // var responseBody = jsonDecode(response.body);
-
   switch (response.statusCode) {
     case 200:
-    final responseJson = response.body;
-    return responseJson;
+      final responseJson = response.body;
+      return responseJson;
     case 404:
       final responseJson = response.body;
       return responseJson;
@@ -197,28 +192,25 @@ dynamic _returnResponse(http.Response response) async {
     case 400:
       final responseJson = response.body;
       return responseJson;
-    //  var message = "";
-     // throw BadRequestException(message.toString(), response.statusCode);
-  // var responseJson = response.body;
-  // log("404error$responseJson");
-  // return responseJson;
-    case 401:
-    case 403:
-    //Utility.log('object');
-
-      throw UnauthorisedException( "", response.statusCode);
-
-      break;
     case 422:
       final responseJson = response.body;
       return responseJson;
-    case 502:
-      throw FetchDataException('',500);
     case 500:
-      throw FetchDataException('${json.decode(response.body)['message']}',500);
+      final responseJson = response.body;
+      return responseJson;
+    case 502:
+      final responseJson = response.body;
+      return responseJson;
+    case 401:
+    case 403:
+      throw UnauthorisedException("", response.statusCode);
     default:
-      throw FetchDataException('${json.decode(response.body)['message']}',500);
+      throw FetchDataException(
+        '${json.decode(response.body)['message']}',
+        response.statusCode,
+      );
   }
+
 }
 
 

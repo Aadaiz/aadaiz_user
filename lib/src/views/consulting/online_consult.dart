@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OnlineConsult extends StatefulWidget {
-  const OnlineConsult({super.key});
+  final bool isOnline;
+  const OnlineConsult({super.key, required this.isOnline});
 
   @override
   State<OnlineConsult> createState() => _OnlineConsultState();
@@ -103,13 +104,13 @@ class _OnlineConsultState extends State<OnlineConsult> with SingleTickerProvider
                     ]
                 )
               ),
-              SizedBox(
-                height: screenHeight*0.78,
+              Expanded(
+
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                     controller: _tabController,
-                    children: const <Widget>[
-                      Appointment(),
+                    children:  <Widget>[
+                      Appointment(isOnline: widget.isOnline),
                       Scheduled(),
                       Completed(
                       )
